@@ -79,22 +79,15 @@
 
                 <v-row>
                     <v-col cols="6">
-                        <v-btn type="button" @click="createDialogState = false" block>Cancel</v-btn>
+                        <v-btn type="button" @click="resetFormState" block>Cancel</v-btn>
                     </v-col>
                     <v-col cols="6">
-                        <v-btn type="submit" color="primary" block>Submit</v-btn> 
+                        <v-btn type="submit" color="primary" @click="createLevel" block>Submit</v-btn> 
                     </v-col>                 
                 </v-row>
 
             </v-container>
         </v-form>
-        <!-- <template v-slot:actions>
-          <v-btn
-            class="ms-auto"
-            text="Ok"
-            @click="createDialogState = false"
-          ></v-btn>
-        </template> -->
       </v-card>
     </v-dialog>
 </template>
@@ -117,7 +110,8 @@ const formState = reactive({
     codeName: "",
     name: "",
     width: 9,
-    height: 16
+    height: 16,
+    folder: "database/level"
 })
 const rules = [
     (value: String | Number) => {
@@ -126,6 +120,25 @@ const rules = [
         return 'You must enter a first name.'
     },
 ]
+
+const resetFormState = () => {
+    formState.codeName = ""
+    formState.name = ""
+    formState.width = 9
+    formState.height = 16
+    createDialogState.value = false
+}
+
+const createLevel = () => {
+    try{
+        const request = $fetch(`${runtimeConfig.public.URL}api/data`, { method: "POST", body: formState })
+
+        console.log(request)
+    }catch(err){
+        console.log(err)
+    }
+    createDialogState.value = false
+}
 
 onMounted(async() => {
     const request : levelDataResponse = await $fetch(`${runtimeConfig.public.URL}api/data?folder=database/level`)
