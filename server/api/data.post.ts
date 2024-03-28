@@ -1,14 +1,14 @@
 import fs from 'node:fs';
-// import path from 'node:path';
+import path from 'node:path';
 
-export default defineEventHandler((event) => {
-    const param = getRouterParams(event)
+export default defineEventHandler( async(event) => {
+    const body = await readBody(event)
 
-    console.log("param :>>> ", param)
+    console.log("body :>>> ", body)
 
-    const { folder, width, height, codeName, name } = param
+    const { codeName, name, width, height, folder } = body
 
-    console.log(`${process.env.URL}${folder}`)
+    // console.log(`${process.env.URL}${folder}`)
 
     const newMap = []
 
@@ -74,10 +74,11 @@ export default defineEventHandler((event) => {
             "difficulty": 1
         }`
 
-        fs.appendFileSync(`${process.env.URL}${folder}/${codeName}.js`, newLevel)
+        fs.appendFileSync(`${__dirname}../../${folder}/${codeName}.js`, newLevel)
 
         return { status: 200 }
     }catch(err){
+        console.log(err)
         return { status: 500, err }
     }
 
