@@ -1,17 +1,9 @@
 import fs from 'node:fs';
 // import path from 'node:path';
 
-export default defineEventHandler((event) => {
-    const query = getQuery(event)
-
-    console.log("query :>>> ", query)
-
-    const { folder } = query
-
-    console.log(`${process.env.URL}${folder}`)
-
+export default defineEventHandler(() => {
     try{
-        const files = fs.readdirSync(`${folder}`)
+        const files = fs.readdirSync(`${process.env.DATA_PATH}`)
 
         console.log(files)
 
@@ -19,6 +11,4 @@ export default defineEventHandler((event) => {
     }catch(err){
         return { status: 500, files: [], err }
     }
-
-
 })
