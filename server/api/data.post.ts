@@ -12,11 +12,11 @@ export default defineEventHandler( async(event) => {
 
     const newMap = []
 
-    for(let i=0; i < Number(width); i++){
+    for(let i=0; i < Number(height); i++){
         const row : number[] = []
         newMap.push(row)
 
-        for(let j=0; j < Number(height); j++){
+        for(let j=0; j < Number(width); j++){
             newMap[i].push(0)
         }
     }
@@ -25,9 +25,9 @@ export default defineEventHandler( async(event) => {
         const newLevel = `import { t } from '../../utils/i18n'
 
         export default {
-            "id": ${codeName},
-            "name": ${name},
-            "map": ${newMap},
+            "id": "${codeName}",
+            "name": "${name}",
+            "map": ${JSON.stringify(newMap)},
             "audio": "", // Audio for battle phase
             "assets": [ // define in numeric order
                 "",
@@ -74,7 +74,9 @@ export default defineEventHandler( async(event) => {
             "difficulty": 1
         }`
 
-        fs.appendFileSync(`${__dirname}../../${folder}/${codeName}.js`, newLevel)
+        const filePath = path.join(process.cwd(), folder,`${codeName}.js`)
+
+        fs.appendFileSync(filePath, newLevel)
 
         return { status: 200 }
     }catch(err){
