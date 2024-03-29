@@ -22,9 +22,11 @@
             >
                 <td>{{ map }}</td>
                 <td class="d-flex justify-end">
-                    <v-btn class="mx-2 mt-2" prepend-icon="mdi-file-edit" color="secondary">
-                        EDIT
-                    </v-btn>
+                    <NuxtLink :to="`/level/${map}`">
+                        <v-btn class="mx-2 mt-2" prepend-icon="mdi-file-edit" color="secondary">
+                            EDIT
+                        </v-btn>                            
+                    </NuxtLink>
 
                     <v-btn class="mx-2 mt-2" prepend-icon="mdi-delete" color="danger" @click="deleteLevel(map, index)">
                         DELETE
@@ -35,7 +37,7 @@
         </v-table>        
     </section>
 
-    <level-create-dialog />
+    <level-create-dialog @trigger-reload="getLevels" />
 </template>
 
 <script setup lang="ts">
@@ -44,7 +46,7 @@ definePageMeta({
 })
 
 import { onMounted, ref } from 'vue';
-import type { levelDataResponse } from '~/types/index';
+import type { levelList } from '~/types/index';
 import { storeToRefs } from 'pinia' 
 
 const { base_url } = storeToRefs(useMainStore())
@@ -53,6 +55,19 @@ const { toggleDialog } = useDialogStore()
 console.log(base_url)
 
 const levels = ref<string[]>([])
+
+// 取已經建立的關卡檔名
+const getLevels = async() => {
+    const request : levelList = await $fetch(`${base_url.value}api/data`)
+    
+    console.log(request)
+
+    if(request.status === 200){
+        request.files.forEach((f, index) => {
+            levels.value[index] = f.split('.')[0]
+        })
+    }
+}
 
 // 刪除關卡檔案
 const deleteLevel = async(id: string, index: number) => {
@@ -66,16 +81,7 @@ const deleteLevel = async(id: string, index: number) => {
 }
 
 onMounted(async() => {
-    // 取已經建立的關卡檔名
-    const request : levelDataResponse = await $fetch(`${base_url.value}api/data`)
-    
-    console.log(request)
-
-    if(request.status === 200){
-        request.files.forEach((f, index) => {
-            levels.value[index] = f.split('.')[0]
-        })
-    }
+    await getLevels()
 })
 
 

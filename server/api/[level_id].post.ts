@@ -22,37 +22,48 @@ export default defineEventHandler( async(event) => {
     }
 
     try{
-        const newLevel = `{
+        const newLevel = `import { t } from '../../utils/i18n'
+
+        export default {
             "id": "${codeName}",
             "name": "${name}",
             "map": ${JSON.stringify(newMap)},
-            "audio": "", 
-            "assets": [ 
+            "audio": "", // Audio for battle phase
+            "assets": [ // define in numeric order
                 "",
                 "",
                 "",
                 "",
                 ""
             ],
-            "phase": [ "conversation", "titleCard", "battle", "conversation", "end" ],
-            "event": [],
+            // conversation - 對話階段, 
+            // battle - 戰鬥階段
+            // intermission - 整備階段
+            // end - 回到標題畫面
+            "phase": [ 'conversation', 'titleCard', 'battle', 'conversation', 'end' ],
+            "event": [], // Pre-defined events
             "enemy": [],
             "objective": {
+                // In what condition does player clear the level
+                // Clear all, pass X turns, Defeat XXX...etc
                 "victory": {
                     "target": "enemy",
                     "value": 0
                 },
+                // In what condition does player lose the level
+                // Defeat all, XXX down...etc
                 "fail": {
                     "target": "player",
                     "value": 0
                 },
+                // In what condition does player get bonus
                 "optional": [
                     {
                         "target": "turn",
                         "value": 6,
                         "prize": [
-                            { 
-                                "id": "currency_1",
+                            { // Prize for clear the level
+                                "id": 'currency_1',
                                 "type": 1,
                                 "amount": 100
                             }
@@ -63,7 +74,7 @@ export default defineEventHandler( async(event) => {
             "difficulty": 1
         }`
 
-        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}`,`${codeName}.json`)
+        const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}`,`${codeName}.js`)
 
         fs.appendFileSync(filePath, newLevel)
 

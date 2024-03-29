@@ -59,6 +59,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { storeToRefs } from 'pinia'
+import type { responseModel } from '~/types/index'
 
 const { base_url } = storeToRefs(useMainStore())
 const { createLevelDialog } = storeToRefs(useDialogStore())
@@ -69,8 +70,7 @@ const formState = reactive({
     codeName: "",
     name: "",
     width: 9,
-    height: 16,
-    folder: "database/level"
+    height: 16
 })
 const rules = [
     (value: String | Number) => {
@@ -79,6 +79,8 @@ const rules = [
         return 'You must enter a first name.'
     },
 ]
+
+const emit = defineEmits(["triggerReload"])
 
 // 重設建立表單
 const resetFormState = () => {
@@ -90,11 +92,16 @@ const resetFormState = () => {
 }
 
 // 新建關卡檔案
-const createLevel = () => {
+const createLevel = async() => {
     try{
-        const request = $fetch(`${base_url.value}api/data`, { method: "POST", body: formState })
+        const request : responseModel = await $fetch(`${base_url.value}api/data`, { method: "POST", body: formState })
 
         console.log(request)
+
+        if(request.status === 200){
+            emit("triggerReload")
+        }
+        
     }catch(err){
         console.log(err)
     }

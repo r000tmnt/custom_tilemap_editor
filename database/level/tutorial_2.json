@@ -1,31 +1,7 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
-export default defineEventHandler( async(event) => {
-    const body = await readBody(event)
-
-    console.log("body :>>> ", body)
-
-    const { codeName, name, width, height } = body
-
-    // console.log(`${process.env.URL}${folder}`)
-
-    const newMap = []
-
-    for(let i=0; i < Number(height); i++){
-        const row : number[] = []
-        newMap.push(row)
-
-        for(let j=0; j < Number(width); j++){
-            newMap[i].push(0)
-        }
-    }
-
-    try{
-        const newLevel = `{
-            "id": "${codeName}",
-            "name": "${name}",
-            "map": ${JSON.stringify(newMap)},
+{
+            "id": "tutorial_2",
+            "name": "tutorial_2",
+            "map": [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]],
             "audio": "", 
             "assets": [ 
                 "",
@@ -61,17 +37,4 @@ export default defineEventHandler( async(event) => {
                 ]
             },
             "difficulty": 1
-        }`
-
-        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}`,`${codeName}.json`)
-
-        fs.appendFileSync(filePath, newLevel)
-
-        return { status: 200 }
-    }catch(err){
-        console.log(err)
-        return { status: 500, err }
-    }
-
-
-})
+        }

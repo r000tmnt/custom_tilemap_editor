@@ -8,7 +8,7 @@ export default defineEventHandler(async(event) => {
     const { id } = body
 
     try {
-        fs.unlinkSync(`${process.env.DATA_PATH}/${id}.js`)
+        fs.unlinkSync(`${process.env.DATA_PATH}${id}.json`)
 
         return { status: 200 }
     } catch (error) {
