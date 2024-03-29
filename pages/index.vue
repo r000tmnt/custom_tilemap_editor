@@ -1,7 +1,7 @@
 <template>
     <section id="wrapper">
         <h3>LEVELS</h3>
-        <v-btn prepend-icon="mdi-plus-box" color="primary" @click="createDialogState = true">
+        <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('level')">
             CREATE
         </v-btn>
         <v-table id="dataTable">
@@ -23,11 +23,11 @@
                 <td>{{ map }}</td>
                 <td class="d-flex justify-end">
                     <v-btn class="mx-2 mt-2" prepend-icon="mdi-file-edit" color="secondary">
-                    EDIT
+                        EDIT
                     </v-btn>
 
-                    <v-btn class="mx-2 mt-2" prepend-icon="mdi-delete" color="danger">
-                    DELETE
+                    <v-btn class="mx-2 mt-2" prepend-icon="mdi-delete" color="danger" @click="deleteLevel(map, index)">
+                        DELETE
                     </v-btn>
                 </td>
             </tr>
@@ -35,61 +35,7 @@
         </v-table>        
     </section>
 
-    <v-dialog
-      v-model="createDialogState"
-      width="auto"
-    >
-      <v-card
-        class="pa-2"
-        width="500"
-        title="Create new level"
-      >
-        <v-form @submit.prevent>
-            <v-container>
-                <v-row>
-                    <v-text-field
-                        v-model="formState.codeName"
-                        :rules="rules"
-                        label="Level id"
-                    ></v-text-field>                    
-                </v-row>
-                <v-row>
-                    <v-text-field
-                        v-model="formState.name"
-                        :rules="rules"
-                        label="Level name"
-                    ></v-text-field>                    
-                </v-row>
-                <v-row>
-                    <v-text-field
-                        v-model="formState.width"
-                        :rules="rules"
-                        type="number"
-                        label="Width of the map"
-                    ></v-text-field>                    
-                </v-row>
-                <v-row>
-                    <v-text-field
-                        v-model="formState.height"
-                        :rules="rules"
-                        type="number"
-                        label="Height of the map"
-                    ></v-text-field>                    
-                </v-row>
-
-                <v-row>
-                    <v-col cols="6">
-                        <v-btn type="button" @click="resetFormState" block>Cancel</v-btn>
-                    </v-col>
-                    <v-col cols="6">
-                        <v-btn type="submit" color="primary" @click="createLevel" block>Submit</v-btn> 
-                    </v-col>                 
-                </v-row>
-
-            </v-container>
-        </v-form>
-      </v-card>
-    </v-dialog>
+    <level-create-dialog />
 </template>
 
 <script setup lang="ts">
@@ -97,55 +43,31 @@ definePageMeta({
     layout: 'base'
 })
 
-import { onMounted, ref, reactive } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { levelDataResponse } from '~/types/index';
+import { storeToRefs } from 'pinia' 
 
-const runtimeConfig = useRuntimeConfig()
+const { base_url } = storeToRefs(useMainStore())
+const { toggleDialog } = useDialogStore()
 
-// console.log(runtimeConfig)
+console.log(base_url)
 
 const levels = ref<string[]>([])
-const createDialogState = ref<boolean>(false)
-const formState = reactive({
-    codeName: "",
-    name: "",
-    width: 9,
-    height: 16,
-    folder: "database/level"
-})
-const rules = [
-    (value: String | Number) => {
-        if (value) return true
 
-        return 'You must enter a first name.'
-    },
-]
+// 刪除關卡檔案
+const deleteLevel = async(id: string, index: number) => {
+    const request : any = await $fetch(`${base_url.value}api/data`, { method: "DELETE", body: { id }})
 
-// 重設建立表單
-const resetFormState = () => {
-    formState.codeName = ""
-    formState.name = ""
-    formState.width = 9
-    formState.height = 16
-    createDialogState.value = false
-}
+    console.log(request)
 
-// 新建關卡檔案
-const createLevel = () => {
-    try{
-        const request = $fetch(`${runtimeConfig.public.URL}api/data`, { method: "POST", body: formState })
-
-        console.log(request)
-    }catch(err){
-        console.log(err)
+    if(request.status === 200){
+        levels.value.splice(index, 1)
     }
-    createDialogState.value = false
-    resetFormState()
 }
 
 onMounted(async() => {
     // 取已經建立的關卡檔名
-    const request : levelDataResponse = await $fetch(`${runtimeConfig.public.URL}api/data?folder=database/level`)
+    const request : levelDataResponse = await $fetch(`${base_url.value}api/data`)
     
     console.log(request)
 
