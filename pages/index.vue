@@ -98,7 +98,7 @@ definePageMeta({
 })
 
 import { onMounted, ref, reactive } from 'vue';
-import { type levelDataResponse } from '../modules/levelModules'
+import type { levelDataResponse } from '~/types/index';
 
 const runtimeConfig = useRuntimeConfig()
 
@@ -121,6 +121,7 @@ const rules = [
     },
 ]
 
+// 重設建立表單
 const resetFormState = () => {
     formState.codeName = ""
     formState.name = ""
@@ -129,6 +130,7 @@ const resetFormState = () => {
     createDialogState.value = false
 }
 
+// 新建關卡檔案
 const createLevel = () => {
     try{
         const request = $fetch(`${runtimeConfig.public.URL}api/data`, { method: "POST", body: formState })
@@ -138,16 +140,18 @@ const createLevel = () => {
         console.log(err)
     }
     createDialogState.value = false
+    resetFormState()
 }
 
 onMounted(async() => {
+    // 取已經建立的關卡檔名
     const request : levelDataResponse = await $fetch(`${runtimeConfig.public.URL}api/data?folder=database/level`)
     
     console.log(request)
 
     if(request.status === 200){
-        request.files.forEach(f => {
-            levels.value.push(f.split('.')[0])
+        request.files.forEach((f, index) => {
+            levels.value[index] = f.split('.')[0]
         })
     }
 })
