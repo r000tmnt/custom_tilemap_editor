@@ -86,6 +86,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute()
 const { levelData, assets } = storeToRefs(useEditorStore())
 const { initEditor } = useEditorStore()
+const { tileSize } = storeToRefs(useMainStore())
 
 // console.log(levelData.value)
 // console.log(route.params)
@@ -93,9 +94,21 @@ const { initEditor } = useEditorStore()
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
+const tiles = ref<HTMLImageElement[]>([])
+const selectedTile = ref<HTMLImageElement|null>(null)
 
-const canvasEvent = (e: Event) => {
+const canvasEvent = (e: any) => {
     console.log('canvas mousedown event:>>> ', e)
+    // Get the clicked position
+    const y = e.clientY - canvasPosition.value.top
+    const x = e.clientX - canvasPosition.value.left
+
+    // const row = Math.floor( y / 32)
+    // const col = Math.floor( x / 32)
+
+    if(selectedTile.value !== null){
+        context.value.drawImage(selectedTile.value, x, y, tileSize.value, tileSize.value)
+    }
 }
 
 onMounted(() => {
@@ -105,8 +118,8 @@ onMounted(() => {
             if(levelData.value !== undefined){
                 console.log(canvasRef.value)
                 if(canvasRef.value !== null){
-                    canvasRef.value.width = levelData.value.map[0].length * 32
-                    canvasRef.value.height = levelData.value.map.length * 32
+                    canvasRef.value.width = levelData.value.map[0].length * tileSize.value
+                    canvasRef.value.height = levelData.value.map.length * tileSize.value
                     context.value = canvasRef.value.getContext("2d")
                     canvasPosition.value = canvasRef.value.getBoundingClientRect()
                     
@@ -117,9 +130,11 @@ onMounted(() => {
                         for(let j=0; j < map[i].length; j++){
                             const tile = levelData.value.assets[map[i][j]]
                             if(tile.length){
+                                const index = map[i][j]
                                 const img = document.createElement('img')
                                 img.src = `/assets/images/env/${tile}`
-                                context.value.drawImage(img, 32 * j, 32 * i, 32, 32)
+                                tiles.value[index] = img
+                                context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
                             }
                         }
                     }
