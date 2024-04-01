@@ -10,7 +10,7 @@ export default defineEventHandler(async(event) => {
 
     const relativePath = path.relative(process.cwd(), "./public")
     const files = fs.readdirSync(`${relativePath}/assets/images/${type}`)
-    const assets = files.map(file => `/_nuxt/${relativePath}/assets/images/${file}`)
+    const assets = files.map(file => `/assets/images/${type}/${file}`)
 
     return { status: 200, assets }
 })
