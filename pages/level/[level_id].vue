@@ -35,15 +35,15 @@
         <v-row class="editor">
             <!-- tile assets -->
             <v-col cols="4">
-                <v-item-group class="d-flex" selected-class="bg-primary">
+                <v-item-group class="d-flex" selected-class="selected">
                     <v-item
                         v-for="img in assets.env"
                         class="tile"
-                        :key="n" 
+                        :key="img" 
                         v-slot="{ isSelected, selectedClass, toggle }
                         ">
                             <v-card
-                            :class="['d-flex align-center', selectedClass]"
+                            :class="['d-flex align-center bg-grey', selectedClass]"
                             height="32"
                             width="32"
                             dark
@@ -54,7 +54,12 @@
                                 >
                                     {{ isSelected ? 'Selected' : 'Click Me!' }}
                                 </div> -->
-                                <img :src="img" alt="tile" />
+                                <v-img 
+                                    width="32" 
+                                    height="32" 
+                                    alt="tile"
+                                    :src="img">
+                                </v-img>
                             </v-card>
                     </v-item>
                 </v-item-group>
@@ -63,7 +68,10 @@
             <!-- tilemap editor -->
             <v-col cols="8">
                 <v-container id="canvasContainer">
-                    <canvas ref="canvasRef"></canvas>
+                    <canvas 
+                        ref="canvasRef"
+                        @mousedown="canvasEvent"
+                    ></canvas>
                 </v-container>
             </v-col>
         </v-row>            
@@ -86,9 +94,14 @@ const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
 
+const canvasEvent = (e: Event) => {
+    console.log('canvas mousedown event:>>> ', e)
+}
+
 onMounted(() => {
-    if(route.params?.level_id){
-        initEditor(route.params?.level_id).then(() => {
+    console.log(route.params)
+    if(Object.entries(route.params).length){
+        initEditor(route.params.level_id).then(() => {
             if(levelData.value !== undefined){
                 console.log(canvasRef.value)
                 if(canvasRef.value !== null){
@@ -99,6 +112,17 @@ onMounted(() => {
                     
                     context.value.fillStyle = '#000000'
                     context.value.fillRect(0, 0, canvasRef.value.width, canvasRef.value.height)
+
+                    for(let i=0, map = levelData.value.map; i < map.length; i++){
+                        for(let j=0; j < map[i].length; j++){
+                            const tile = levelData.value.assets[map[i][j]]
+                            if(tile.length){
+                                const img = document.createElement('img')
+                                img.src = `/assets/images/env/${tile}`
+                                context.value.drawImage(img, 32 * j, 32 * i, 32, 32)
+                            }
+                        }
+                    }
                 }
             }
         })
@@ -124,5 +148,9 @@ canvas{
 
 .tile{
     padding: 0;
+}
+
+.selected{
+    border: 1px solid yellow;
 }
 </style>
