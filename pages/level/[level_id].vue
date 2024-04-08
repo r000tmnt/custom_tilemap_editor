@@ -98,7 +98,10 @@ const { tileSize, base_url } = storeToRefs(useMainStore())
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
+
+// Tiles in the map
 const tiles = ref<HTMLImageElement[]>([])
+// Selected tile
 const selectedTile = ref<HTMLImageElement|null>(null)
 
 const canvasEvent = (e: any) => {
@@ -121,10 +124,22 @@ const canvasEvent = (e: any) => {
                 // Store the map before update
                 storeSteps(levelData.value.map)
                 // Update the map
-                const assetIndex = levelData.value.assets.findIndex(a => selectedTile.value?.src.includes(a))
-                levelData.value.map[row][col] = assetIndex
-                // Save the changes
-                saveLevelData()
+                let assetIndex = -1
+                for(let i=0; i < levelData.value.assets.length; i++){
+                    if(levelData.value.assets[i].length){
+                        if(selectedTile.value.src.includes(levelData.value.assets[i])){
+                            assetIndex = i
+                            break;
+                        }
+                    }
+                }
+
+                if(assetIndex >= 0){
+                    console.log(assetIndex)
+                    levelData.value.map[row][col] = assetIndex
+                    // Save the changes
+                    saveLevelData()
+                }
             }
         break;
         case 2:
@@ -155,11 +170,17 @@ const selectTile = (v:any, index:number) => {
 
         const assetIndex = tiles.value.findIndex(a => a.src.includes(assetUrl))
 
+        // If it is a new tile in the map
         if(assetIndex < 0){
-            levelData.value.assets.push(tiles.value[assetIndex].src.split(base_url.value)[1])
+            levelData.value.assets.push(assetUrl)
+            const newTile = document.createElement('img')
+            newTile.src = `${base_url.value}${assetUrl}`
+            tiles.value.push(newTile)   
+            selectedTile.value = newTile
+        }else{
+            // If it is an existing tile
+            selectedTile.value = tiles.value[index]
         }
-
-        selectedTile.value = tiles.value[assetIndex]
     }
 }
 
@@ -183,11 +204,11 @@ onMounted(() => {
                             const tile = levelData.value.assets[map[i][j]]
                             if(tile.length){
                                 console.log("tile :>>", tile)
-                                const index = map[i][j]
+                                // const index = map[i][j]
                                 const img = document.createElement('img')
                                 img.src = `/assets/images/env/${tile}`
-                                console.log(img)
-                                tiles.value[index] = img
+                                // console.log(img)
+                                tiles.value.push(img)
                                 img.onload = () => {
                                     context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
                                 }
