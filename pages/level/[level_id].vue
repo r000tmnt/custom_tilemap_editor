@@ -37,17 +37,17 @@
             <v-col cols="4">
                 <v-item-group class="d-flex" selected-class="selected">
                     <v-item
-                        v-for="img in assets.env"
+                        v-for="(img, index) in assets.env"
                         class="tile"
                         :key="img" 
                         v-slot="{ isSelected, selectedClass, toggle }
                         ">
                             <v-card
                             :class="['d-flex align-center bg-grey', selectedClass]"
-                            height="32"
-                            width="32"
+                            :height="tileSize"
+                            :width="tileSize"
                             dark
-                            @click="toggle"
+                            @click="() => {toggle; selectTile(index)}"
                             >
                                 <!-- <div
                                     class="flex-grow-1 text-center"
@@ -71,6 +71,7 @@
                     <canvas 
                         ref="canvasRef"
                         @mousedown="canvasEvent"
+                        @keydown="canvasKeyPressEvent"
                     ></canvas>
                 </v-container>
             </v-col>
@@ -84,8 +85,8 @@ import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
-const { levelData, assets } = storeToRefs(useEditorStore())
-const { initEditor } = useEditorStore()
+const { levelData, assets, steps } = storeToRefs(useEditorStore())
+const { initEditor, storeSteps } = useEditorStore()
 const { tileSize } = storeToRefs(useMainStore())
 
 // console.log(levelData.value)
@@ -103,18 +104,52 @@ const canvasEvent = (e: any) => {
     const y = e.clientY - canvasPosition.value.top
     const x = e.clientX - canvasPosition.value.left
 
-    // const row = Math.floor( y / 32)
-    // const col = Math.floor( x / 32)
+    const row = Math.floor( y / tileSize.value)
+    const col = Math.floor( x / tileSize.value)
 
-    if(selectedTile.value !== null){
-        context.value.drawImage(selectedTile.value, x, y, tileSize.value, tileSize.value)
+    const mouseButton = e.button
+
+    switch(mouseButton){
+        case 0:
+            // Left button
+            // Draw a tile on the canvas if selected
+            if(selectedTile.value !== null){
+                context.value.drawImage(selectedTile.value, col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)
+                // Store the map before update
+                storeSteps(levelData.value.map)
+                // Update the map
+                levelData.value.map[row][col] = Number(selectedTile.value.dataset.asset)
+            }
+        break;
+        case 2:
+            // Right button
+            // Open a context menu
+        break;
+        default:
+            // Other
+        break;
     }
+}
+
+const canvasKeyPressEvent = (e: any) => {
+    // If the combination is ctrl + z
+    if(e.keyCode === 90 && e.ctrlKey){
+        // Take one step back
+        levelData.value.map = steps.value[steps.value.length - 1]
+        // Remove the step
+        steps.value.splice(steps.value.length - 1, 1)
+    }
+}
+
+// Keep the selected tile
+const selectTile = (index:number) => {
+    selectedTile.value = tiles.value[index]
 }
 
 onMounted(() => {
     console.log(route.params)
-    if(Object.entries(route.params).length){
-        initEditor(route.params.level_id).then(() => {
+    if(route?.params?.level_id){
+        initEditor(String(route.params.level_id)).then(() => {
             if(levelData.value !== undefined){
                 console.log(canvasRef.value)
                 if(canvasRef.value !== null){
@@ -130,11 +165,15 @@ onMounted(() => {
                         for(let j=0; j < map[i].length; j++){
                             const tile = levelData.value.assets[map[i][j]]
                             if(tile.length){
+                                console.log("tile :>>", tile)
                                 const index = map[i][j]
                                 const img = document.createElement('img')
+                                img.setAttribute('data-asset', String(index))
                                 img.src = `/assets/images/env/${tile}`
                                 tiles.value[index] = img
-                                context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                                img.onload = () => {
+                                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                                }
                             }
                         }
                     }
