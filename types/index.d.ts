@@ -50,10 +50,16 @@ declare global {
         event: levelEventModle[]
         phase: string[]
         enemy: []
-        objective: {},
+        objective: {}
         audio: string
         assets: string[]
         difficulty: number
+    }
+
+    interface levelAssetModle {
+        env: string[]
+        class: string[]
+        mob: string[]
     }
 }
 
@@ -62,5 +68,6 @@ export {
     levelList,
     levelDataResponse, 
     levleDataModle, 
-    levelEventModle 
+    levelEventModle ,
+    levelAssetModle
 }
