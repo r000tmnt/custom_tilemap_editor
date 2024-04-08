@@ -6,7 +6,7 @@ export const useMainStore = defineStore('main', () => {
 
     const base_url = ref<string>(runtimeConfig.public.URL)
 
-    const tileSize = ref<Number>(32)
+    const tileSize = ref<number>(32)
 
     return {
         base_url,
