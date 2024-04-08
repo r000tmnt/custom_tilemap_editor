@@ -217,13 +217,17 @@ onMounted(() => {
                             const tile = levelData.value.assets[map[i][j]]
                             if(tile.length){
                                 console.log("tile :>>", tile)
-                                // const index = map[i][j]
-                                const img = document.createElement('img')
-                                img.src = `/assets/images/env/${tile}`
-                                // console.log(img)
-                                tiles.value.push(img)
-                                img.onload = () => {
-                                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                                
+                                for(let [key, value] of Object.entries(assets)){
+                                    if(value.find((a: string) => a.includes((tile)))){
+                                        const img = document.createElement('img')
+                                        img.src = `/assets/images/${key}/${tile}`
+                                        // console.log(img)
+                                        tiles.value.push(img)
+                                        img.onload = () => {
+                                            context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                                        }
+                                    }
                                 }
                             }
                         }

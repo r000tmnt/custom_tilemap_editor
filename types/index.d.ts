@@ -56,6 +56,11 @@ declare global {
         difficulty: number
     }
 
+    interface levelAssetResponseModel{
+        status: number
+        assets: string[]
+    }
+
     interface levelAssetModle {
         env: string[]
         class: string[]
@@ -69,5 +74,6 @@ export {
     levelDataResponse, 
     levleDataModle, 
     levelEventModle ,
-    levelAssetModle
+    levelAssetModle,
+    levelAssetResponseModel
 }

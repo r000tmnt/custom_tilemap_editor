@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { levleDataModle, levelDataResponse, levelAssetModle } from '~/types/index'
+import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel } from '~/types/index'
 
 export const useEditorStore = defineStore('editor', () => {
     const levelData = ref<levleDataModle>({
@@ -25,17 +25,20 @@ export const useEditorStore = defineStore('editor', () => {
     const initEditor = async(id: string) => {
         const mainStore = useMainStore()
         const request : levelDataResponse = await $fetch(`${mainStore.base_url}api/${id}`)
-        const request_assets : any = await $fetch(`${mainStore.base_url}api/asset?type=env`)
+
+        // Get all assets
+        for(let [key, value] of Object.entries(assets.value)){
+            const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset?type=${key}`)
+            console.log("request:>>> ", request_assets)
+            if(request_assets.status === 200){
+                assets.value[key as keyof levelAssetModle] = request_assets.assets
+            }  
+        }
 
         console.log("request:>>> ", request)
-        console.log("request:>>> ", request_assets)
-
+        
         if(request.status === 200){
             levelData.value = request.data
-        }  
-        
-        if(request_assets.status === 200){
-            assets.value.env = request_assets.assets
         }  
     }
 
