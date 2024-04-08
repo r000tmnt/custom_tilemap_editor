@@ -9,7 +9,7 @@ export default defineEventHandler( async(event) => {
     try{
         const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}`,`${body.id}.json`)
 
-        fs.appendFileSync(filePath, JSON.stringify(body))
+        fs.writeFileSync(filePath, JSON.stringify(body))
 
         return { status: 200 }
     }catch(err){
