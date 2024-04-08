@@ -3,13 +3,24 @@ import { ref } from 'vue'
 import type { levleDataModle, levelDataResponse } from '~/types/index'
 
 export const useEditorStore = defineStore('editor', () => {
-    const levelData = ref<levleDataModle>()
+    const levelData = ref<levleDataModle>({
+        id: "",
+        name: "",
+        map: [],
+        event: [],
+        phase: [],
+        enemy: [],
+        objective: {},
+        audio: "",
+        assets: [],
+        difficulty: 0
+    })
     const assets = ref({
         env: [],
         class: [],
         mob: []
     })
-    const steps = ref<levleDataModle[]>([]) // Steps to reverse
+    const steps = ref<Array<number[][]>>([]) // Steps to reverse
 
     const initEditor = async(id: string) => {
         const mainStore = useMainStore()
@@ -28,14 +39,14 @@ export const useEditorStore = defineStore('editor', () => {
         }  
     }
 
-    const storeSteps = (step: levleDataModle) => {
+    const storeSteps = (step: number[][]) => {
         steps.value.push(step)
     }
 
     const previousStep = () => {
         if(steps.value.length){
             steps.value.splice(steps.value.length - 1, 1)
-            levelData.value = steps.value[steps.value.length - 1]            
+            levelData.value.map = steps.value[steps.value.length - 1]            
         }else{
             console.log('no more steps')
         }
@@ -48,6 +59,7 @@ export const useEditorStore = defineStore('editor', () => {
     return {
         levelData,
         assets,
+        steps,
         initEditor,
         storeSteps,
         previousStep,
