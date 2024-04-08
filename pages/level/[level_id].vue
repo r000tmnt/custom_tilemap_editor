@@ -25,11 +25,13 @@
             <v-app-bar-title>{{ levelData.id }}</v-app-bar-title>
 
             <template v-slot:append>
-                <v-btn icon="mdi-pencil"></v-btn>
+                <v-btn icon="mdi-navigation" :color="mode === 'nav'? 'primary': 'grey'" @click="mode = 'nav'"></v-btn>
 
-                <v-btn icon="mdi-eraser"></v-btn>
+                <v-btn icon="mdi-pencil" :color="mode === 'draw'? 'primary': 'grey'" @click="mode = 'draw'"></v-btn>
 
-                <!-- <v-btn icon="mdi-dots-vertical"></v-btn> -->
+                <v-btn icon="mdi-eraser" :color="mode === 'erase'? 'primary': 'grey'" @click="mode = 'erase'"></v-btn>
+
+                <v-btn icon="mdi-cog" :color="mode === 'config'? 'primary': 'grey'" @click="mode = 'config'"></v-btn>
             </template>
         </v-app-bar>  
 
@@ -103,6 +105,9 @@ const canvasPosition = ref()
 const tiles = ref<HTMLImageElement[]>([])
 // Selected tile
 const selectedTile = ref<HTMLImageElement|null>(null)
+// Current mode
+// nav - View tile info on click
+const mode = ref<string>('nav')
 
 const canvasEvent = (e: any) => {
     console.log('canvas mousedown event:>>> ', e)
@@ -118,28 +123,36 @@ const canvasEvent = (e: any) => {
     switch(mouseButton){
         case 0:
             // Left button
-            // Draw a tile on the canvas if selected
-            if(selectedTile.value !== null){
-                context.value.drawImage(selectedTile.value, col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)
-                // Store the map before update
-                storeSteps(levelData.value.map)
-                // Update the map
-                let assetIndex = -1
-                for(let i=0; i < levelData.value.assets.length; i++){
-                    if(levelData.value.assets[i].length){
-                        if(selectedTile.value.src.includes(levelData.value.assets[i])){
-                            assetIndex = i
-                            break;
+            switch(mode.value){
+                case "nav":
+                break;
+                case "draw":
+                    // Draw a tile on the canvas if selected
+                    if(selectedTile.value !== null){
+                        context.value.drawImage(selectedTile.value, col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)
+                        // Store the map before update
+                        storeSteps(levelData.value.map)
+                        // Update the map
+                        let assetIndex = -1
+                        for(let i=0; i < levelData.value.assets.length; i++){
+                            if(levelData.value.assets[i].length){
+                                if(selectedTile.value.src.includes(levelData.value.assets[i])){
+                                    assetIndex = i
+                                    break;
+                                }
+                            }
                         }
-                    }
-                }
 
-                if(assetIndex >= 0){
-                    console.log(assetIndex)
-                    levelData.value.map[row][col] = assetIndex
-                    // Save the changes
-                    saveLevelData()
-                }
+                        if(assetIndex >= 0){
+                            console.log(assetIndex)
+                            levelData.value.map[row][col] = assetIndex
+                            // Save the changes
+                            saveLevelData()
+                        }
+                    }                    
+                break;
+                case "erase":
+                break;
             }
         break;
         case 2:
