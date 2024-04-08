@@ -24,58 +24,61 @@
 
             <v-app-bar-title>{{ levelData.id }}</v-app-bar-title>
 
-            <!-- <template v-slot:append>
-                <v-btn icon="mdi-heart"></v-btn>
+            <template v-slot:append>
+                <v-btn icon="mdi-pencil"></v-btn>
 
-                <v-btn icon="mdi-magnify"></v-btn>
+                <v-btn icon="mdi-eraser"></v-btn>
 
-                <v-btn icon="mdi-dots-vertical"></v-btn>
-            </template> -->
+                <!-- <v-btn icon="mdi-dots-vertical"></v-btn> -->
+            </template>
         </v-app-bar>  
-        <v-row class="editor">
-            <!-- tile assets -->
-            <v-col cols="4">
-                <v-item-group class="d-flex" selected-class="selected">
-                    <v-item
-                        v-for="(img, index) in assets.env"
-                        class="tile"
-                        :key="img" 
-                        v-slot="{ isSelected, selectedClass, toggle }
-                        ">
-                            <v-card
-                            :class="['d-flex align-center bg-grey', selectedClass]"
-                            :height="tileSize"
-                            :width="tileSize"
-                            dark
-                            @click="() => {toggle; selectTile(index)}"
-                            >
-                                <!-- <div
-                                    class="flex-grow-1 text-center"
-                                >
-                                    {{ isSelected ? 'Selected' : 'Click Me!' }}
-                                </div> -->
-                                <v-img 
-                                    width="32" 
-                                    height="32" 
-                                    alt="tile"
-                                    :src="img">
-                                </v-img>
-                            </v-card>
-                    </v-item>
-                </v-item-group>
-            </v-col>
 
-            <!-- tilemap editor -->
-            <v-col cols="8">
-                <v-container id="canvasContainer">
-                    <canvas 
-                        ref="canvasRef"
-                        @mousedown="canvasEvent"
-                        @keydown="canvasKeyPressEvent"
-                    ></canvas>
-                </v-container>
-            </v-col>
-        </v-row>            
+        <v-container>
+            <v-row class="editor">
+                <!-- tile assets -->
+                <v-col cols="4">
+                    <v-item-group class="d-flex" selected-class="selected">
+                        <v-item
+                            v-for="(img, index) in assets.env"
+                            class="tile"
+                            :key="img" 
+                            v-slot="{ isSelected, selectedClass, toggle }"
+                            @group:selected="(v) => selectTile(v, index)">
+                                <v-card
+                                :class="['d-flex align-center bg-grey', selectedClass]"
+                                :height="tileSize"
+                                :width="tileSize"
+                                dark
+                                @click="toggle"
+                                >
+                                    <!-- <div
+                                        class="flex-grow-1 text-center"
+                                    >
+                                        {{ isSelected ? 'Selected' : 'Click Me!' }}
+                                    </div> -->
+                                    <v-img 
+                                        width="32" 
+                                        height="32" 
+                                        alt="tile"
+                                        :src="img">
+                                    </v-img>
+                                </v-card>
+                        </v-item>
+                    </v-item-group>
+                </v-col>
+
+                <!-- tilemap editor -->
+                <v-col cols="8">
+                    <v-container id="canvasContainer">
+                        <canvas 
+                            ref="canvasRef"
+                            @mousedown="canvasEvent"
+                            @keydown="canvasKeyPressEvent"
+                        ></canvas>
+                    </v-container>
+                </v-col>
+            </v-row>     
+        </v-container>
     </section> 
 </template>
 
@@ -86,8 +89,8 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute()
 const { levelData, assets, steps } = storeToRefs(useEditorStore())
-const { initEditor, storeSteps } = useEditorStore()
-const { tileSize } = storeToRefs(useMainStore())
+const { initEditor, storeSteps, saveLevelData } = useEditorStore()
+const { tileSize, base_url } = storeToRefs(useMainStore())
 
 // console.log(levelData.value)
 // console.log(route.params)
@@ -118,7 +121,10 @@ const canvasEvent = (e: any) => {
                 // Store the map before update
                 storeSteps(levelData.value.map)
                 // Update the map
-                levelData.value.map[row][col] = Number(selectedTile.value.dataset.asset)
+                const assetIndex = levelData.value.assets.findIndex(a => selectedTile.value?.src.includes(a))
+                levelData.value.map[row][col] = assetIndex
+                // Save the changes
+                saveLevelData()
             }
         break;
         case 2:
@@ -142,8 +148,19 @@ const canvasKeyPressEvent = (e: any) => {
 }
 
 // Keep the selected tile
-const selectTile = (index:number) => {
-    selectedTile.value = tiles.value[index]
+const selectTile = (v:any, index:number) => {
+    console.log(v)
+    if(v.value){
+        const assetUrl = assets.value.env[index]
+
+        const assetIndex = tiles.value.findIndex(a => a.src.includes(assetUrl))
+
+        if(assetIndex < 0){
+            levelData.value.assets.push(tiles.value[assetIndex].src.split(base_url.value)[1])
+        }
+
+        selectedTile.value = tiles.value[assetIndex]
+    }
 }
 
 onMounted(() => {
@@ -168,8 +185,8 @@ onMounted(() => {
                                 console.log("tile :>>", tile)
                                 const index = map[i][j]
                                 const img = document.createElement('img')
-                                img.setAttribute('data-asset', String(index))
                                 img.src = `/assets/images/env/${tile}`
+                                console.log(img)
                                 tiles.value[index] = img
                                 img.onload = () => {
                                     context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
