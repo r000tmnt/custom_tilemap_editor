@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { levleDataModle, levelDataResponse } from '~/types/index'
+import type { levleDataModle, levelDataResponse, levelAssetModle } from '~/types/index'
 
 export const useEditorStore = defineStore('editor', () => {
     const levelData = ref<levleDataModle>({
@@ -15,7 +15,7 @@ export const useEditorStore = defineStore('editor', () => {
         assets: [],
         difficulty: 0
     })
-    const assets = ref({
+    const assets = ref<levelAssetModle>({
         env: [],
         class: [],
         mob: []
@@ -52,6 +52,15 @@ export const useEditorStore = defineStore('editor', () => {
         }
     }
 
+    const saveLevelData = async() => {
+        try {
+            const mainStore = useMainStore()
+            await $fetch(`${mainStore.base_url}api/${levelData.value}`, { method: 'PATCH', body: levelData.value })
+        } catch (error) {
+            console.error("saveLevelData error :>>>", error)
+        }
+    }
+
     const clearSteps = () => {
         steps.value.splice(0)
     }
@@ -63,6 +72,7 @@ export const useEditorStore = defineStore('editor', () => {
         initEditor,
         storeSteps,
         previousStep,
-        clearSteps
+        clearSteps,
+        saveLevelData
     }
 })
