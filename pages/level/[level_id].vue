@@ -42,7 +42,7 @@
                     <v-card class="info" subtitle="Tile info" :text="`Width:${canvasRef?.width}\nHeight:${canvasRef?.height}\nX:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
                         <v-card-actions>
                             <v-btn color="primary">Add event</v-btn>
-                            <v-btn color="secondary">Manage events</v-btn>
+                            <v-btn :color="(tileInfo.events.length)? 'secondary' : 'grey'" :disabled="tileInfo.events.length === 0">Manage events</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -69,15 +69,24 @@ const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
 
-const tileInfoDescFormatter = (x: number, y: number, events: number) => {
-    return `Width:${canvasRef?.value?.width}\nHeight:${canvasRef?.value?.height}\nX:${x}\nY:${y}\nEvents:${events}`
+const getEventsonTile = (x: number, y: number) => {
+    const events = []
+
+    for(let i=0, levelEvent = levelData.value.event; i < levelEvent.length; i++){
+        for(let j=0, eventPosition = levelEvent[i].position; j < eventPosition.length; j++){
+            if(eventPosition[j].x === x && eventPosition[j].y === y){
+                events.push(levelEvent[i])
+            }
+        }
+    }
+
+    return events
 }
 
 const tileInfo = ref({
     x: 0,
     y: 0,
-    events: levelData.value.event,
-    desc: tileInfoDescFormatter(0, 0, levelData.value.event.length)
+    events: getEventsonTile(0, 0)
 })
 
 const canvasEvent = (e: any) => {
@@ -99,7 +108,7 @@ const canvasEvent = (e: any) => {
                     // Change tile info desc
                     tileInfo.value.x = col
                     tileInfo.value.y = row
-                    tileInfo.value.desc = tileInfoDescFormatter(col, row, levelData.value.event.length)
+                    tileInfo.value.events = getEventsonTile(col, row)
                 break;
                 case "draw":
                     // Draw a tile on the canvas if selected
