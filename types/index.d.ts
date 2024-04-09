@@ -35,12 +35,29 @@ declare global {
         option?: dialogueOptionModle[]
     }
 
-    interface levelEventModle {
+    interface eventSceneModel{
         background: string
         audio: string
         people: number
         dialogue: eventDialogueModel[],
         trigger: string
+    }
+
+    interface eventPositionModel{
+        x: number
+        y: number
+    }
+
+    interface eventItemModel{
+        amount: number
+        id: string
+        type: number
+    }
+
+    interface levelEventModle {
+        position: eventPositionModel[]
+        item: eventItemModel[]
+        scene: eventSceneModel[]
     }
 
     interface levleDataModle {
