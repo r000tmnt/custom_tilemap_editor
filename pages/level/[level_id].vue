@@ -29,6 +29,7 @@
                 <!-- tilemap editor -->
                 <v-col cols="4">
                     <v-container id="canvasContainer">
+                        <!-- map layer -->
                         <canvas 
                             ref="canvasRef"
                             @mousedown="canvasEvent"
@@ -182,7 +183,7 @@ const changeLayuout = (v: any) => {
                 //     for(let j=0; j < map[i].length; j++){
                 //         const type = map[i][j]
                 //         const x = (j+i) * tileSize.value
-                //         const y = (i+1) * tileSize.value
+                //         const y = i * tileSize.value
                 //         const event = getEventsonTile(x, y)
                 //         if(type === 2 || type === 3){
                 //             const img = document.createElement('img')
@@ -206,23 +207,17 @@ const changeLayuout = (v: any) => {
                 for(let i=0, map = levelData.value.map; i < map.length; i++){
                     for(let j=0; j < map[i].length; j++){
                         const type = map[i][j]
-                        const x = (j+i) * tileSize.value
-                        const y = (i+1) * tileSize.value
+                        const x = j * tileSize.value
+                        const y = i * tileSize.value
                         const event = getEventsonTile(x, y)
                         if(type === 2 || type === 3){
-                            context.value.save()
-                            context.value.globalCompositeOperation = 'source-over'
                             context.value.fillStyle = '#000000'
                             context.value.fillRect(x, y, tileSize.value, tileSize.value)
-                            context.value.restore()
                         }
 
                         if(event.length){
-                            context.value.save()
-                            context.value.globalCompositeOperation = 'source-over'
                             context.value.fillStyle = 'yellow'
                             context.value.fillRect(x, y, tileSize.value, tileSize.value)
-                            context.value.restore()
                         }
                     }
                 }
@@ -231,8 +226,8 @@ const changeLayuout = (v: any) => {
             case 'event':{
                 for(let i=0, map = levelData.value.map; i < map.length; i++){
                     for(let j=0; j < map[i].length; j++){
-                        const x = (j+i) * tileSize.value
-                        const y = (i+1) * tileSize.value
+                        const x = j * tileSize.value
+                        const y = i * tileSize.value
                         const event = getEventsonTile(x, y)
 
                         if(event.length){
@@ -254,7 +249,7 @@ const changeLayuout = (v: any) => {
                     for(let j=0; j < map[i].length; j++){
                         const type = map[i][j]
                         const x = (j+i) * tileSize.value
-                        const y = (i+1) * tileSize.value
+                        const y = i * tileSize.value
                         const tile = levelData.value.assets[map[i][j]]
                         const event = getEventsonTile(x, y)
 
@@ -292,7 +287,7 @@ const changeLayuout = (v: any) => {
                     for(let j=0; j < map[i].length; j++){
                         const type = map[i][j]
                         const x = (j+i) * tileSize.value
-                        const y = (i+1) * tileSize.value
+                        const y = i * tileSize.value
                         const event = getEventsonTile(x, y)
                         if(type === 2 || type === 3){
                             context.value.fillStyle = '#000000'
@@ -311,7 +306,7 @@ const changeLayuout = (v: any) => {
                 for(let i=0, map = levelData.value.map; i < map.length; i++){
                     for(let j=0; j < map[i].length; j++){
                         const x = (j+i) * tileSize.value
-                        const y = (i+1) * tileSize.value
+                        const y = i * tileSize.value
                         const event = getEventsonTile(x, y)
 
                         if(event.length){
@@ -345,8 +340,8 @@ onMounted(() => {
                         for(let j=0; j < map[i].length; j++){
                             const tile = levelData.value.assets[map[i][j]]
                             const type = map[i][j]
-                            const x = (j+i) * tileSize.value
-                            const y = (i+1) * tileSize.value
+                            const x = j * tileSize.value
+                            const y = i * tileSize.value
                             const event = getEventsonTile(x, y)
                             if(tile.length){
                                 console.log("tile :>>", tile)
@@ -360,23 +355,18 @@ onMounted(() => {
                             }
 
                             if(event.length){
-                                context.value.save()
                                 context.value.globalCompositeOperation = 'source-over'
                                 context.value.fillStyle('yellow')
                                 context.value.fillRect(x, y, tileSize.value, tileSize.value)
-                                context.value.restore()
                             }
 
                             if(type === 2 || type === 3){
-                                context.value.save()
-                                context.value.globalCompositeOperation = 'source-over'
                                 const img = document.createElement('img')
                                 img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
                                 // console.log(img)
                                 tiles.value.push(img)
                                 img.onload = () => {
                                     context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
-                                    context.value.restore()
                                 }
                             }
                         }
