@@ -14,7 +14,7 @@
 
                 <v-btn icon="mdi-eraser" :color="mode === 'erase'? 'primary': 'grey'" @click="mode = 'erase'"></v-btn>
 
-                <v-menu>
+                <v-menu :close-on-content-click="false" width="200">
                     <template v-slot:activator="{ props }">
                         <v-btn icon="mdi-layers" v-bind="props"></v-btn>
                     </template>
@@ -24,7 +24,10 @@
                         :key="index"
                         :value="index"
                         >
-                        <v-list-item-title>{{ item }}</v-list-item-title>
+                        <v-list-item-title class="d-flex justify-space-between">
+                            {{ item.name }}
+                            <v-icon :icon="(item.active)? 'mdi-eye' : 'mdi-eye-closed'" @click="toggleLayout(index)"></v-icon>
+                        </v-list-item-title>
                         </v-list-item>
                     </v-list>
                  </v-menu>
@@ -42,7 +45,18 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia'
 
-const layers = ref<string[]>(['map', 'character', 'event'])
+const emit = defineEmits(['toggleLayout'])
+
+const layers = ref<any[]>([
+    { name: 'map', active: 'true' },
+    { name: 'player', active: 'true' },
+    { name: 'event', active: 'true' },
+])
+
+const toggleLayout = (index: number) => {
+    layers.value[index].active = !layers.value[index].active
+    emit("toggleLayout", layers.value[index])
+}
 
 const { levelData, mode } = storeToRefs(useEditorStore())
 </script>
