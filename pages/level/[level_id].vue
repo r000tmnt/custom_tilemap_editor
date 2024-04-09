@@ -96,6 +96,7 @@ const canvasEvent = (e: any) => {
             // Left button
             switch(mode.value){
                 case "nav":
+                    // Change tile info desc
                     tileInfo.value.x = col
                     tileInfo.value.y = row
                     tileInfo.value.desc = tileInfoDescFormatter(col, row, levelData.value.event.length)
@@ -126,6 +127,14 @@ const canvasEvent = (e: any) => {
                     }                    
                 break;
                 case "erase":
+                    context.value.fillStyle = '#000000'
+                    context.value.fillRect(col, row, tileSize.value, tileSize.value)
+                    // Store the map before update
+                    storeSteps(levelData.value.map)
+                    // Update the map
+                    levelData.value.map[row][col] = 0
+                    // Save the changes
+                    saveLevelData()
                 break;
             }
         break;
