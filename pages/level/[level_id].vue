@@ -17,7 +17,7 @@
 
     <section v-else>
         <!-- paint brushes and other tools -->
-        <editor-tool-bar />
+        <editor-tool-bar @toggle-layout="changeLayuout" />
 
         <v-container>
             <v-row class="editor">
@@ -113,6 +113,9 @@ const canvasEvent = (e: any) => {
                 case "draw":
                     // Draw a tile on the canvas if selected
                     if(selectedTile.value !== null){
+                        // Cleat the old tile first
+                        context.value.fillStyle = '#000000'
+                        context.value.fillRect(col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)
                         context.value.drawImage(selectedTile.value, col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)
                         // Store the map before update
                         storeSteps(levelData.value.map)
@@ -137,7 +140,7 @@ const canvasEvent = (e: any) => {
                 break;
                 case "erase":
                     context.value.fillStyle = '#000000'
-                    context.value.fillRect(col, row, tileSize.value, tileSize.value)
+                    context.value.fillRect(col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)
                     // Store the map before update
                     storeSteps(levelData.value.map)
                     // Update the map
@@ -167,6 +170,162 @@ const canvasKeyPressEvent = (e: any) => {
     }
 }
 
+const changeLayuout = (v: any) => {
+    if(!v.active){
+        // Hide the layer
+        switch(v.name){
+            case 'map':{
+                // context.value.globalCompositeOperation = 'destination-over'
+                context.value.fillStyle = '#000000'
+                context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
+                // for(let i=0, map = levelData.value.map; i < map.length; i++){
+                //     for(let j=0; j < map[i].length; j++){
+                //         const type = map[i][j]
+                //         const x = (j+i) * tileSize.value
+                //         const y = (i+1) * tileSize.value
+                //         const event = getEventsonTile(x, y)
+                //         if(type === 2 || type === 3){
+                //             const img = document.createElement('img')
+                //             img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
+                //             // console.log(img)
+                //             tiles.value.push(img)
+                //             img.onload = () => {
+                //                 context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                //             }
+                //         }
+
+                //         if(event.length){
+                //             context.value.fillStyle('yellow')
+                //             context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                //         }
+                //     }
+                // }
+            }
+            break;
+            case 'player':{
+                for(let i=0, map = levelData.value.map; i < map.length; i++){
+                    for(let j=0; j < map[i].length; j++){
+                        const type = map[i][j]
+                        const x = (j+i) * tileSize.value
+                        const y = (i+1) * tileSize.value
+                        const event = getEventsonTile(x, y)
+                        if(type === 2 || type === 3){
+                            context.value.save()
+                            context.value.globalCompositeOperation = 'source-over'
+                            context.value.fillStyle = '#000000'
+                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                            context.value.restore()
+                        }
+
+                        if(event.length){
+                            context.value.save()
+                            context.value.globalCompositeOperation = 'source-over'
+                            context.value.fillStyle = 'yellow'
+                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                            context.value.restore()
+                        }
+                    }
+                }
+            }
+            break;
+            case 'event':{
+                for(let i=0, map = levelData.value.map; i < map.length; i++){
+                    for(let j=0; j < map[i].length; j++){
+                        const x = (j+i) * tileSize.value
+                        const y = (i+1) * tileSize.value
+                        const event = getEventsonTile(x, y)
+
+                        if(event.length){
+                            context.value.fillStyle = '#000000'
+                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                        }
+                    }
+                }
+            }
+            break;
+        }
+    }else{
+        // Display the layer
+        switch(v.name){
+            case 'map':{
+                context.value.fillStyle = '#000000'
+                context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
+                for(let i=0, map = levelData.value.map; i < map.length; i++){
+                    for(let j=0; j < map[i].length; j++){
+                        const type = map[i][j]
+                        const x = (j+i) * tileSize.value
+                        const y = (i+1) * tileSize.value
+                        const tile = levelData.value.assets[map[i][j]]
+                        const event = getEventsonTile(x, y)
+
+                        if(tile.length){
+                            console.log("tile :>>", tile)
+                            const img = document.createElement('img')
+                            img.src = `/assets/images/env/${tile}`
+                            // console.log(img)
+                            tiles.value.push(img)
+                            img.onload = () => {
+                                context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                            }
+                        }
+
+                        // if(type === 2 || type === 3){
+                        //     const img = document.createElement('img')
+                        //     img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
+                        //     // console.log(img)
+                        //     tiles.value.push(img)
+                        //     img.onload = () => {
+                        //         context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                        //     }
+                        // }
+
+                        // if(event.length){
+                        //     context.value.fillStyle('yellow')
+                        //     context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                        // }
+                    }
+                }
+            }
+            break;
+            case 'player':{
+                for(let i=0, map = levelData.value.map; i < map.length; i++){
+                    for(let j=0; j < map[i].length; j++){
+                        const type = map[i][j]
+                        const x = (j+i) * tileSize.value
+                        const y = (i+1) * tileSize.value
+                        const event = getEventsonTile(x, y)
+                        if(type === 2 || type === 3){
+                            context.value.fillStyle = '#000000'
+                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                        }
+
+                        if(event.length){
+                            context.value.fillStyle = 'yellow'
+                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                        }
+                    }
+                }
+            }
+            break;
+            case 'event':{
+                for(let i=0, map = levelData.value.map; i < map.length; i++){
+                    for(let j=0; j < map[i].length; j++){
+                        const x = (j+i) * tileSize.value
+                        const y = (i+1) * tileSize.value
+                        const event = getEventsonTile(x, y)
+
+                        if(event.length){
+                            context.value.fillStyle = '#000000'
+                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                        }
+                    }
+                }
+            }
+            break;
+        }
+    }
+}
+
 onMounted(() => {
     console.log(route.params)
     if(route?.params?.level_id){
@@ -178,13 +337,17 @@ onMounted(() => {
                     canvasRef.value.height = levelData.value.map.length * tileSize.value
                     context.value = canvasRef.value.getContext("2d")
                     canvasPosition.value = canvasRef.value.getBoundingClientRect()
-                    
+
                     context.value.fillStyle = '#000000'
-                    context.value.fillRect(0, 0, canvasRef.value.width, canvasRef.value.height)
+                    context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
 
                     for(let i=0, map = levelData.value.map; i < map.length; i++){
                         for(let j=0; j < map[i].length; j++){
                             const tile = levelData.value.assets[map[i][j]]
+                            const type = map[i][j]
+                            const x = (j+i) * tileSize.value
+                            const y = (i+1) * tileSize.value
+                            const event = getEventsonTile(x, y)
                             if(tile.length){
                                 console.log("tile :>>", tile)
                                 const img = document.createElement('img')
@@ -193,6 +356,27 @@ onMounted(() => {
                                 tiles.value.push(img)
                                 img.onload = () => {
                                     context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                                }
+                            }
+
+                            if(event.length){
+                                context.value.save()
+                                context.value.globalCompositeOperation = 'source-over'
+                                context.value.fillStyle('yellow')
+                                context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                                context.value.restore()
+                            }
+
+                            if(type === 2 || type === 3){
+                                context.value.save()
+                                context.value.globalCompositeOperation = 'source-over'
+                                const img = document.createElement('img')
+                                img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
+                                // console.log(img)
+                                tiles.value.push(img)
+                                img.onload = () => {
+                                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                                    context.value.restore()
                                 }
                             }
                         }
