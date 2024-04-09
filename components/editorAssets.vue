@@ -47,7 +47,7 @@ const selectTile = (v:any, index:number) => {
         if(assetIndex < 0){
             levelData.value.assets.push(assetUrl)
             const newTile = document.createElement('img')
-            newTile.src = `${base_url.value}${assetUrl}`
+            newTile.src = `${base_url.value}${assetUrl.substring(1, assetUrl.length)}`
             tiles.value.push(newTile)   
             selectedTile.value = newTile
         }else{
