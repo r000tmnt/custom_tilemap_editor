@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel } from '~/types/index'
 
 export const useEditorStore = defineStore('editor', () => {
+    // Default template for levelData
     const levelData = ref<levleDataModle>({
         id: "",
         name: "",
@@ -15,12 +16,29 @@ export const useEditorStore = defineStore('editor', () => {
         assets: [],
         difficulty: 0
     })
+
+    // ALL assets
     const assets = ref<levelAssetModle>({
         env: [],
         class: [],
         mob: []
     })
-    const steps = ref<Array<number[][]>>([]) // Steps to reverse
+
+    // Steps to reverse
+    const steps = ref<Array<number[][]>>([])
+
+    // Current mode
+    // nav - View / Drag a tile on canvas?
+    // draw - Draw a tile on the canvas
+    // erase - Remove a tile on the canvas
+    // layer - switch canvas layer
+    // config - Manage other parts of levelData
+    const mode = ref<string>('nav')
+
+    // Tiles on the map
+    const tiles = ref<HTMLImageElement[]>([])
+    // Selected tile
+    const selectedTile = ref<HTMLImageElement|null>(null)
 
     const initEditor = async(id: string) => {
         const mainStore = useMainStore()
@@ -72,6 +90,9 @@ export const useEditorStore = defineStore('editor', () => {
         levelData,
         assets,
         steps,
+        mode,
+        tiles,
+        selectedTile,
         initEditor,
         storeSteps,
         previousStep,
