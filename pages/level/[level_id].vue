@@ -27,7 +27,7 @@
                 </v-col>
 
                 <!-- tilemap editor -->
-                <v-col cols="8">
+                <v-col cols="4">
                     <v-container id="canvasContainer">
                         <canvas 
                             ref="canvasRef"
@@ -35,6 +35,16 @@
                             @keydown="canvasKeyPressEvent"
                         ></canvas>
                     </v-container>
+                </v-col>
+
+                <!-- tile info -->
+                <v-col cols="4">
+                    <v-card subtitle="Tile info" :text="`X:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
+                        <v-card-actions>
+                            <v-btn>Add event</v-btn>
+                            <v-btn>Manage events</v-btn>
+                        </v-card-actions>
+                    </v-card>
                 </v-col>
             </v-row>     
         </v-container>
@@ -55,12 +65,14 @@ const { levelData, steps, tiles, selectedTile, mode } = storeToRefs(useEditorSto
 const { initEditor, storeSteps, saveLevelData } = useEditorStore()
 const { tileSize } = storeToRefs(useMainStore())
 
-// console.log(levelData.value)
-// console.log(route.params)
-
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
+const tileInfo = ref({
+    x: 0,
+    y: 0,
+    events: []
+})
 
 const canvasEvent = (e: any) => {
     console.log('canvas mousedown event:>>> ', e)
