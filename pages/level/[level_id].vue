@@ -17,56 +17,13 @@
 
     <section v-else>
         <!-- paint brushes and other tools -->
-        <v-app-bar id="bar" :elevation="5">
-            <template v-slot:prepend>
-                <v-app-bar-nav-icon></v-app-bar-nav-icon>
-            </template>
-
-            <v-app-bar-title>{{ levelData.id }}</v-app-bar-title>
-
-            <template v-slot:append>
-                <v-btn icon="mdi-navigation" :color="mode === 'nav'? 'primary': 'grey'" @click="mode = 'nav'"></v-btn>
-
-                <v-btn icon="mdi-pencil" :color="mode === 'draw'? 'primary': 'grey'" @click="mode = 'draw'"></v-btn>
-
-                <v-btn icon="mdi-eraser" :color="mode === 'erase'? 'primary': 'grey'" @click="mode = 'erase'"></v-btn>
-
-                <v-btn icon="mdi-cog" :color="mode === 'config'? 'primary': 'grey'" @click="mode = 'config'"></v-btn>
-            </template>
-        </v-app-bar>  
+        <editor-tool-bar />
 
         <v-container>
             <v-row class="editor">
                 <!-- tile assets -->
                 <v-col cols="4">
-                    <v-item-group class="d-flex" selected-class="selected">
-                        <v-item
-                            v-for="(img, index) in assets.env"
-                            class="tile"
-                            :key="img" 
-                            v-slot="{ isSelected, selectedClass, toggle }"
-                            @group:selected="(v) => selectTile(v, index)">
-                                <v-card
-                                :class="['d-flex align-center bg-grey', selectedClass]"
-                                :height="tileSize"
-                                :width="tileSize"
-                                dark
-                                @click="toggle"
-                                >
-                                    <!-- <div
-                                        class="flex-grow-1 text-center"
-                                    >
-                                        {{ isSelected ? 'Selected' : 'Click Me!' }}
-                                    </div> -->
-                                    <v-img 
-                                        width="32" 
-                                        height="32" 
-                                        alt="tile"
-                                        :src="img">
-                                    </v-img>
-                                </v-card>
-                        </v-item>
-                    </v-item-group>
+                    <editor-assets />
                 </v-col>
 
                 <!-- tilemap editor -->
@@ -89,10 +46,14 @@ import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
 
+// Components
+import editorToolBar from '../../components/editorToolBar.vue'
+import editorAssets from '../../components/editorAssets.vue'
+
 const route = useRoute()
-const { levelData, assets, steps } = storeToRefs(useEditorStore())
+const { levelData, steps, tiles, selectedTile, mode } = storeToRefs(useEditorStore())
 const { initEditor, storeSteps, saveLevelData } = useEditorStore()
-const { tileSize, base_url } = storeToRefs(useMainStore())
+const { tileSize } = storeToRefs(useMainStore())
 
 // console.log(levelData.value)
 // console.log(route.params)
@@ -100,14 +61,6 @@ const { tileSize, base_url } = storeToRefs(useMainStore())
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
-
-// Tiles in the map
-const tiles = ref<HTMLImageElement[]>([])
-// Selected tile
-const selectedTile = ref<HTMLImageElement|null>(null)
-// Current mode
-// nav - View tile info on click
-const mode = ref<string>('nav')
 
 const canvasEvent = (e: any) => {
     console.log('canvas mousedown event:>>> ', e)
@@ -175,28 +128,6 @@ const canvasKeyPressEvent = (e: any) => {
     }
 }
 
-// Keep the selected tile
-const selectTile = (v:any, index:number) => {
-    console.log(v)
-    if(v.value){
-        const assetUrl = assets.value.env[index]
-
-        const assetIndex = tiles.value.findIndex(a => a.src.includes(assetUrl))
-
-        // If it is a new tile in the map
-        if(assetIndex < 0){
-            levelData.value.assets.push(assetUrl)
-            const newTile = document.createElement('img')
-            newTile.src = `${base_url.value}${assetUrl}`
-            tiles.value.push(newTile)   
-            selectedTile.value = newTile
-        }else{
-            // If it is an existing tile
-            selectedTile.value = tiles.value[index]
-        }
-    }
-}
-
 onMounted(() => {
     console.log(route.params)
     if(route?.params?.level_id){
@@ -217,17 +148,12 @@ onMounted(() => {
                             const tile = levelData.value.assets[map[i][j]]
                             if(tile.length){
                                 console.log("tile :>>", tile)
-                                
-                                for(let [key, value] of Object.entries(assets)){
-                                    if(value.find((a: string) => a.includes((tile)))){
-                                        const img = document.createElement('img')
-                                        img.src = `/assets/images/${key}/${tile}`
-                                        // console.log(img)
-                                        tiles.value.push(img)
-                                        img.onload = () => {
-                                            context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
-                                        }
-                                    }
+                                const img = document.createElement('img')
+                                img.src = `/assets/images/env/${tile}`
+                                // console.log(img)
+                                tiles.value.push(img)
+                                img.onload = () => {
+                                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
                                 }
                             }
                         }
@@ -253,13 +179,5 @@ canvas{
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-}
-
-.tile{
-    padding: 0;
-}
-
-.selected{
-    border: 1px solid yellow;
 }
 </style>
