@@ -39,10 +39,10 @@
 
                 <!-- tile info -->
                 <v-col cols="4">
-                    <v-card subtitle="Tile info" :text="`X:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
+                    <v-card class="info" subtitle="Tile info" :text="`Width:${canvasRef?.width}\nHeight:${canvasRef?.height}\nX:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
                         <v-card-actions>
-                            <v-btn>Add event</v-btn>
-                            <v-btn>Manage events</v-btn>
+                            <v-btn color="primary">Add event</v-btn>
+                            <v-btn color="secondary">Manage events</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -68,10 +68,16 @@ const { tileSize } = storeToRefs(useMainStore())
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
+
+const tileInfoDescFormatter = (x: number, y: number, events: number) => {
+    return `Width:${canvasRef?.value?.width}\nHeight:${canvasRef?.value?.height}\nX:${x}\nY:${y}\nEvents:${events}`
+}
+
 const tileInfo = ref({
     x: 0,
     y: 0,
-    events: []
+    events: levelData.value.event,
+    desc: tileInfoDescFormatter(0, 0, levelData.value.event.length)
 })
 
 const canvasEvent = (e: any) => {
@@ -90,6 +96,9 @@ const canvasEvent = (e: any) => {
             // Left button
             switch(mode.value){
                 case "nav":
+                    tileInfo.value.x = col
+                    tileInfo.value.y = row
+                    tileInfo.value.desc = tileInfoDescFormatter(col, row, levelData.value.event.length)
                 break;
                 case "draw":
                     // Draw a tile on the canvas if selected
@@ -191,5 +200,9 @@ canvas{
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.info{
+    white-space: pre-line;
 }
 </style>
