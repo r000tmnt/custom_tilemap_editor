@@ -5,7 +5,9 @@
     >
       <v-card
         class="pa-2"
-        width="500"
+        width="800"
+        max-height="1000"
+        :scrollable="true"
         title="Create new event"
       >
         <v-form @submit.prevent>
@@ -26,11 +28,35 @@
                     </v-col>
                     <v-col cols="8">
                         <v-list>
-                            <v-list-item 
-                                v-for="(item, index) in selectedType"
-                                :key="index">
-                                {{ item }}
-                            </v-list-item>
+                            <template v-if="selectedType?.id !== undefined">
+                                <!-- item -->
+                                <v-btn>Add item</v-btn>
+                                <v-list-item 
+                                    v-for="(item, index) in selectedType"
+                                    :key="index">
+                                    <div class="d-flex">
+                                        <span>
+                                            {{ item.name }}
+                                        </span>
+                                        <span>
+                                            {{ item.amount }}
+                                        </span>
+                                        <span>-</span>
+                                        <span>+</span>
+                                        <v-icon icon="mdi-trash"></v-icon>
+                                    </div>
+                                </v-list-item>
+                            </template>
+
+                            <template v-if="selectedType?.background !== undefined">
+                                <!-- scene -->
+                                <v-btn>Add Scene</v-btn>
+                                <v-list-item 
+                                    v-for="(item, index) in selectedType"
+                                    :key="index">
+                                    {{ item }}
+                                </v-list-item>    
+                            </template>
                         </v-list>
                     </v-col>
                 </v-row>
@@ -59,7 +85,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import type { responseModel } from '~/types/index'
+import type { responseModel } from '~/types/level'
 
 const { base_url } = storeToRefs(useMainStore())
 const { createEventDialog } = storeToRefs(useDialogStore())
@@ -78,6 +104,7 @@ const triggerType = ref<string[]>([
 ])
 
 const selectedType = ref()
+const createType = ref<string>("")
 
 const rules = [
     (value: String | Number) => {
