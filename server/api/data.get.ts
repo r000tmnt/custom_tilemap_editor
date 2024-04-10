@@ -3,7 +3,7 @@ import fs from 'node:fs';
 
 export default defineEventHandler(() => {
     try{
-        const files = fs.readdirSync(`${process.env.DATA_PATH}`)
+        const files = fs.readdirSync(`${process.env.DATA_PATH}/level/`)
 
         console.log(files)
 

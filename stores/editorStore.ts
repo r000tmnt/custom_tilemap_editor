@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel, tileInfoModel } from '~/types/index'
+import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel, tileInfoModel } from '~/types/level'
 
 export const useEditorStore = defineStore('editor', () => {
     // Default template for levelData

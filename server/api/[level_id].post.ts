@@ -13,7 +13,7 @@ export default defineEventHandler( async(event) => {
             ${body}
         }`
 
-        const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}`,`${body.id}.js`)
+        const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/level/`,`${body.id}.js`)
 
         fs.appendFileSync(filePath, newLevel)
 

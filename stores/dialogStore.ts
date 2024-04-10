@@ -3,7 +3,6 @@ import { ref } from "vue";
 
 export const useDialogStore = defineStore('dialog', () => {
     const createLevelDialog = ref<boolean>(false)
-    const editLevelDialog = ref<boolean>(false)
     // On and off switch for event create dialog
     const createEventDialog = ref<boolean>(false)
     // On and off switch for event edit dialog
@@ -14,8 +13,6 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'level-create':
                 createLevelDialog.value = !createLevelDialog.value
             break;
-            case 'level-edit':
-                editLevelDialog.value = !editLevelDialog.value
             case 'event-create':
                 createEventDialog.value = !createEventDialog.value
             break;
@@ -28,7 +25,6 @@ export const useDialogStore = defineStore('dialog', () => {
 
     return {
         createLevelDialog,
-        editLevelDialog,
         createEventDialog,
         editEventDialog,
         toggleDialog

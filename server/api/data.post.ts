@@ -64,7 +64,7 @@ export default defineEventHandler( async(event) => {
             "difficulty": 1
         }`
 
-        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}`,`${id}.json`)
+        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}/level/`,`${id}.json`)
 
         fs.appendFileSync(filePath, newLevel)
 

@@ -7,7 +7,7 @@ export default defineEventHandler( async(event) => {
     console.log("body :>>> ", body)
 
     try{
-        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}`,`${body.id}.json`)
+        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}/level/`,`${body.id}.json`)
 
         fs.writeFileSync(filePath, JSON.stringify(body))
 
