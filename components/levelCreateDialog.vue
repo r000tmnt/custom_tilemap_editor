@@ -1,5 +1,5 @@
 <template>
-        <v-dialog
+    <v-dialog
       v-model="createLevelDialog"
       width="auto"
     >
@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { storeToRefs } from 'pinia'
-import type { responseModel } from '~/types/index'
+import type { responseModel } from '~/types/level'
 
 const { base_url } = storeToRefs(useMainStore())
 const { createLevelDialog } = storeToRefs(useDialogStore())
@@ -76,7 +76,7 @@ const rules = [
     (value: String | Number) => {
         if (value) return true
 
-        return 'You must enter a first name.'
+        return 'You must enter something.'
     },
 ]
 
@@ -88,7 +88,7 @@ const resetFormState = () => {
     formState.name = ""
     formState.width = 9
     formState.height = 16
-    toggleDialog('level')
+    toggleDialog('level-create')
 }
 
 // 新建關卡檔案
