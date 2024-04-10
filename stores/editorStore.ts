@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel } from '~/types/index'
+import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel, tileInfoModel } from '~/types/index'
 
 export const useEditorStore = defineStore('editor', () => {
     // Default template for levelData
@@ -40,7 +40,36 @@ export const useEditorStore = defineStore('editor', () => {
     const tiles = ref<HTMLImageElement[]>([])
     // Selected tile
     const selectedTile = ref<HTMLImageElement|null>(null)
+    // Details about the tile
+    const tileInfo = ref<tileInfoModel>({
+        x: 0,
+        y: 0,
+        events: []
+    })
+    
+    /**
+     * Get all the events asigned to the tile
+     * @param x - The x axis of the tile
+     * @param y - The y axis of the tile
+     * @returns The array of events
+     */
+    const getEventsonTile = (x: number, y: number) => {
+        const events = []
+    
+        for(let i=0, levelEvent = levelData.value.event; i < levelEvent.length; i++){
+            const eventPosition = levelEvent[i].position
+            if(eventPosition.x === x && eventPosition.y === y){
+                    events.push(levelEvent[i])
+            }
+        }
+    
+        return events
+    }
 
+    /**
+     * Initialize the editor
+     * @param id - The identifier of the levelData to find
+     */
     const initEditor = async(id: string) => {
         const mainStore = useMainStore()
         const request : levelDataResponse = await $fetch(`${mainStore.base_url}api/${id}`)
@@ -61,10 +90,17 @@ export const useEditorStore = defineStore('editor', () => {
         }  
     }
 
+    /**
+     * Push a new step to keep tracking
+     * @param step - A two dimentional array of number represend the tileMap
+     */
     const storeSteps = (step: number[][]) => {
         steps.value.push(step)
     }
 
+    /**
+     * Set the state of tileMap one step back
+     */
     const previousStep = () => {
         if(steps.value.length){
             steps.value.splice(steps.value.length - 1, 1)
@@ -74,6 +110,9 @@ export const useEditorStore = defineStore('editor', () => {
         }
     }
 
+    /**
+     * Save the latest changes of levelData
+     */
     const saveLevelData = async() => {
         try {
             const mainStore = useMainStore()
@@ -83,6 +122,9 @@ export const useEditorStore = defineStore('editor', () => {
         }
     }
 
+    /**
+     * Clear out the tracking steps
+     */
     const clearSteps = () => {
         steps.value.splice(0)
     }
@@ -94,10 +136,12 @@ export const useEditorStore = defineStore('editor', () => {
         mode,
         tiles,
         selectedTile,
+        tileInfo,
         initEditor,
         storeSteps,
         previousStep,
         clearSteps,
-        saveLevelData
+        saveLevelData,
+        getEventsonTile
     }
 })
