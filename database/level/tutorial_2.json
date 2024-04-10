@@ -13,6 +13,7 @@
             "phase": [ "conversation", "titleCard", "battle", "conversation", "end" ],
             "event": [],
             "enemy": [],
+            "player": [],
             "objective": {
                 "victory": {
                     "target": "enemy",
