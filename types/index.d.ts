@@ -60,6 +60,10 @@ declare global {
         scene: eventSceneModel[]
     }
 
+    interface tileInfoModel extends eventPositionModel {
+        events: levelEventModle[]
+    }
+
     interface characterReferenceModel {
         name?: string
         job?: string
@@ -99,5 +103,6 @@ export {
     levleDataModle, 
     levelEventModle ,
     levelAssetModle,
-    levelAssetResponseModel
+    levelAssetResponseModel,
+    tileInfoModel
 }
