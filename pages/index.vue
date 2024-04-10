@@ -1,7 +1,7 @@
 <template>
     <section id="wrapper">
         <h3>LEVELS</h3>
-        <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('level')">
+        <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('level-create')">
             CREATE
         </v-btn>
         <v-table id="dataTable">
@@ -46,7 +46,7 @@ definePageMeta({
 })
 
 import { onMounted, ref } from 'vue';
-import type { levelList } from '~/types/index';
+import type { levelList } from '~/types/level';
 import { storeToRefs } from 'pinia' 
 
 const { base_url } = storeToRefs(useMainStore())
