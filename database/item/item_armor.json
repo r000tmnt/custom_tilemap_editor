@@ -1,0 +1,17 @@
+[
+    {
+        "id": "armor_light_1",
+        "name": "Rag",
+        "type": 4,
+        "stackLimit": 1,
+        "position": "body",
+        "effect":{
+            "base_attribute":{
+                "def": 2
+            },
+            "desc": "A cloth in a poor condition"
+        },
+        "prefix": [],
+        "suffix": []
+    }
+]

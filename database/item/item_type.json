@@ -1,0 +1,30 @@
+[
+    {
+        "type": 0,
+        "category": "potion"
+    },
+    {
+        "type": 1,
+        "category": "currency"
+    },
+    {
+        "type": 2,
+        "category": "material"
+    },
+    {
+        "type": 3,
+        "category": "weapon"
+    },
+    {
+        "type": 4,
+        "category": "armor"
+    },
+    {
+        "type": 5,
+        "category": "accessory"
+    },
+    {
+        "type": 6,
+        "category": "key"
+    }
+]
