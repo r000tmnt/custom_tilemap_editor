@@ -12,7 +12,7 @@
             <v-container>
                 <v-row>
                     <v-text-field
-                        v-model="formState.codeName"
+                        v-model="formState.id"
                         :rules="rules"
                         label="Level id"
                     ></v-text-field>                    
@@ -67,7 +67,7 @@ const { toggleDialog } = useDialogStore()
 
 
 const formState = reactive({
-    codeName: "",
+    id: "",
     name: "",
     width: 9,
     height: 16
@@ -84,7 +84,7 @@ const emit = defineEmits(["triggerReload"])
 
 // 重設建立表單
 const resetFormState = () => {
-    formState.codeName = ""
+    formState.id = ""
     formState.name = ""
     formState.width = 9
     formState.height = 16
