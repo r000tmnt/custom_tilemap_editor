@@ -60,13 +60,20 @@ declare global {
         scene: eventSceneModel[]
     }
 
+    interface characterReferenceModel {
+        name?: string
+        job?: string
+        startingPoint: eventPositionModel
+    }
+
     interface levleDataModle {
         id: string
         name: string
         map: number[][]
         event: levelEventModle[]
         phase: string[]
-        enemy: []
+        enemy: characterReferenceModel[]
+        player: characterReferenceModel[]
         objective: {}
         audio: string
         assets: string[]
