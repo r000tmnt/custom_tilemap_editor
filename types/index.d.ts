@@ -55,7 +55,7 @@ declare global {
     }
 
     interface levelEventModle {
-        position: eventPositionModel[]
+        position: eventPositionModel
         item: eventItemModel[]
         scene: eventSceneModel[]
     }
