@@ -28,26 +28,21 @@
 
                 <!-- tilemap editor -->
                 <v-col cols="4">
-                    <v-container id="canvasContainer">
-                        <!-- map layer -->
-                        <canvas 
-                            ref="canvasRef"
-                            @mousedown="canvasEvent"
-                            @keydown="canvasKeyPressEvent"
-                        ></canvas>
-                    </v-container>
+                    <!-- map layer -->
+                    <canvas 
+                        ref="canvasRef"
+                        @mousedown="canvasEvent"
+                        @keydown="canvasKeyPressEvent"
+                    ></canvas>
                 </v-col>
 
                 <!-- tile info -->
                 <v-col cols="4">
-                    <v-card class="info" subtitle="Tile info" :text="`Width:${canvasRef?.width}\nHeight:${canvasRef?.height}\nX:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
-                        <v-card-actions>
-                            <v-btn color="primary">Add event</v-btn>
-                            <v-btn :color="(tileInfo.events.length)? 'secondary' : 'grey'" :disabled="tileInfo.events.length === 0">Manage events</v-btn>
-                        </v-card-actions>
-                    </v-card>
+                    <editor-tile-info :width="canvasRef?.width" :height="canvasRef?.height" />
                 </v-col>
-            </v-row>     
+            </v-row>  
+               
+            <event-create-dialog />
         </v-container>
     </section> 
 </template>
@@ -60,34 +55,17 @@ import { useRoute } from 'vue-router';
 // Components
 import editorToolBar from '../../components/editorToolBar.vue'
 import editorAssets from '../../components/editorAssets.vue'
+import editorTileInfo from '../../components/editorTileInfo.vue'
+import eventCreateDialog from '~/components/eventCreateDialog.vue';
 
 const route = useRoute()
-const { levelData, steps, tiles, selectedTile, mode } = storeToRefs(useEditorStore())
-const { initEditor, storeSteps, saveLevelData } = useEditorStore()
+const { levelData, steps, tiles, selectedTile, mode, tileInfo } = storeToRefs(useEditorStore())
+const { initEditor, storeSteps, saveLevelData, getEventsonTile } = useEditorStore()
 const { tileSize, base_url } = storeToRefs(useMainStore())
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
-
-const getEventsonTile = (x: number, y: number) => {
-    const events = []
-
-    for(let i=0, levelEvent = levelData.value.event; i < levelEvent.length; i++){
-        const eventPosition = levelEvent[i].position
-        if(eventPosition.x === x && eventPosition.y === y){
-                events.push(levelEvent[i])
-        }
-    }
-
-    return events
-}
-
-const tileInfo = ref({
-    x: 0,
-    y: 0,
-    events: getEventsonTile(0, 0)
-})
 
 const canvasEvent = (e: any) => {
     console.log('canvas mousedown event:>>> ', e)
@@ -345,12 +323,12 @@ onMounted(() => {
 
 <style scoped>
 .editor{
-    margin-top: 64px;
+    margin-top: 20px;
 }
 
-#canvasContainer{
+/* #canvasContainer{
     position: relative;
-}
+} */
 
 canvas{
     border: 1px solid gray;
