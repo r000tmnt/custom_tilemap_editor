@@ -6,7 +6,7 @@ export default defineEventHandler( async(event) => {
 
     console.log("body :>>> ", body)
 
-    const { codeName, name, width, height } = body
+    const { id, name, width, height } = body
 
     // console.log(`${process.env.URL}${folder}`)
 
@@ -23,7 +23,7 @@ export default defineEventHandler( async(event) => {
 
     try{
         const newLevel = `{
-            "id": "${codeName}",
+            "id": "${id}",
             "name": "${name}",
             "map": ${JSON.stringify(newMap)},
             "audio": "", 
@@ -37,6 +37,7 @@ export default defineEventHandler( async(event) => {
             "phase": [ "conversation", "titleCard", "battle", "conversation", "end" ],
             "event": [],
             "enemy": [],
+            "player": [],
             "objective": {
                 "victory": {
                     "target": "enemy",
@@ -63,7 +64,7 @@ export default defineEventHandler( async(event) => {
             "difficulty": 1
         }`
 
-        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}`,`${codeName}.json`)
+        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}`,`${id}.json`)
 
         fs.appendFileSync(filePath, newLevel)
 
