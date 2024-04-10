@@ -11,6 +11,7 @@ export const useEditorStore = defineStore('editor', () => {
         event: [],
         phase: [],
         enemy: [],
+        player: [],
         objective: {},
         audio: "",
         assets: [],
