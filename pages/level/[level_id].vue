@@ -64,7 +64,7 @@ import editorAssets from '../../components/editorAssets.vue'
 const route = useRoute()
 const { levelData, steps, tiles, selectedTile, mode } = storeToRefs(useEditorStore())
 const { initEditor, storeSteps, saveLevelData } = useEditorStore()
-const { tileSize } = storeToRefs(useMainStore())
+const { tileSize, base_url } = storeToRefs(useMainStore())
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
@@ -74,10 +74,9 @@ const getEventsonTile = (x: number, y: number) => {
     const events = []
 
     for(let i=0, levelEvent = levelData.value.event; i < levelEvent.length; i++){
-        for(let j=0, eventPosition = levelEvent[i].position; j < eventPosition.length; j++){
-            if(eventPosition[j].x === x && eventPosition[j].y === y){
+        const eventPosition = levelEvent[i].position
+        if(eventPosition.x === x && eventPosition.y === y){
                 events.push(levelEvent[i])
-            }
         }
     }
 
@@ -177,30 +176,24 @@ const changeLayuout = (v: any) => {
         switch(v.name){
             case 'map':{
                 // context.value.globalCompositeOperation = 'destination-over'
-                context.value.fillStyle = '#000000'
-                context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
-                // for(let i=0, map = levelData.value.map; i < map.length; i++){
-                //     for(let j=0; j < map[i].length; j++){
-                //         const type = map[i][j]
-                //         const x = (j+i) * tileSize.value
-                //         const y = i * tileSize.value
-                //         const event = getEventsonTile(x, y)
-                //         if(type === 2 || type === 3){
-                //             const img = document.createElement('img')
-                //             img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
-                //             // console.log(img)
-                //             tiles.value.push(img)
-                //             img.onload = () => {
-                //                 context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
-                //             }
-                //         }
+                // context.value.fillStyle = '#000000'
+                // context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
+                for(let i=0, map = levelData.value.map; i < map.length; i++){
+                    for(let j=0; j < map[i].length; j++){
+                        const type = map[i][j]
+                        const x = j * tileSize.value
+                        const y = i * tileSize.value
+                        const event = getEventsonTile(x, y)
+                        if(type !== 2 && type !== 3){
+                            context.value.clearRect(x, y, tileSize.value, tileSize.value)
+                        }
 
-                //         if(event.length){
-                //             context.value.fillStyle('yellow')
-                //             context.value.fillRect(x, y, tileSize.value, tileSize.value)
-                //         }
-                //     }
-                // }
+                        if(event.length){
+                            context.value.fillStyle('yellow')
+                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                        }
+                    }
+                }
             }
             break;
             case 'player':{
@@ -224,15 +217,27 @@ const changeLayuout = (v: any) => {
             }
             break;
             case 'event':{
-                for(let i=0, map = levelData.value.map; i < map.length; i++){
-                    for(let j=0; j < map[i].length; j++){
-                        const x = j * tileSize.value
-                        const y = i * tileSize.value
-                        const event = getEventsonTile(x, y)
+                for(let i=0, event = levelData.value.event; i < event.length; i++){
+                    if(Object.entries(event[i].position).length){
+                        const { x, y } = event[i].position
+                        const type = levelData.value.map[y][x]
+                        const asset = levelData.value.assets[type]
 
-                        if(event.length){
-                            context.value.fillStyle = '#000000'
-                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                        // Draw the tile covered by the yellow square
+                        if(asset.length){
+                            const tile = tiles.value.find(t => t.src.includes(asset))
+
+                            if(tile !== undefined){
+                                context.value.drawImage(tile, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+                            }else{
+                                const newTile = document.createElement('img')
+                                newTile.src = `${base_url}${asset.substring(1, asset.length)}`
+                                tiles.value.push(newTile)
+
+                                newTile.onload = () => {
+                                    context.value.drawImage(newTile, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+                                }
+                            }
                         }
                     }
                 }
@@ -248,36 +253,43 @@ const changeLayuout = (v: any) => {
                 for(let i=0, map = levelData.value.map; i < map.length; i++){
                     for(let j=0; j < map[i].length; j++){
                         const type = map[i][j]
-                        const x = (j+i) * tileSize.value
+                        const x = j * tileSize.value
                         const y = i * tileSize.value
                         const tile = levelData.value.assets[map[i][j]]
                         const event = getEventsonTile(x, y)
 
                         if(tile.length){
                             console.log("tile :>>", tile)
-                            const img = document.createElement('img')
-                            img.src = `/assets/images/env/${tile}`
-                            // console.log(img)
-                            tiles.value.push(img)
-                            img.onload = () => {
-                                context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+
+                            const asset = tiles.value.find(t => t.src.includes(tile))
+
+                            if(asset !== undefined){
+                                context.value.drawImage(asset, x, y, tileSize.value, tileSize.value)
+                            }else{
+                                const img = document.createElement('img')
+                                img.src = `/assets/images/env/${tile}`
+                                // console.log(img)
+                                // tiles.value.push(img)
+                                img.onload = () => {
+                                    context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+                                }
                             }
                         }
 
-                        // if(type === 2 || type === 3){
-                        //     const img = document.createElement('img')
-                        //     img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
-                        //     // console.log(img)
-                        //     tiles.value.push(img)
-                        //     img.onload = () => {
-                        //         context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
-                        //     }
-                        // }
+                        if(type === 2 || type === 3){
+                            const img = document.createElement('img')
+                            img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
+                            // console.log(img)
+                            // tiles.value.push(img)
+                            img.onload = () => {
+                                context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+                            }
+                        }
 
-                        // if(event.length){
-                        //     context.value.fillStyle('yellow')
-                        //     context.value.fillRect(x, y, tileSize.value, tileSize.value)
-                        // }
+                        if(event.length){
+                            context.value.fillStyle = 'yellow'
+                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                        }
                     }
                 }
             }
@@ -286,12 +298,17 @@ const changeLayuout = (v: any) => {
                 for(let i=0, map = levelData.value.map; i < map.length; i++){
                     for(let j=0; j < map[i].length; j++){
                         const type = map[i][j]
-                        const x = (j+i) * tileSize.value
+                        const x = j * tileSize.value
                         const y = i * tileSize.value
                         const event = getEventsonTile(x, y)
                         if(type === 2 || type === 3){
-                            context.value.fillStyle = '#000000'
-                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                            const img = document.createElement('img')
+                            img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
+                            // console.log(img)
+                            // tiles.value.push(img)
+                            img.onload = () => {
+                                context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+                            }
                         }
 
                         if(event.length){
@@ -303,16 +320,11 @@ const changeLayuout = (v: any) => {
             }
             break;
             case 'event':{
-                for(let i=0, map = levelData.value.map; i < map.length; i++){
-                    for(let j=0; j < map[i].length; j++){
-                        const x = (j+i) * tileSize.value
-                        const y = i * tileSize.value
-                        const event = getEventsonTile(x, y)
-
-                        if(event.length){
-                            context.value.fillStyle = '#000000'
-                            context.value.fillRect(x, y, tileSize.value, tileSize.value)
-                        }
+                for(let i=0, event = levelData.value.event; i < event.length; i++){
+                    if(Object.entries(event[i].position).length){
+                        const { x, y } = event[i].position
+                        context.value.fillStyle = 'yellow'
+                        context.value.fillRect(x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
                     }
                 }
             }
@@ -364,7 +376,7 @@ onMounted(() => {
                                 const img = document.createElement('img')
                                 img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
                                 // console.log(img)
-                                tiles.value.push(img)
+                                // tiles.value.push(img)
                                 img.onload = () => {
                                     context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
                                 }
@@ -389,6 +401,7 @@ onMounted(() => {
 
 canvas{
     border: 1px solid gray;
+    background: rgba(128, 128, 128, 0.5);
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
