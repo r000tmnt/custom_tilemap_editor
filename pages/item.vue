@@ -22,28 +22,33 @@
             </tr>
             </thead>
             <tbody>
-            <tr
-                v-for="(map, index) in levels"
-                :key="map"
-            >
-                <td>{{ map }}</td>
-                <td class="d-flex justify-end">
-                    <!-- <NuxtLink :to="`/level/${map}`">
-                        <v-btn class="mx-2 mt-2" prepend-icon="mdi-file-edit" color="secondary">
-                            EDIT
-                        </v-btn>                            
-                    </NuxtLink>
+                <template
+                    v-for="(value, name, index) in item"
+                    :key="name"
+                >
+                    <tr
+                        v-for="(val, pointer) in value"
+                                :key="pointer"
+                    >
+                        <td>{{ val.id }}</td>
+                        <td>{{ val.name }}</td>
+                        <td>{{ val?.effect?.desc }}</td>    
+                        <td class="d-flex justify-end" >
+                            <v-btn class="mx-2 mt-2" prepend-icon="mdi-file-edit" color="secondary">
+                                    EDIT
+                                </v-btn>   
 
-                    <v-btn class="mx-2 mt-2" prepend-icon="mdi-delete" color="danger" @click="deleteLevel(map, index)">
-                        DELETE
-                    </v-btn> -->
-                </td>
-            </tr>
+                            <v-btn class="mx-2 mt-2" prepend-icon="mdi-delete" color="danger" >
+                                DELETE
+                            </v-btn>
+                        </td>   
+                    </tr>
+                </template>
             </tbody>
         </v-table>        
     </section>
 
-    <level-create-dialog @trigger-reload="getLevels" />
+    <!-- <level-create-dialog @trigger-reload="getLevels" /> -->
 </template>
 
 <script setup lang="ts">
@@ -56,13 +61,13 @@ import { storeToRefs } from 'pinia'
 
 const { base_url } = storeToRefs(useMainStore())
 const { toggleDialog } = useDialogStore()
+const { item } = storeToRefs(useItemStore())
+const { getItemData } = useItemStore()
 
 console.log(base_url)
 
-const levels = ref<string[]>([])
-
 onMounted(async() => {
-    await getLevels()
+    await getItemData()
 })
 
 
