@@ -6,12 +6,12 @@ export default defineEventHandler(async(event) => {
 
     console.log("params:>>> ", params)
 
-    const { type } = params
+    const { item_type } = params
     
     const { DATA_PATH } = process.env
 
     try {
-        const filePath = path.join(process.cwd(), `${DATA_PATH}/item/`, `item_${type}.json`)
+        const filePath = path.join(process.cwd(), `${DATA_PATH}/item/`, `item_${item_type}.json`)
 
         const data = fs.readFileSync(filePath, { encoding: 'utf-8' })
 
