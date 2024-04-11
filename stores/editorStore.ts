@@ -72,7 +72,7 @@ export const useEditorStore = defineStore('editor', () => {
      */
     const initEditor = async(id: string) => {
         const mainStore = useMainStore()
-        const request : levelDataResponse = await $fetch(`${mainStore.base_url}api/${id}`)
+        const request : levelDataResponse = await $fetch(`${mainStore.base_url}api/level/${id}`)
 
         // Get all assets
         for(let [key, value] of Object.entries(assets.value)){
@@ -116,7 +116,7 @@ export const useEditorStore = defineStore('editor', () => {
     const saveLevelData = async() => {
         try {
             const mainStore = useMainStore()
-            await $fetch(`${mainStore.base_url}api/${levelData.value}`, { method: 'PATCH', body: levelData.value })
+            await $fetch(`${mainStore.base_url}api/level/${levelData.value}`, { method: 'PATCH', body: levelData.value })
         } catch (error) {
             console.error("saveLevelData error :>>>", error)
         }

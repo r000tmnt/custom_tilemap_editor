@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
 
@@ -264,6 +264,45 @@ const changeLayuout = (v: any) => {
     }
 }
 
+// First time rendering
+watch(() => levelData.value.map.length, (newMap) => {
+    for(let i=0, map = levelData.value.map; i < map.length; i++){
+        for(let j=0; j < map[i].length; j++){
+            const tile = levelData.value.assets[map[i][j]]
+            const type = map[i][j]
+            const x = j * tileSize.value
+            const y = i * tileSize.value
+            const event = getEventsonTile(x, y)
+            if(tile.length){
+                console.log("tile :>>", tile)
+                const img = document.createElement('img')
+                img.src = `/assets/images/env/${tile}`
+                // console.log(img)
+                tiles.value.push(img)
+                img.onload = () => {
+                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                }
+            }
+
+            if(event.length){
+                context.value.globalCompositeOperation = 'source-over'
+                context.value.fillStyle('yellow')
+                context.value.fillRect(x, y, tileSize.value, tileSize.value)
+            }
+
+            if(type === 2 || type === 3){
+                const img = document.createElement('img')
+                img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
+                // console.log(img)
+                tiles.value.push(img)
+                img.onload = () => {
+                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                }
+            }
+        }
+    }
+})
+
 onMounted(() => {
     console.log(route.params)
     if(route?.params?.level_id){
@@ -279,41 +318,41 @@ onMounted(() => {
                     context.value.fillStyle = '#000000'
                     context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
 
-                    for(let i=0, map = levelData.value.map; i < map.length; i++){
-                        for(let j=0; j < map[i].length; j++){
-                            const tile = levelData.value.assets[map[i][j]]
-                            const type = map[i][j]
-                            const x = j * tileSize.value
-                            const y = i * tileSize.value
-                            const event = getEventsonTile(x, y)
-                            if(tile.length){
-                                console.log("tile :>>", tile)
-                                const img = document.createElement('img')
-                                img.src = `/assets/images/env/${tile}`
-                                // console.log(img)
-                                tiles.value.push(img)
-                                img.onload = () => {
-                                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
-                                }
-                            }
+                    // for(let i=0, map = levelData.value.map; i < map.length; i++){
+                    //     for(let j=0; j < map[i].length; j++){
+                    //         const tile = levelData.value.assets[map[i][j]]
+                    //         const type = map[i][j]
+                    //         const x = j * tileSize.value
+                    //         const y = i * tileSize.value
+                    //         const event = getEventsonTile(x, y)
+                    //         if(tile.length){
+                    //             console.log("tile :>>", tile)
+                    //             const img = document.createElement('img')
+                    //             img.src = `/assets/images/env/${tile}`
+                    //             // console.log(img)
+                    //             tiles.value.push(img)
+                    //             img.onload = () => {
+                    //                 context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                    //             }
+                    //         }
 
-                            if(event.length){
-                                context.value.globalCompositeOperation = 'source-over'
-                                context.value.fillStyle('yellow')
-                                context.value.fillRect(x, y, tileSize.value, tileSize.value)
-                            }
+                    //         if(event.length){
+                    //             context.value.globalCompositeOperation = 'source-over'
+                    //             context.value.fillStyle('yellow')
+                    //             context.value.fillRect(x, y, tileSize.value, tileSize.value)
+                    //         }
 
-                            if(type === 2 || type === 3){
-                                const img = document.createElement('img')
-                                img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
-                                // console.log(img)
-                                tiles.value.push(img)
-                                img.onload = () => {
-                                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
-                                }
-                            }
-                        }
-                    }
+                    //         if(type === 2 || type === 3){
+                    //             const img = document.createElement('img')
+                    //             img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
+                    //             // console.log(img)
+                    //             tiles.value.push(img)
+                    //             img.onload = () => {
+                    //                 context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 }
             }
         })
