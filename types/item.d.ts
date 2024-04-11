@@ -11,6 +11,16 @@ interface effectDataModel {
     desc: string
 }
 
+interface materialEffectModel {
+    lv: number
+    type: number
+    target: string
+    amount: number
+    status: string
+    rate?: number
+    desc: string
+}
+
 interface keyEffectModel extends effectDataModel {
     enemy_number: number
     elite_rate: number
@@ -82,6 +92,14 @@ interface itemDataModel {
     suffix: string[]
 }
 
+interface materialDataModel {
+    id: string
+    name: string
+    stackLimit: number
+    type: number
+    effect: materialEffectModel
+}
+
 interface otherDataModel {
     id: string
     name: string
@@ -133,6 +151,20 @@ interface otherResponseModel extends responseModel {
     data: otherDataModel[]
 }
 
+interface materialResponseModel extends responseModel {
+    data: materialDataModel[]
+}
+
+interface itemState {
+    armor: armorDataModel[]
+    accessory: []
+    key: keyDataModel[]
+    material: materialDataModel[]
+    other: otherDataModel[]
+    potion: potionDataModel[]
+    weapon: weaponDataModel[]
+}
+
 export{
     itemTypeModel,
     armorDataModel,
@@ -140,10 +172,13 @@ export{
     keyDataModel,
     potionDataModel,
     otherDataModel,
+    materialDataModel,
     typeResponseModel,
     weaponResponseModel,
     armorResponseModel,
     keyResponseModel,
     potionResponseModel,
-    otherResponseModel
+    otherResponseModel,
+    materialResponseModel,
+    itemState
 }
