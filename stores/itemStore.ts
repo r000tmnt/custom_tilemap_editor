@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { armorDataModel, keyDataModel, materialDataModel, materialResponseModel, otherDataModel, otherResponseModel, potionDataModel, potionResponseModel, typeResponseModel, itemState, armorResponseModel, weaponResponseModel, keyResponseModel } from "~/types/item";
+import type { materialResponseModel, otherResponseModel, potionResponseModel, typeResponseModel, itemState, armorResponseModel, weaponResponseModel, keyResponseModel } from "~/types/item";
 
 export const useItemStore = defineStore('item', () => {
     const item = ref<itemState>({

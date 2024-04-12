@@ -7,7 +7,9 @@ export const useDialogStore = defineStore('dialog', () => {
     const createEventDialog = ref<boolean>(false)
     // On and off switch for event edit dialog
     const editEventDialog = ref<boolean>(false)
-
+    // On and off switch for event item selection
+    const eventItemDialog = ref<boolean>(false)
+    
     const toggleDialog = (type: string) => {
         switch(type){
             case 'level-create':
@@ -19,6 +21,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'event-edit':
                 editEventDialog.value = !editEventDialog.value
             break;
+            case 'event-item':
+                eventItemDialog.value = !eventItemDialog.value
+            break;
             // and more...
         }
     }
@@ -27,6 +32,7 @@ export const useDialogStore = defineStore('dialog', () => {
         createLevelDialog,
         createEventDialog,
         editEventDialog,
+        eventItemDialog,
         toggleDialog
     }
 })

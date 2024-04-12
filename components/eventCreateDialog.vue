@@ -13,7 +13,9 @@
         <v-form @submit.prevent>
             <v-container>
                 <v-row>
-                    Position: {{  `${tileInfo.events[tileInfo.events.length - 1].position.x}, ${tileInfo.events[tileInfo.events.length - 1].position.y}`  }}
+                    <v-col>
+                        Position: {{  `${tileInfo.events[tileInfo.events.length - 1].position.x}, ${tileInfo.events[tileInfo.events.length - 1].position.y}`  }}
+                    </v-col>
                 </v-row>
                 <v-row>
                     <v-col cols="4">
@@ -28,11 +30,11 @@
                     </v-col>
                     <v-col cols="8">
                         <v-list>
-                            <template v-if="selectedType?.id !== undefined">
+                            <template v-if="selectedType === 'ITEM'">
                                 <!-- item -->
-                                <v-btn>Add item</v-btn>
+                                <v-btn color="secondary">Add item</v-btn>
                                 <v-list-item 
-                                    v-for="(item, index) in selectedType"
+                                    v-for="(item, index) in editContentType"
                                     :key="index">
                                     <div class="d-flex">
                                         <span>
@@ -48,14 +50,20 @@
                                 </v-list-item>
                             </template>
 
-                            <template v-if="selectedType?.background !== undefined">
+                            <template v-if="selectedType === 'SCENE'">
                                 <!-- scene -->
-                                <v-btn>Add Scene</v-btn>
+                                <v-btn color="secondary">Add Scene</v-btn>
                                 <v-list-item 
-                                    v-for="(item, index) in selectedType"
+                                    v-for="(item, index) in editContentType"
                                     :key="index">
                                     {{ item }}
                                 </v-list-item>    
+                            </template>
+
+                            <template v-if="!selectedType.length" >
+                                <div style="text-align:center">
+                                    Chose a type to edit
+                                </div>
                             </template>
                         </v-list>
                     </v-col>
@@ -103,8 +111,8 @@ const triggerType = ref<string[]>([
     "defeat",
 ])
 
-const selectedType = ref()
-const createType = ref<string>("")
+const editContentType = ref()
+const selectedType = ref<string>("")
 
 const rules = [
     (value: String | Number) => {
@@ -115,11 +123,15 @@ const rules = [
 ]
 
 const selectType = (type:string) => {
+    selectedType.value = type
+
     if(type === 'ITEM'){
-        selectedType.value = tileInfo.value.events[tileInfo.value.events.length - 1].item
+        editContentType.value = tileInfo.value.events[tileInfo.value.events.length - 1].item
     }else{
-        selectedType.value = tileInfo.value.events[tileInfo.value.events.length - 1].scene
+        editContentType.value = tileInfo.value.events[tileInfo.value.events.length - 1].scene
     }
+
+    console.log(editContentType.value)
 }
 
 // const emit = defineEmits(["triggerReload"])
