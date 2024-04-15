@@ -2,6 +2,7 @@
     <v-dialog
       v-model="createEventDialog"
       width="auto"
+      persistent
     >
       <v-card
         class="pa-2"

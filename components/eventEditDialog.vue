@@ -2,6 +2,7 @@
     <v-dialog
       v-model="editEventDialog"
       width="auto"
+      persistent
     >
       <v-card
         class="pa-2"
