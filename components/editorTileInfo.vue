@@ -7,7 +7,10 @@
 
         <v-list>
             <v-list-item v-for="(event, index) in tileInfo.events" :key="index">
-                <v-card :text="`Item: ${event.item.length} Scene: ${event.scene.length} Trigger: ${event.trigger}`"></v-card>
+                <v-card hover>
+                    {{ `Item: ${event.item.length} Scene: ${event.scene.length} Trigger: ${event.trigger}` }}
+                    <v-btn size="x-small" variant="outlined" color="secondary" class="ml-auto" @click="editEvent(index)">EDIT</v-btn>
+                </v-card>
             </v-list-item>
         </v-list>
     </v-card>
@@ -29,7 +32,7 @@ const props = defineProps(
     }
 )
 
-const { tileInfo, levelData } = storeToRefs(useEditorStore())
+const { tileInfo, levelData, editEventIndex } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 
 const createEvent = (x: number, y: number) => {
@@ -43,5 +46,10 @@ const createEvent = (x: number, y: number) => {
     tileInfo.value.events.push(newEvent)
 
     toggleDialog("event-create")
+}
+
+const editEvent = (index: number) => {
+    editEventIndex.value = index
+    toggleDialog("event-edit")
 }
 </script>
