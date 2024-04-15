@@ -22,14 +22,17 @@
                 <!-- Max people on the screen, default to 1 -->
                 <v-text-field type="number"></v-text-field>
 
-                <!-- dialogue tree -->
+                <!-- Scene -->
                 <v-card-actions>
                     <v-btn>New dialogue</v-btn>
                 </v-card-actions>
-                <v-expansion-panels v-for="(scene, index) in tileInfo.events[tileInfo.events.length - 1].scene.length" :key="index">
+                <v-expansion-panels v-for="(scene, index) in tileInfo.events[tileInfo.events.length - 1].scene" :key="index">
                     <v-expansion-panel>
                         <v-expansion-panel-title>{{ `SCENE ${index + 1}` }}</v-expansion-panel-title>
-
+                        <!-- Dialogue -->
+                        <v-list v-for="(dialogue, index) in scene.dialogue">
+                            {{ dialogue.content }}
+                        </v-list>
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-container>

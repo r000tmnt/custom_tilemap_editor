@@ -90,12 +90,14 @@
     </v-dialog>
 
     <event-item-list @event-item-update="updateEvent"/>
+    <event-scene-create />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 
 import eventItemList from './eventItemList.vue';
+import eventSceneCreate from './eventSceneCreate.vue';
 
 const { editEventDialog } = storeToRefs(useDialogStore())
 const { tileInfo, levelData, editEventIndex } = storeToRefs(useEditorStore())
