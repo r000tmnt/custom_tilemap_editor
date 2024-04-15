@@ -43,6 +43,7 @@
             </v-row>  
                
             <event-create-dialog />
+            <event-edit-dialog />
         </v-container>
     </section> 
 </template>
@@ -57,6 +58,7 @@ import editorToolBar from '../../components/editorToolBar.vue'
 import editorAssets from '../../components/editorAssets.vue'
 import editorTileInfo from '../../components/editorTileInfo.vue'
 import eventCreateDialog from '~/components/eventCreateDialog.vue';
+import eventEditDialog from '~/components/eventEditDialog.vue';
 
 const route = useRoute()
 const { levelData, steps, tiles, selectedTile, mode, tileInfo } = storeToRefs(useEditorStore())
