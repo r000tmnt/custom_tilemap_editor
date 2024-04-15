@@ -98,7 +98,6 @@ import { storeToRefs } from 'pinia'
 
 import eventItemList from './eventItemList.vue';
 
-const { base_url } = storeToRefs(useMainStore())
 const { createEventDialog } = storeToRefs(useDialogStore())
 const { tileInfo, levelData } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
