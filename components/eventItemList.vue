@@ -87,11 +87,12 @@ const setItemAmount = (e: any, id:string) => {
     const exist = selectedItem.value.findIndex(s => s.id === id)
     if(exist >= 0){
         // Update selected item
-        selectedItem.value[exist] = e.target.value
+        selectedItem.value[exist].amount = Number(e.target.value)
     }
 }
 
 const updateEvent = () => {
+    console.log(selectedItem.value)
     emit("eventItemUpdate", selectedItem.value)
     toggleDialog("event-item")
 }
