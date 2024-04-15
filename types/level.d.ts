@@ -36,8 +36,7 @@ interface eventSceneModel{
     background: string
     audio: string
     people: number
-    dialogue: eventDialogueModel[],
-    trigger: string
+    dialogue: eventDialogueModel[]
 }
 
 interface eventPositionModel{
@@ -55,6 +54,7 @@ interface levelEventModle {
     position: eventPositionModel
     item: eventItemModel[]
     scene: eventSceneModel[]
+    trigger: string
 }
 
 interface tileInfoModel extends eventPositionModel {
@@ -100,5 +100,6 @@ export {
     levelEventModle ,
     levelAssetModle,
     levelAssetResponseModel,
-    tileInfoModel
+    tileInfoModel,
+    eventItemModel
 }
