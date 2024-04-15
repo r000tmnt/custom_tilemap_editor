@@ -32,7 +32,7 @@
                         <v-list>
                             <template v-if="selectedType === 'ITEM'">
                                 <!-- item -->
-                                <v-btn color="secondary">Add item</v-btn>
+                                <v-btn color="secondary" @click="toggleDialog('event-item')">Add item</v-btn>
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
@@ -81,7 +81,7 @@
                         <v-btn type="button" @click="resetFormState" block>Cancel</v-btn>
                     </v-col>
                     <v-col cols="6">
-                        <v-btn type="submit" color="primary" @click="createLevel" block>Submit</v-btn> 
+                        <v-btn type="submit" color="primary" @click="createEvent" block>Submit</v-btn> 
                     </v-col>                 
                 </v-row>
 
@@ -89,16 +89,20 @@
         </v-form>
       </v-card>
     </v-dialog>
+
+    <event-item-list @event-item-update="updateEvent"/>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import type { responseModel } from '~/types/level'
+
+import eventItemList from './eventItemList.vue';
 
 const { base_url } = storeToRefs(useMainStore())
 const { createEventDialog } = storeToRefs(useDialogStore())
-const { tileInfo } = storeToRefs(useEditorStore())
+const { tileInfo, levelData } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
+const { saveLevelData } = useEditorStore()
 
 const eventType = ref<string[]>([
     "ITEM",
@@ -134,28 +138,37 @@ const selectType = (type:string) => {
     console.log(editContentType.value)
 }
 
-// const emit = defineEmits(["triggerReload"])
+const updateEvent = (v: any) => {
+    console.log(v)
 
-// 重設建立表單
-const resetFormState = () => {
-    toggleDialog("event-create")
+    if(selectedType.value === 'ITEM'){
+        tileInfo.value.events[tileInfo.value.events.length - 1].item.concat(v)
+    }else{
+        tileInfo.value.events[tileInfo.value.events.length - 1].scene.concat(v)
+    }
+
+    editContentType.value.concat(v)
 }
 
-// 新建關卡檔案
-const createLevel = async() => {
+// const emit = defineEmits(["triggerReload"])
+
+// 重設表單
+const resetFormState = () => {
+    toggleDialog("event-create")
+    if(tileInfo.value.events.length){
+        tileInfo.value.events.splice(tileInfo.value.events.length - 1, 1)
+    }
+}
+
+// 新建關卡事件
+const createEvent = async() => {
     try{
-        const request : responseModel = await $fetch(`${base_url.value}api/data`, { method: "POST", body: {} })
-
-        console.log(request)
-
-        if(request.status === 200){
-            // emit("triggerReload")
-        }
-        
+        levelData.value.event = tileInfo.value.events
+        await saveLevelData()
+        resetFormState()
     }catch(err){
         console.log(err)
     }
-    resetFormState()
 }
 
 </script>
