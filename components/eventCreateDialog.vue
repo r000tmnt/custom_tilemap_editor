@@ -36,16 +36,14 @@
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
-                                    <div class="d-flex">
+                                    <div class="d-flex justify-space-between">
                                         <span>
-                                            {{ item.name }}
+                                            id: {{ item.id }}
                                         </span>
                                         <span>
-                                            {{ item.amount }}
+                                            Quantity: {{ item.amount }}
                                         </span>
-                                        <span>-</span>
-                                        <span>+</span>
-                                        <v-icon icon="mdi-trash"></v-icon>
+                                        <v-icon icon="mdi-trash-can" color="#F44336" @click="removeEventItem(index)"></v-icon>
                                     </div>
                                 </v-list-item>
                             </template>
@@ -125,6 +123,10 @@ const rules = [
     },
 ]
 
+const removeEventItem = (index: number) => {
+    editContentType.value.splice(index, 1)
+}
+
 const selectType = (type:string) => {
     selectedType.value = type
 
@@ -154,15 +156,24 @@ const updateEvent = (v: any) => {
 // 重設表單
 const resetFormState = () => {
     toggleDialog("event-create")
-    if(tileInfo.value.events.length){
-        tileInfo.value.events.splice(tileInfo.value.events.length - 1, 1)
-    }
+    //if(tileInfo.value.events.length){
+      //  tileInfo.value.events.splice(tileInfo.value.events.length - 1, 1)
+    //}
 }
 
 // 新建關卡事件
 const createEvent = async() => {
     try{
-        levelData.value.event = tileInfo.value.events
+        const pointer: number[] = []
+        levelData.value.event.forEach((e, index) => {
+            if(e.position.x === tileInfo.value.events[0].position.x && e.position.y === tileInfo.value.events[0].position.y){
+                pointer.push(index)
+            }
+        })
+
+        tileInfo.value.events.forEach((e, index) => {
+            levelData.value.event[pointer[index]] = e
+        })
         await saveLevelData()
         resetFormState()
     }catch(err){
