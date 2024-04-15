@@ -141,12 +141,12 @@ const updateEvent = (v: any) => {
     console.log(v)
 
     if(selectedType.value === 'ITEM'){
-        tileInfo.value.events[tileInfo.value.events.length - 1].item.concat(v)
+        tileInfo.value.events[tileInfo.value.events.length - 1].item = tileInfo.value.events[tileInfo.value.events.length - 1].item.concat(v)
     }else{
-        tileInfo.value.events[tileInfo.value.events.length - 1].scene.concat(v)
+        tileInfo.value.events[tileInfo.value.events.length - 1].scene = tileInfo.value.events[tileInfo.value.events.length - 1].scene.concat(v)
     }
 
-    editContentType.value.concat(v)
+    editContentType.value = editContentType.value.concat(v)
 }
 
 // const emit = defineEmits(["triggerReload"])
