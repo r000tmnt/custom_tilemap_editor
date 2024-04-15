@@ -9,6 +9,10 @@ export const useDialogStore = defineStore('dialog', () => {
     const editEventDialog = ref<boolean>(false)
     // On and off switch for event item selection
     const eventItemDialog = ref<boolean>(false)
+    // On and off switch for event scene create
+    const eventSceneCreateDialog = ref<boolean>(false)
+    // On and off switch for event scene edit
+    const eventSceneEditDialog = ref<boolean>(false)
     
     const toggleDialog = (type: string) => {
         switch(type){
@@ -24,6 +28,12 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'event-item':
                 eventItemDialog.value = !eventItemDialog.value
             break;
+            case 'scene-create':
+                eventSceneCreateDialog.value = !eventSceneCreateDialog.value
+            break;
+            case 'scene-edit':
+                eventSceneEditDialog.value = !eventSceneEditDialog.value
+            break;
             // and more...
         }
     }
@@ -33,6 +43,8 @@ export const useDialogStore = defineStore('dialog', () => {
         createEventDialog,
         editEventDialog,
         eventItemDialog,
+        eventSceneCreateDialog,
+        eventSceneEditDialog,
         toggleDialog
     }
 })
