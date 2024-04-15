@@ -36,16 +36,14 @@
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
-                                    <div class="d-flex">
+                                    <div class="d-flex justify-space-between">
                                         <span>
-                                            {{ item.name }}
+                                            id: {{ item.id }}
                                         </span>
                                         <span>
-                                            {{ item.amount }}
+                                            Quantity: {{ item.amount }}
                                         </span>
-                                        <span>-</span>
-                                        <span>+</span>
-                                        <v-icon icon="mdi-trash"></v-icon>
+                                        <v-icon icon="mdi-trash-can" color="#F44336" @click="removeEventItem(index)"></v-icon>
                                     </div>
                                 </v-list-item>
                             </template>
@@ -137,16 +135,20 @@ const selectType = (type:string) => {
     console.log(editContentType.value)
 }
 
+const removeEventItem = (index: number) => {
+    editContentType.value.splice(index, 1)
+}
+
 const updateEvent = (v: any) => {
     console.log(v)
 
     if(selectedType.value === 'ITEM'){
-        tileInfo.value.events[editEventIndex.value].item.concat(v)
+        tileInfo.value.events[editEventIndex.value].item = tileInfo.value.events[editEventIndex.value].item.concat(v)
     }else{
-        tileInfo.value.events[editEventIndex.value].scene.concat(v)
+        tileInfo.value.events[editEventIndex.value].scene = tileInfo.value.events[editEventIndex.value].scene.concat(v)
     }
 
-    editContentType.value.concat(v)
+    editContentType.value = editContentType.value.concat(v)
 }
 
 // const emit = defineEmits(["triggerReload"])
