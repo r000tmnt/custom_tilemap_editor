@@ -46,6 +46,9 @@ export const useEditorStore = defineStore('editor', () => {
         y: 0,
         events: []
     })
+
+    //
+    const editEventIndex = ref<number>(0)
     
     /**
      * Get all the events asigned to the tile
@@ -137,6 +140,7 @@ export const useEditorStore = defineStore('editor', () => {
         tiles,
         selectedTile,
         tileInfo,
+        editEventIndex,
         initEditor,
         storeSteps,
         previousStep,
