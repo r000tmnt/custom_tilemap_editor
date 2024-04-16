@@ -20,7 +20,10 @@
                 <v-select label="Background audio"></v-select>
 
                 <!-- Max people on the screen, default to 1 -->
-                <v-text-field type="number"></v-text-field>
+                <v-text-field 
+                  type="number" 
+                  v-model="newScene.people"
+                  @input="(e:any) => updatePeopleInScene(e)"></v-text-field>
 
                 <!-- Scene -->
                 <v-card-actions>
@@ -44,11 +47,24 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue'
-// import { eventDialogueModel } from '~/types/level'
+import type { eventSceneModel } from '~/types/level'
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
 const { tileInfo, editEventIndex } = storeToRefs(useEditorStore())
 
-// const newDialogues = ref<eventDialogueModel>([])
+const newScene = ref<eventSceneModel>({
+  background: "",
+  audio: "",
+  people: 1,
+  dialogue: []
+})
+
+const updatePeopleInScene = (e: any) => {
+  if(Number(e.target.value) <= 0){
+    newScene.value.people = 1
+  }else{
+    newScene.value.people = Number(e.target.value) 
+  }
+}
 </script>
