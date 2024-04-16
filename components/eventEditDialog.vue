@@ -51,7 +51,7 @@
 
                             <template v-if="selectedType === 'SCENE'">
                                 <!-- scene -->
-                                <v-btn color="secondary">Add Scene</v-btn>
+                                <v-btn color="secondary" @click="toggleDialog('scene-create')">Add Scene</v-btn>
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
