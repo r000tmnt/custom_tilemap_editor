@@ -18,11 +18,25 @@ export const useEditorStore = defineStore('editor', () => {
         difficulty: 0
     })
 
-    // ALL assets
+    // Image assets
     const assets = ref<levelAssetModle>({
+        bg: [],
         env: [],
         class: [],
-        mob: []
+        mob: [],
+        portrait: []
+    })
+
+    // Animation assets
+    // const animationAssets = ref({
+    //     class: [] as string[],
+    //     mob: [] as string[]
+    // })
+
+    // Audio assets
+    const audioAssets = ref({
+        general: [] as string[],
+        battle: [] as string[]
     })
 
     // Steps to reverse
@@ -77,9 +91,9 @@ export const useEditorStore = defineStore('editor', () => {
         const mainStore = useMainStore()
         const request : levelDataResponse = await $fetch(`${mainStore.base_url}api/level/${id}`)
 
-        // Get all assets
+        // Get image assets
         for(let [key, value] of Object.entries(assets.value)){
-            const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset?type=${key}`)
+            const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${key}`)
             console.log("request:>>> ", request_assets)
             if(request_assets.status === 200){
                 assets.value[key as keyof levelAssetModle] = request_assets.assets
@@ -92,6 +106,34 @@ export const useEditorStore = defineStore('editor', () => {
             levelData.value = request.data
         }  
     }
+
+    // Get audio assets
+    const getAudioAssets = async() => {
+        const mainStore = useMainStore()
+        const audioRequest : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/audio?type=general`)
+
+        console.log(audioRequest)
+
+        if(audioRequest.status === 200){
+          audioAssets.value.general = audioRequest.assets  
+        }
+    }
+
+    const getBattleAudioAsset = async() => {
+        const mainStore = useMainStore()
+        const audioRequest : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/audio?type=battle`)
+
+        console.log(audioRequest)
+
+        if(audioRequest.status === 200){
+          audioAssets.value.battle = audioRequest.assets  
+        }
+    }
+
+    // Get animation assets
+    // const getAnimationAssets = (type: string) => {
+
+    // }
 
     /**
      * Push a new step to keep tracking
@@ -146,6 +188,8 @@ export const useEditorStore = defineStore('editor', () => {
         previousStep,
         clearSteps,
         saveLevelData,
-        getEventsonTile
+        getEventsonTile,
+        getAudioAssets,
+        getBattleAudioAsset
     }
 })
