@@ -40,7 +40,8 @@
             <v-row>
                 <v-col>
                     <!-- audio (optional) -->
-                    <v-select></v-select>
+                    <v-select title="click audio"
+                        :items="audioAssets.general"></v-select>
                 </v-col>
             </v-row>
             <v-row>
@@ -68,6 +69,7 @@ import type { eventDialogueModel } from '~/types/level'
 
 const { dialougeCreatedialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
+const { audioAssets } = storeToRefs(useEditorStore())
 
 const fontSizes = ref<string[]>([
     "fontSize",
