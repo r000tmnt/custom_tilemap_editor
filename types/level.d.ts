@@ -87,9 +87,11 @@ interface levelAssetResponseModel{
 }
 
 interface levelAssetModle {
+    bg: string[]
     env: string[]
     class: string[]
     mob: string[]
+    portrait: string[]
 }
 
 export { 
@@ -101,5 +103,6 @@ export {
     levelAssetModle,
     levelAssetResponseModel,
     tileInfoModel,
-    eventItemModel
+    eventItemModel,
+    eventSceneModel
 }
