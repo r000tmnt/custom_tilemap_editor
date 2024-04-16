@@ -62,7 +62,7 @@
 
                 <!-- Scene -->
                 <v-card-actions>
-                    <v-btn>New dialogue</v-btn>
+                    <v-btn @click="toggleDialog('scene-dialogue-create')">New dialogue</v-btn>
                 </v-card-actions>
                 <v-expansion-panels v-for="(scene, index) in tileInfo.events[tileInfo.events.length - 1].scene" :key="index">
                     <v-expansion-panel>
@@ -75,10 +75,19 @@
                 </v-expansion-panels>
             </v-container>
         </v-form>
+        <v-row>
+          <v-col class="d-flex justify-end">
+                <v-btn color="grey" 
+                  @click="toggleDialog('scene-create')"
+                  class="mr-2">CANCEL</v-btn>
+                <v-btn color="primary">CONFIRM</v-btn>            
+          </v-col>
+        </v-row>
       </v-card>
     </v-dialog>
 
     <event-scene-bg-gallery @set-scene-back-ground="setBackground" />
+    <event-dialogue-create />
 </template>
 
 <script setup lang="ts">
@@ -87,6 +96,7 @@ import { ref, onBeforeMount } from 'vue'
 import type { eventSceneModel } from '~/types/level'
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
+import eventDialogueCreate from './eventDialogueCreate.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
