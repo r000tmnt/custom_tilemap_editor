@@ -183,6 +183,7 @@ export const useEditorStore = defineStore('editor', () => {
         selectedTile,
         tileInfo,
         editEventIndex,
+        audioAssets,
         initEditor,
         storeSteps,
         previousStep,
