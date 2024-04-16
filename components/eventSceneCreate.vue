@@ -14,10 +14,45 @@
         <v-form @submit.prevent>
             <v-container>
                 <!-- Background image file -->
-                <v-select label="Background image"></v-select>
+                <!-- <v-select label="Background image"
+                  :items="assets.bg"
+                  >
+                  <template v-slot:prepend-item>
+                    <v-file-input clearable 
+                      label="Upload file"
+                      accept="image/*"></v-file-input>
+                  </template>
+
+                  <template v-slot:item="{props, item}">
+                    <div class="d-flex">
+                      <v-img 
+                        v-bind="props"
+                        :src="item.raw"
+                        :width="56"
+                        :max-height="100"
+                        aspect-ratio="9/16"
+                        cover></v-img>
+                        <span>
+                          {{ item.raw.split("/")[4] }}
+                        </span>
+                    </div>
+                    
+
+                  </template>
+                </v-select> -->
+                <v-btn @click="toggleDialog('scene-bg')">
+                  {{ `Background image ${newScene.background.length? newScene.background: ''}` }}
+                </v-btn>
 
                 <!-- Aduio file -->
-                <v-select label="Background audio"></v-select>
+                <v-select label="Background audio"
+                :items="audioAssets.general">
+                  <template v-slot:prepend-item>
+                      <v-file-input clearable 
+                        label="Upload file"
+                        accept="audio/*"></v-file-input>
+                  </template>
+                </v-select>
 
                 <!-- Max people on the screen, default to 1 -->
                 <v-text-field 
@@ -42,16 +77,21 @@
         </v-form>
       </v-card>
     </v-dialog>
+
+    <event-scene-bg-gallery @set-scene-back-ground="setBackground" />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import type { eventSceneModel } from '~/types/level'
+
+import eventSceneBgGallery from './eventSceneBgGallery.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
-const { tileInfo, editEventIndex } = storeToRefs(useEditorStore())
+const { tileInfo, editEventIndex, audioAssets, assets } = storeToRefs(useEditorStore())
+const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
 
 const newScene = ref<eventSceneModel>({
   background: "",
@@ -67,4 +107,13 @@ const updatePeopleInScene = (e: any) => {
     newScene.value.people = Number(e.target.value) 
   }
 }
+
+const setBackground = (path: string) => {
+  newScene.value.background = path
+}
+
+onBeforeMount(async() => {
+  await getAudioAssets()
+  await getBattleAudioAsset()
+})
 </script>
