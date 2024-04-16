@@ -104,5 +104,6 @@ export {
     levelAssetResponseModel,
     tileInfoModel,
     eventItemModel,
-    eventSceneModel
+    eventSceneModel,
+    eventDialogueModel
 }
