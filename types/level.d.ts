@@ -13,7 +13,7 @@ interface optionEffectModle {
     target: string
     attribute: string
     type?: number
-    value: number
+    value: number | string
 }
 
 interface dialogueOptionModle {
@@ -95,6 +95,11 @@ interface levelAssetModle {
     portrait: string[]
 }
 
+interface effectItemReferenceModel {
+    id: string,
+    type: number
+}
+
 export { 
     responseModel,
     levelList,
@@ -107,5 +112,7 @@ export {
     eventItemModel,
     eventSceneModel,
     eventDialogueModel,
-    dialogueOptionModle
+    dialogueOptionModle,
+    optionEffectModle,
+    effectItemReferenceModel
 }
