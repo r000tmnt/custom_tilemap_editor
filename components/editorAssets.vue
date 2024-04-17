@@ -2,7 +2,6 @@
     <v-item-group class="d-flex" selected-class="selected">
         <v-item
             v-for="(img, index) in assets.env"
-            class="tile"
             :key="img" 
             v-slot="{ isSelected, selectedClass, toggle }"
             @group:selected="(v) => selectTile(v, index)">
@@ -59,10 +58,6 @@ const selectTile = (v:any, index:number) => {
 </script>
 
 <style scoped>
-.tile{
-    padding: 0;
-}
-
 .selected{
     border: 1px solid yellow;
 }
