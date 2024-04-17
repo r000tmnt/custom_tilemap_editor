@@ -11,47 +11,53 @@
             :scrollable="true"
             title="Create new event"
         >
-            <v-row>
-                <v-col>
-                    <!-- The person to show on the screen -->
-                    <v-select title="Person"></v-select>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <!-- font color -->
-                    <v-color-picker v-model="newDialogue.style"></v-color-picker>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <!-- font size -->
-                    <v-select title="Font size"
-                        v-model="newDialogue.size"
-                        :items="fontSizes"></v-select>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <!-- content -->
-                    <v-textarea label="Content"></v-textarea>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <!-- audio (optional) -->
-                    <v-select title="click audio"
-                        :items="audioAssets.general"></v-select>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col class="d-flex justify-end">
-                    <v-btn color="grey" 
-                        @click="toggleDialog('scene-dialogue-create')"
-                        class="mr-2">CANCEL</v-btn>
-                    <v-btn color="primary">CONFIRM</v-btn>
-                </v-col>
-            </v-row>
+            <v-form ref="formRef">
+                <v-row>
+                    <v-col>
+                        <!-- The person to show on the screen -->
+                        <v-select title="Person"
+                            :rules="selectRules"></v-select>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <!-- font color -->
+                        <v-color-picker v-model="newDialogue.style"
+                            :rules="inputRules"></v-color-picker>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <!-- font size -->
+                        <v-select title="Font size"
+                            v-model="newDialogue.size"
+                            :items="fontSizes"></v-select>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <!-- content -->
+                        <v-textarea label="Content"
+                            :rules="selectRules"></v-textarea>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <!-- audio (optional) -->
+                        <v-select title="click audio"
+                            :items="audioAssets.general"></v-select>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col class="d-flex justify-end">
+                        <v-btn color="grey" 
+                            @click="toggleDialog('scene-dialogue-create')"
+                            class="mr-2">CANCEL</v-btn>
+                        <v-btn color="primary" @click="createDialog">CONFIRM</v-btn>
+                    </v-col>
+                </v-row>                
+            </v-form>
+
         </v-card>
     </v-dialog>
 </template>
@@ -64,6 +70,8 @@ import type { eventDialogueModel } from '~/types/level'
 const { dialougeCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { audioAssets } = storeToRefs(useEditorStore())
+
+const emit = defineEmits(["createDialogue"])
 
 const fontSizes = ref<string[]>([
     "fontSize",
@@ -78,4 +86,30 @@ const newDialogue = ref<eventDialogueModel>({
     content: "",
     audio: []
 })
+
+const formRef = ref()
+
+const selectRules = [
+    (value: any) => {
+        if(value) return true
+
+        return 'You must make a choice'
+    }
+]
+
+const inputRules = [
+    (value: any) => {
+        if(value) return true
+
+        return 'You must type something'
+    }
+]
+
+const createDialog = () => {
+    formRef.value?.validate((result: any) => {
+        if(result.valid){
+            emit("createDialogue", newDialogue)
+        }
+    })
+}
 </script>
