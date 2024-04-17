@@ -11,7 +11,7 @@
         :scrollable="true"
         title="Create new event"
       >
-        <v-form @submit.prevent>
+        <v-form>
             <v-container>
                 <v-row>
                     <v-col>
@@ -166,21 +166,23 @@ const resetFormState = () => {
 
 // 新建關卡事件
 const createEvent = async() => {
-    try{
-        const pointer: number[] = []
-        levelData.value.event.forEach((e, index) => {
-            if(e.position.x === tileInfo.value.events[0].position.x && e.position.y === tileInfo.value.events[0].position.y){
-                pointer.push(index)
-            }
-        })
+    if(tileInfo.value.events[tileInfo.value.events.length - 1].item.length || tileInfo.value.events[tileInfo.value.events.length - 1].scene.length){
+        try{
+            const pointer: number[] = []
+            levelData.value.event.forEach((e, index) => {
+                if(e.position.x === tileInfo.value.events[0].position.x && e.position.y === tileInfo.value.events[0].position.y){
+                    pointer.push(index)
+                }
+            })
 
-        tileInfo.value.events.forEach((e, index) => {
-            levelData.value.event[pointer[index]] = e
-        })
-        await saveLevelData()
-        resetFormState()
-    }catch(err){
-        console.log(err)
+            tileInfo.value.events.forEach((e, index) => {
+                levelData.value.event[pointer[index]] = e
+            })
+            await saveLevelData()
+            resetFormState()
+        }catch(err){
+            console.log(err)
+        }         
     }
 }
 
