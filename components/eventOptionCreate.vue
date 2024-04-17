@@ -11,52 +11,64 @@
         :scrollable="true"
         title="Create event option"
       >
-        <v-row>
-            <v-col>
-                <!-- Value -->
-                <v-text-field label="Value" v-model="newOption.value"></v-text-field>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <!-- Content -->
-                <v-textarea label="Response" v-model="newOption.content"></v-textarea>
-            </v-col>
-        </v-row>
-        <!-- <v-row>
-            <v-col>
-                <v-select title="click audio"
-                        :items="audioAssets.general"></v-select>
-            </v-col>
-        </v-row> -->
-        <v-row>
-            <v-col>
-                <!-- Effect -->
-                <v-btn @click="toggleDialog('option-effect-create')">Add effect</v-btn>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col class="d-flex justify-end">
-                <v-btn color="grey" class=mr-2 @click="toggleDialog('dialogue-option-create')">CANCEL</v-btn>
-                <v-btn color="primary">CONFIRM</v-btn>
-            </v-col>
-        </v-row>      
+        <v-form ref="formRef">
+            <v-row>
+                <v-col>
+                    <!-- Value -->
+                    <v-text-field label="Value" 
+                        v-model="newOption.value"
+                        :rules="inputRules"></v-text-field>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <!-- Content -->
+                    <v-textarea label="Response" 
+                        v-model="newOption.content"
+                        :rules="inputRules"></v-textarea>
+                </v-col>
+            </v-row>
+            <!-- <v-row>
+                <v-col>
+                    <v-select title="click audio"
+                            :items="audioAssets.general"></v-select>
+                </v-col>
+            </v-row> -->
+            <v-row>
+                <v-col>
+                    <!-- Effect -->
+                    <v-btn @click="toggleDialog('option-effect-create')">Add effect</v-btn>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col class="d-flex justify-end">
+                    <v-btn color="grey" class=mr-2 @click="toggleDialog('dialogue-option-create')">CANCEL</v-btn>
+                    <v-btn color="primary" @click="createOption">CONFIRM</v-btn>
+                </v-col>
+            </v-row>               
+        </v-form>
+   
       </v-card>
     </v-dialog>
 
-    <event-option-effect />
+    <event-option-effect @create-option-effect="confirmEffect" />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue'
-import type { dialogueOptionModle } from '~/types/level'
+import type { dialogueOptionModle, optionEffectModle } from '~/types/level'
 
 import eventOptionEffect from './eventOptionEffect.vue';
 
 // const { audioAssets } = storeToRefs(useEditorStore())
 const { optionCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
+const { inputRules } = storeToRefs(useRuleStore())
+
+const emit = defineEmits(["createOption"])
+
+const formRef = ref()
 
 const newOption = ref<dialogueOptionModle>({
     value: "",
@@ -65,4 +77,17 @@ const newOption = ref<dialogueOptionModle>({
     content: "",
     effect: []
 })
+
+const confirmEffect = (v: optionEffectModle) => {
+    newOption.value.effect.push(v)
+}
+
+const createOption = () => {
+    formRef.value?.validate((result: any) => {
+        if(result.valid){
+            emit("createOption", newOption)
+            toggleDialog("'dialogue-option-create'")
+        }
+    })
+}
 </script>
