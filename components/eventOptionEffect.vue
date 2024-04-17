@@ -98,6 +98,7 @@ const { optionEffectDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { levelData } = storeToRefs(useEditorStore())
 const { item } = storeToRefs(useItemStore())
+const { selectRules, inputRules } = storeToRefs(useRuleStore())
 
 const emit = defineEmits(["createOptionEffect"])
 
@@ -147,22 +148,6 @@ const newEffect = ref<optionEffectModle>({
     value: ""
 })
 
-const selectRules = [
-    (value: any) => {
-        if(value) return true
-
-        return 'You must make a choice'
-    }
-]
-
-const inputRules = [
-    (value: any) => {
-        if(value) return true
-
-        return 'You must provide a number'
-    }
-]
-
 const effectValueUpdate = (v: any) => {
     console.log(v)
 }
@@ -173,6 +158,7 @@ const createEffect = () => {
 
         if(result.valid){
             emit("createOptionEffect", newEffect)
+            toggleDialog("option-effect-create")
         }
     })
 }

@@ -70,6 +70,7 @@ import type { eventDialogueModel } from '~/types/level'
 const { dialougeCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { audioAssets } = storeToRefs(useEditorStore())
+const { selectRules, inputRules } = storeToRefs(useRuleStore())
 
 const emit = defineEmits(["createDialogue"])
 
@@ -89,26 +90,11 @@ const newDialogue = ref<eventDialogueModel>({
 
 const formRef = ref()
 
-const selectRules = [
-    (value: any) => {
-        if(value) return true
-
-        return 'You must make a choice'
-    }
-]
-
-const inputRules = [
-    (value: any) => {
-        if(value) return true
-
-        return 'You must type something'
-    }
-]
-
 const createDialog = () => {
     formRef.value?.validate((result: any) => {
         if(result.valid){
             emit("createDialogue", newDialogue)
+            toggleDialog("scene-dialogue-create")
         }
     })
 }
