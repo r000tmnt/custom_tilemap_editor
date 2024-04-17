@@ -12,6 +12,7 @@ interface levelList extends responseModel {
 interface optionEffectModle {
     target: string
     attribute: string
+    type?: number
     value: number
 }
 
@@ -105,5 +106,6 @@ export {
     tileInfoModel,
     eventItemModel,
     eventSceneModel,
-    eventDialogueModel
+    eventDialogueModel,
+    dialogueOptionModle
 }
