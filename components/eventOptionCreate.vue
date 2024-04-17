@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-      v-model="eventSceneCreateDialog"
+      v-model="optionCreateDialog"
       width="auto"
       persistent
     >
@@ -10,30 +10,55 @@
         max-height="1000"
         :scrollable="true"
         title="Create event option"
-      ></v-card>
+      >
         <v-row>
             <v-col>
                 <!-- Value -->
-                <v-text-field label="Value"></v-text-field>
+                <v-text-field label="Value" v-model="newOption.value"></v-text-field>
             </v-col>
         </v-row>
         <v-row>
             <v-col>
                 <!-- Content -->
-                <v-textarea label="Content"></v-textarea>
+                <v-textarea label="Response" v-model="newOption.content"></v-textarea>
             </v-col>
         </v-row>
-        <v-row>
+        <!-- <v-row>
             <v-col>
-                <!-- audio (optional) -->
                 <v-select title="click audio"
                         :items="audioAssets.general"></v-select>
             </v-col>
+        </v-row> -->
+        <v-row>
+            <v-col>
+                <!-- Effect -->
+                <v-btn>Add effect</v-btn>
+            </v-col>
         </v-row>
+        <v-row>
+            <v-col class="d-flex justify-end">
+                <v-btn color="grey" class=mr-2 @click="toggleDialog('dialogue-option-create')">CANCEL</v-btn>
+                <v-btn color="primary">CONFIRM</v-btn>
+            </v-col>
+        </v-row>      
+      </v-card>
     </v-dialog>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-const { audioAssets } = storeToRefs(useEditorStore())
+import { ref } from 'vue'
+import type { dialogueOptionModle } from '~/types/level'
+
+// const { audioAssets } = storeToRefs(useEditorStore())
+const { optionCreateDialog } = storeToRefs(useDialogStore())
+const { toggleDialog } = useDialogStore()
+
+const newOption = ref<dialogueOptionModle>({
+    value: "",
+    style: "#ffffff",
+    size: "",
+    content: "",
+    effect: []
+})
 </script>
