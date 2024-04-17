@@ -1,4 +1,12 @@
 <template>
+    <v-file-input
+    label="Create asset"
+    multiple
+    accept="image/png"
+    :rules="fileRules"
+    @update:model-value="getFiles"
+    ></v-file-input>
+    <v-tabs></v-tabs>
     <v-item-group class="d-flex" selected-class="selected">
         <v-item
             v-for="(img, index) in assets.env"
@@ -30,9 +38,12 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 const { levelData, assets, tiles, selectedTile } = storeToRefs(useEditorStore())
 const { tileSize, base_url } = storeToRefs(useMainStore())
+const { fileRules } = storeToRefs(useRuleStore())
+
 
 // Keep the selected tile
 const selectTile = (v:any, index:number) => {
@@ -54,6 +65,14 @@ const selectTile = (v:any, index:number) => {
             selectedTile.value = tiles.value[index]
         }
     }
+}
+
+const getFiles = (files: File[]) => {
+    console.log("files :>>>", files)
+
+    // files.forEach(f => {
+    //     levelData.value.assets.push()
+    // })
 }
 </script>
 
