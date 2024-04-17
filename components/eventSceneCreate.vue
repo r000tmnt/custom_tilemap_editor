@@ -63,6 +63,8 @@
                 <!-- Scene -->
                 <v-card-actions>
                     <v-btn @click="toggleDialog('scene-dialogue-create')">New dialogue</v-btn>
+
+                    <v-btn @click="toggleDialog('dialogue-option-create')">Create option</v-btn>
                 </v-card-actions>
                 <v-expansion-panels v-for="(scene, index) in tileInfo.events[tileInfo.events.length - 1].scene" :key="index">
                     <v-expansion-panel>
@@ -88,6 +90,7 @@
 
     <event-scene-bg-gallery @set-scene-back-ground="setBackground" />
     <event-dialogue-create />
+    <event-option-create />
 </template>
 
 <script setup lang="ts">
@@ -97,6 +100,7 @@ import type { eventSceneModel } from '~/types/level'
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
 import eventDialogueCreate from './eventDialogueCreate.vue';
+import eventOptionCreate from './eventOptionCreate.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
