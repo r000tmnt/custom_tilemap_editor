@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-      v-model="dialougeCreatedialog"
+      v-model="dialougeCreateDialog"
       width="auto"
       persistent
     >
@@ -45,12 +45,6 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-col>
-                    <!-- option (optional) -->
-                    <v-btn>Create option</v-btn>
-                </v-col>
-            </v-row>
-            <v-row>
                 <v-col class="d-flex justify-end">
                     <v-btn color="grey" 
                         @click="toggleDialog('scene-dialogue-create')"
@@ -67,7 +61,7 @@ import { storeToRefs } from 'pinia';
 import { ref } from 'vue'
 import type { eventDialogueModel } from '~/types/level'
 
-const { dialougeCreatedialog } = storeToRefs(useDialogStore())
+const { dialougeCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { audioAssets } = storeToRefs(useEditorStore())
 
@@ -82,7 +76,6 @@ const newDialogue = ref<eventDialogueModel>({
     style: "#ffffff",
     size: "",
     content: "",
-    audio: [],
-    option: []
+    audio: []
 })
 </script>
