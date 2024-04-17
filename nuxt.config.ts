@@ -26,10 +26,5 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
-  },
-  runtimeConfig: {
-    public:{
-      URL: "http://localhost:3000/"
-    }
   }
 })
