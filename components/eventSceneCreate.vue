@@ -11,7 +11,7 @@
         :scrollable="true"
         title="Create new event"
       >
-        <v-form @submit.prevent>
+        <v-form ref="formRef">
             <v-container>
                 <!-- Background image file -->
                 <!-- <v-select label="Background image"
@@ -46,7 +46,8 @@
 
                 <!-- Aduio file -->
                 <v-select label="Background audio"
-                :items="audioAssets.general">
+                  :items="audioAssets.general"
+                  :rules="selectRules">
                   <template v-slot:prepend-item>
                       <v-file-input clearable 
                         label="Upload file"
@@ -58,7 +59,8 @@
                 <v-text-field 
                   type="number" 
                   v-model="newScene.people"
-                  @input="(e:any) => updatePeopleInScene(e)"></v-text-field>
+                  @input="(e:any) => updatePeopleInScene(e)"
+                  :rules="inputRules"></v-text-field>
 
                 <!-- Scene -->
                 <v-card-actions>
@@ -82,21 +84,21 @@
                 <v-btn color="grey" 
                   @click="toggleDialog('scene-create')"
                   class="mr-2">CANCEL</v-btn>
-                <v-btn color="primary">CONFIRM</v-btn>            
+                <v-btn color="primary" @click="createScene">CONFIRM</v-btn>            
           </v-col>
         </v-row>
       </v-card>
     </v-dialog>
 
     <event-scene-bg-gallery @set-scene-back-ground="setBackground" />
-    <event-dialogue-create />
-    <event-option-create />
+    <event-dialogue-create @create-dialogue="confirmDialogue" />
+    <event-option-create @create-option="confirmOption" />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref, onBeforeMount } from 'vue'
-import type { eventSceneModel } from '~/types/level'
+import type { eventSceneModel, dialogueOptionModle, eventDialogueModel } from '~/types/level'
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
 import eventDialogueCreate from './eventDialogueCreate.vue';
@@ -105,7 +107,12 @@ import eventOptionCreate from './eventOptionCreate.vue';
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
 const { tileInfo, editEventIndex, audioAssets, assets } = storeToRefs(useEditorStore())
+const { selectRules, inputRules } = storeToRefs(useRuleStore())
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
+
+const emit = defineEmits(["createScene"])
+
+const formRef = ref()
 
 const newScene = ref<eventSceneModel>({
   background: "",
@@ -124,6 +131,29 @@ const updatePeopleInScene = (e: any) => {
 
 const setBackground = (path: string) => {
   newScene.value.background = path
+}
+
+const confirmDialogue = (v: eventDialogueModel) => {
+  newScene.value.dialogue.push(v)
+}
+
+const confirmOption = (v: dialogueOptionModle) => {
+  newScene.value.dialogue.push({
+    person: "",
+    style: "",
+    size: "",
+    content: "",
+    option: [ v ]
+  })
+}
+
+const createScene = () => {
+  formRef.value?.validate((result: any) => {
+    if(result.valid){
+      emit("createScene", newScene)
+      toggleDialog("scene-create")
+    }
+  })
 }
 
 onBeforeMount(async() => {
