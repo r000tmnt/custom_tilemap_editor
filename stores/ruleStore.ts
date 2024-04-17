@@ -26,9 +26,18 @@ export const useRuleStore = defineStore('rule', () => {
         }
     ]
 
+    const fileRules = [
+        (value: any) => {
+            if(value.length) return true
+    
+            return 'You must select an image'
+        }
+    ]
+
     return {
         selectRules,
         inputRules,
-        numberRules
+        numberRules,
+        fileRules
     }
 })
