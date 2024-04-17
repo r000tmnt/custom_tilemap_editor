@@ -16,7 +16,9 @@ export const useDialogStore = defineStore('dialog', () => {
     // On and off switch for background images
     const bgAssetsGalleryDialog = ref<boolean>(false)
     // On and off switch for event dialogue create
-    const dialougeCreatedialog = ref<boolean>(false)
+    const dialougeCreateDialog = ref<boolean>(false)
+    // On and off switch for event dialogue option create
+    const optionCreateDialog = ref<boolean>(false)
     
     const toggleDialog = (type: string) => {
         switch(type){
@@ -42,7 +44,10 @@ export const useDialogStore = defineStore('dialog', () => {
                 bgAssetsGalleryDialog.value = !bgAssetsGalleryDialog.value
             break;
             case 'scene-dialogue-create':
-                dialougeCreatedialog.value = !dialougeCreatedialog.value
+                dialougeCreateDialog.value = !dialougeCreateDialog.value
+            break;
+            case 'dialogue-option-create':
+                optionCreateDialog.value = !optionCreateDialog.value
             break;
             // and more...
         }
@@ -56,7 +61,8 @@ export const useDialogStore = defineStore('dialog', () => {
         eventSceneCreateDialog,
         eventSceneEditDialog,
         bgAssetsGalleryDialog,
-        dialougeCreatedialog,
+        dialougeCreateDialog,
+        optionCreateDialog,
         toggleDialog
     }
 })
