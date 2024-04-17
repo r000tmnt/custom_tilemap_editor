@@ -32,7 +32,7 @@
         <v-row>
             <v-col>
                 <!-- Effect -->
-                <v-btn>Add effect</v-btn>
+                <v-btn @click="toggleDialog('option-effect-create')">Add effect</v-btn>
             </v-col>
         </v-row>
         <v-row>
@@ -43,12 +43,16 @@
         </v-row>      
       </v-card>
     </v-dialog>
+
+    <event-option-effect />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue'
 import type { dialogueOptionModle } from '~/types/level'
+
+import eventOptionEffect from './eventOptionEffect.vue';
 
 // const { audioAssets } = storeToRefs(useEditorStore())
 const { optionCreateDialog } = storeToRefs(useDialogStore())
