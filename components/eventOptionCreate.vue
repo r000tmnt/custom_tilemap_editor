@@ -64,7 +64,7 @@ import eventOptionEffect from './eventOptionEffect.vue';
 // const { audioAssets } = storeToRefs(useEditorStore())
 const { optionCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-const { inputRules } = storeToRefs(useRuleStore())
+const { inputRules } = useRuleStore()
 
 const emit = defineEmits(["createOption"])
 

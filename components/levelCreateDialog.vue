@@ -13,21 +13,21 @@
                 <v-row>
                     <v-text-field
                         v-model="formState.id"
-                        :rules="rules"
+                        :rules="inputRules"
                         label="Level id"
                     ></v-text-field>                    
                 </v-row>
                 <v-row>
                     <v-text-field
                         v-model="formState.name"
-                        :rules="rules"
+                        :rules="inputRules"
                         label="Level name"
                     ></v-text-field>                    
                 </v-row>
                 <v-row>
                     <v-text-field
                         v-model="formState.width"
-                        :rules="rules"
+                        :rules="inputRules"
                         type="number"
                         label="Width of the map"
                     ></v-text-field>                    
@@ -35,7 +35,7 @@
                 <v-row>
                     <v-text-field
                         v-model="formState.height"
-                        :rules="rules"
+                        :rules="inputRules"
                         type="number"
                         label="Height of the map"
                     ></v-text-field>                    
@@ -64,7 +64,7 @@ import type { responseModel } from '~/types/level'
 const { base_url } = storeToRefs(useMainStore())
 const { createLevelDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-
+const { inputRules } = useRuleStore()
 
 const formState = reactive({
     id: "",
@@ -72,13 +72,6 @@ const formState = reactive({
     width: 9,
     height: 16
 })
-const rules = [
-    (value: String | Number) => {
-        if (value) return true
-
-        return 'You must enter something.'
-    },
-]
 
 const emit = defineEmits(["triggerReload"])
 

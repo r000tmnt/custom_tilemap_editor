@@ -107,7 +107,7 @@ import eventOptionCreate from './eventOptionCreate.vue';
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
 const { tileInfo, editEventIndex, audioAssets, assets } = storeToRefs(useEditorStore())
-const { selectRules, inputRules } = storeToRefs(useRuleStore())
+const { selectRules, inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
 
 const emit = defineEmits(["createScene"])

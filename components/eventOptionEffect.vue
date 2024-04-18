@@ -98,7 +98,7 @@ const { optionEffectDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { levelData } = storeToRefs(useEditorStore())
 const { item } = storeToRefs(useItemStore())
-const { selectRules, inputRules } = storeToRefs(useRuleStore())
+const { selectRules, inputRules } = useRuleStore()
 
 const emit = defineEmits(["createOptionEffect"])
 

@@ -70,7 +70,7 @@ import type { eventDialogueModel } from '~/types/level'
 const { dialougeCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { audioAssets } = storeToRefs(useEditorStore())
-const { selectRules, inputRules } = storeToRefs(useRuleStore())
+const { selectRules, inputRules } = useRuleStore()
 
 const emit = defineEmits(["createDialogue"])
 
