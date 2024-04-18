@@ -1,8 +1,10 @@
 <template>
     <v-app-bar id="bar" :elevation="5" style="position:relative">
-        <!-- <template v-slot:prepend>
-            <v-app-bar-nav-icon></v-app-bar-nav-icon>
-        </template> -->
+        <template v-slot:prepend>
+            <Nuxt-link to="/">
+                <v-icon icon="mdi-arrow-left"></v-icon>
+            </Nuxt-link>
+        </template>
 
         <v-app-bar-title>{{ levelData.id }}</v-app-bar-title>
 
