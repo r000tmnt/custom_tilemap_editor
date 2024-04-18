@@ -2,14 +2,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export default defineEventHandler( async(event) => {
-    const body = await readBody(event)
+    // const body = await readBody(event)
 
-    console.log("body :>>> ", body)
+    // console.log("body :>>> ", body)
+
+    const { id } = event.context.formidable.fields
 
     try{
-        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}/level/`,`${body.id}.json`)
+        const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}/level/`,`${id}.json`)
 
-        fs.writeFileSync(filePath, JSON.stringify(body))
+        fs.writeFileSync(filePath, JSON.stringify(event.context.formidable.fields))
 
         return { status: 200 }
     }catch(err){

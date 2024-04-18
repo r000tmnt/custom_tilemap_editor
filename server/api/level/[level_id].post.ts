@@ -2,18 +2,18 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export default defineEventHandler( async(event) => {
-    const body = await readBody(event)
+    // const body = await readBody(event)
 
-    console.log("body :>>> ", body)
+    // console.log("body :>>> ", body)
 
     try{
         const newLevel = `import { t } from '../../utils/i18n'
 
         export default {
-            ${body}
+            ${event.context.formidable.fields}
         }`
 
-        const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/level/`,`${body.id}.js`)
+        const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/level/`,`${event.context.formidable.fields.id}.js`)
 
         fs.appendFileSync(filePath, newLevel)
 
