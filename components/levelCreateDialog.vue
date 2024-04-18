@@ -2,13 +2,14 @@
     <v-dialog
       v-model="createLevelDialog"
       width="auto"
+      persistent
     >
       <v-card
         class="pa-2"
         width="500"
         title="Create new level"
       >
-        <v-form @submit.prevent>
+        <v-form ref="formRef">
             <v-container>
                 <v-row>
                     <v-text-field
@@ -27,7 +28,7 @@
                 <v-row>
                     <v-text-field
                         v-model="formState.width"
-                        :rules="inputRules"
+                        :rules="numberRules"
                         type="number"
                         label="Width of the map"
                     ></v-text-field>                    
@@ -35,7 +36,7 @@
                 <v-row>
                     <v-text-field
                         v-model="formState.height"
-                        :rules="inputRules"
+                        :rules="numberRules"
                         type="number"
                         label="Height of the map"
                     ></v-text-field>                    
@@ -46,7 +47,7 @@
                         <v-btn type="button" @click="resetFormState" block>Cancel</v-btn>
                     </v-col>
                     <v-col cols="6">
-                        <v-btn type="submit" color="primary" @click="createLevel" block>Submit</v-btn> 
+                        <v-btn color="primary" @click="createLevel" block>Submit</v-btn> 
                     </v-col>                 
                 </v-row>
 
@@ -57,14 +58,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { storeToRefs } from 'pinia'
 import type { responseModel } from '~/types/level'
 
 const { base_url } = storeToRefs(useMainStore())
 const { createLevelDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-const { inputRules } = useRuleStore()
+const { inputRules, numberRules } = useRuleStore()
 
 const formState = reactive({
     id: "",
@@ -72,6 +73,8 @@ const formState = reactive({
     width: 9,
     height: 16
 })
+
+const formRef = ref()
 
 const emit = defineEmits(["triggerReload"])
 
@@ -87,18 +90,20 @@ const resetFormState = () => {
 // 新建關卡檔案
 const createLevel = async() => {
     try{
-        const request : responseModel = await $fetch(`${base_url.value}api/data`, { method: "POST", body: formState })
+        const result = await formRef.value?.validate()
+        console.log('validation :>>>', result)
 
-        console.log(request)
+        if(result.valid){
+            const request : responseModel = await $fetch(`${base_url.value}api/data`, { method: "POST", body: formState })
 
-        if(request.status === 200){
-            emit("triggerReload")
+            if(request.status === 200){
+                emit("triggerReload")
+                resetFormState()
+            }  
         }
-        
     }catch(err){
         console.log(err)
     }
-    resetFormState()
 }
 
 </script>
