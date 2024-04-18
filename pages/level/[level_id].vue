@@ -19,32 +19,42 @@
         <!-- paint brushes and other tools -->
         <editor-tool-bar @toggle-layout="changeLayuout" />
 
-        <v-container>
-            <v-row class="editor">
+        <v-row class="editor">
                 <!-- tile assets -->
-                <v-col cols="4">
+                <v-col cols="3"
+                    class="col pa-2">
                     <editor-assets />
+                    <div class="draggable border"
+                        @mouseover="highlightColumn"
+                        @mouseleave="leaveColumn"></div>
                 </v-col>
 
                 <!-- tilemap editor -->
-                <v-col cols="4">
+                <v-col cols="6"
+                    class="col pa-2">
                     <!-- map layer -->
                     <canvas 
                         ref="canvasRef"
                         @mousedown="canvasEvent"
                         @keydown="canvasKeyPressEvent"
                     ></canvas>
+                    <div class="draggable border"
+                        @mouseover="highlightColumn"
+                        @mouseleave="leaveColumn"></div>
                 </v-col>
 
                 <!-- tile info -->
-                <v-col cols="4">
+                <v-col cols="3"
+                    class="col pa-2">
                     <editor-tile-info :width="canvasRef?.width" :height="canvasRef?.height" />
+                    <!-- <div class="draggable border" 
+                    ref="draggableRefs"
+                    @mousemove="highlightColumn(2)"></div> -->
                 </v-col>
             </v-row>  
                
             <event-create-dialog />
             <event-edit-dialog />
-        </v-container>
     </section> 
 </template>
 
@@ -266,44 +276,23 @@ const changeLayuout = (v: any) => {
     }
 }
 
-// First time rendering
-// watch(() => levelData.value.map.length, (newMap) => {
-//     for(let i=0, map = levelData.value.map; i < map.length; i++){
-//         for(let j=0; j < map[i].length; j++){
-//             const tile = levelData.value.assets[map[i][j]]
-//             const type = map[i][j]
-//             const x = j * tileSize.value
-//             const y = i * tileSize.value
-//             const event = getEventsonTile(x, y)
-//             if(tile.length){
-//                 console.log("tile :>>", tile)
-//                 const img = document.createElement('img')
-//                 img.src = `/assets/images/env/${tile}`
-//                 // console.log(img)
-//                 tiles.value.push(img)
-//                 img.onload = () => {
-//                     context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
-//                 }
-//             }
+const highlightColumn = (e: any) => {
+    console.log(e)
+    if(e.target){
+        e.target.classList.add('highlight')
+        e.target.style.cursor = "col-resize"
+    }
+}
 
-//             if(event.length){
-//                 context.value.globalCompositeOperation = 'source-over'
-//                 context.value.fillStyle('yellow')
-//                 context.value.fillRect(x, y, tileSize.value, tileSize.value)
-//             }
+const leaveColumn = (e: any) => {
+    console.log(e)
+    if(e.target){
+        e.target.classList.remove('highlight')
+        e.target.style.cursor = "default"
+    }
+}
 
-//             if(type === 2 || type === 3){
-//                 const img = document.createElement('img')
-//                 img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
-//                 // console.log(img)
-//                 tiles.value.push(img)
-//                 img.onload = () => {
-//                     context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
-//                 }
-//             }
-//         }
-//     }
-// })
+const columnResize = () => {}
 
 onMounted(() => {
     console.log(route.params)
@@ -367,12 +356,32 @@ onMounted(() => {
 
 <style scoped>
 .editor{
-    margin-top: 20px;
+    margin-top: 10px;
+    margin-left: 6px;
+    width: 100vw;
 }
 
 /* #canvasContainer{
     position: relative;
 } */
+
+.col{
+    position: relative;
+}
+
+.draggable{
+    position: absolute;
+    border: 3px solid grey;
+    width: 3px;
+    height: 100vh;
+    top: 0;
+    right: 0;
+}
+
+.highlight{
+    border: none;
+    background-color: blue;
+}
 
 canvas{
     border: 1px solid gray;
