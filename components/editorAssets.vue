@@ -6,7 +6,6 @@
     :rules="fileRules"
     @update:model-value="getFiles"
     ></v-file-input>
-    <v-tabs></v-tabs>
     <v-item-group class="d-flex" selected-class="selected">
         <v-item
             v-for="(img, index) in assets.env"
@@ -42,8 +41,8 @@ import { ref } from 'vue'
 
 const { levelData, assets, tiles, selectedTile } = storeToRefs(useEditorStore())
 const { tileSize, base_url } = storeToRefs(useMainStore())
-const { fileRules } = storeToRefs(useRuleStore())
-
+const { saveAsset } = useEditorStore()
+const { fileRules } = useRuleStore()
 
 // Keep the selected tile
 const selectTile = (v:any, index:number) => {
@@ -70,6 +69,40 @@ const selectTile = (v:any, index:number) => {
 const getFiles = (files: File[]) => {
     console.log("files :>>>", files)
 
+    let pass = null
+
+    // Check image width & height
+    for(let i=0; i < files.length; i++){
+        if(pass === false){
+            break
+        }
+
+        const reader = new FileReader()
+        reader.readAsDataURL(files[i])
+        reader.onloadend = (e) => {
+            const tempImg = new Image()
+            tempImg.src = e.target?.result as string
+
+            tempImg.onload = () => {
+                const height = tempImg.naturalHeight
+                const width = tempImg.naturalWidth
+
+                console.log('w: ',width, 'h: ', height)
+
+                if(width > 64 || width < 8 && height < 8 || height > 64){
+                    pass = false
+                }else{
+                    pass = true
+                }
+            }
+        }
+    }
+
+
+    if(pass){
+        // Call action
+        saveAsset(files, "env")
+    }
     // files.forEach(f => {
     //     levelData.value.assets.push()
     // })
