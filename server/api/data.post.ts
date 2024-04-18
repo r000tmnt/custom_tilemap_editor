@@ -29,11 +29,7 @@ export default defineEventHandler( async(event) => {
             "name": "${name}",
             "map": ${JSON.stringify(newMap)},
             "audio": "", 
-            "assets": [ 
-                "",
-                "",
-                "",
-                "",
+            "assets": [
                 ""
             ],
             "phase": [ "conversation", "titleCard", "battle", "conversation", "end" ],
