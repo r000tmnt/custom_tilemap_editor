@@ -20,7 +20,7 @@ export const useRuleStore = defineStore('rule', () => {
 
     const numberRules = [
         (value: any) => {
-            if(value <= 0) return true
+            if(Number(value) >= 1) return true
     
             return 'The minimum number must be equal to 1'
         }
