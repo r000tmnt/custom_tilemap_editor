@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel, tileInfoModel } from '~/types/level'
+import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel, tileInfoModel, responseModel } from '~/types/level'
 
 export const useEditorStore = defineStore('editor', () => {
     // Default template for levelData
@@ -63,6 +63,8 @@ export const useEditorStore = defineStore('editor', () => {
 
     //
     const editEventIndex = ref<number>(0)
+
+    const mainStore = useMainStore()
     
     /**
      * Get all the events asigned to the tile
@@ -88,7 +90,6 @@ export const useEditorStore = defineStore('editor', () => {
      * @param id - The identifier of the levelData to find
      */
     const initEditor = async(id: string) => {
-        const mainStore = useMainStore()
         const request : levelDataResponse = await $fetch(`${mainStore.base_url}api/level/${id}`)
 
         // Get image assets
@@ -109,7 +110,6 @@ export const useEditorStore = defineStore('editor', () => {
 
     // Get audio assets
     const getAudioAssets = async() => {
-        const mainStore = useMainStore()
         const audioRequest : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/audio?type=general`)
 
         console.log(audioRequest)
@@ -156,6 +156,32 @@ export const useEditorStore = defineStore('editor', () => {
     }
 
     /**
+     * Save image assets to folder
+     * @param files - An array of image files
+     * @param type - The type, the folder to store the asset
+     */
+    const saveAsset = async(files: File[], type: string) => {
+        const formData = new FormData()
+
+        files.forEach((file, index) => formData.append(String(index), file))
+
+        formData.append("type", type)
+
+        const uploadResult : responseModel = await $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData })
+
+        console.log(uploadResult)
+
+        if(uploadResult.status === 200){
+            // Update the asset listed in the store
+            const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${type}`)
+            console.log("request:>>> ", request_assets)
+            if(request_assets.status === 200){
+                assets.value[type as keyof levelAssetModle] = request_assets.assets
+            } 
+        }
+    }
+
+    /**
      * Save the latest changes of levelData
      */
     const saveLevelData = async() => {
@@ -191,6 +217,7 @@ export const useEditorStore = defineStore('editor', () => {
         saveLevelData,
         getEventsonTile,
         getAudioAssets,
-        getBattleAudioAsset
+        getBattleAudioAsset,
+        saveAsset
     }
 })
