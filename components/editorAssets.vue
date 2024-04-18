@@ -54,7 +54,7 @@ const selectTile = (v:any, index:number) => {
 
         // If it is a new tile in the map
         if(assetIndex < 0){
-            levelData.value.assets.push(assetUrl)
+            levelData.value.assets.push(assetUrl.split("/")[4])
             const newTile = document.createElement('img')
             newTile.src = `${base_url.value}${assetUrl.substring(1, assetUrl.length)}`
             tiles.value.push(newTile)   
