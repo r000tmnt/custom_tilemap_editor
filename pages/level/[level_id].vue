@@ -92,7 +92,8 @@
                 :x="pointedSpot.x" 
                 :y="pointedSpot.y"
                 :row="pointedSpot.row"
-                :col="pointedSpot.col" />
+                :col="pointedSpot.col"
+                @set-starting-point="drawPoint" />
     </section> 
 </template>
 
@@ -376,6 +377,29 @@ const expandColumn = (index: number) => {
     }
 }
 
+const drawPoint = (v: any) => {    
+    const { type, x, y } = v
+
+    context.value.save()
+    // context.value.globalCompositeOperation = 'source-over'
+    context.value.globalAlpha = 0.5
+
+    switch(type){
+        case 2:
+            context.value.fillStyle = "#add8e6"
+        break;
+        case 3:
+            context.value.fillStyle = "#ff2f9a"
+        break;
+        case 4:
+            context.value.fillStyle = "yellow"
+        break;
+    }
+
+    context.value.fillRect(x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+    context.value.restore()
+}
+
 onMounted(() => {
     console.log(route.params)
     if(route?.params?.level_id){
@@ -405,17 +429,12 @@ onMounted(() => {
                                 // console.log(img)
                                 tiles.value.push(img)
                                 img.onload = () => {
-                                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                                    context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
                                 }
                             }
 
                             if(event.length){
-                                context.value.save()
-                                context.value.globalCompositeOperation = 'source-over'
-                                context.value.globalAlpha = 0.5
-                                context.value.fillStyle = "yellow"
-                                context.value.fillRect(x, y, tileSize.value, tileSize.value)
-                                context.value.restore()
+                                drawPoint({ type: 4, x: j, y: i })
                             }
 
                             if(type === 2 || type === 3){
@@ -424,10 +443,18 @@ onMounted(() => {
                                 // console.log(img)
                                 tiles.value.push(img)
                                 img.onload = () => {
-                                    context.value.drawImage(img, tileSize.value * j, tileSize.value * i, tileSize.value, tileSize.value)
+                                    context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
                                 }
                             }
                         }
+                    }
+
+                    for(let i=0, player = levelData.value.player; i < player.length; i++){
+                        drawPoint({ type: 2, ...player[i].startingPoint })
+                    }
+
+                    for(let i=0, enemy = levelData.value.enemy; i < enemy.length; i++){
+                        drawPoint({ type: 3, ...enemy[i].startingPoint })
                     }
                 }
             }
