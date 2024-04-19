@@ -97,7 +97,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref, onBeforeMount } from 'vue'
+import { ref, onMounted } from 'vue'
 import type { eventSceneModel, dialogueOptionModle, eventDialogueModel } from '~/types/level'
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
@@ -156,7 +156,7 @@ const createScene = () => {
   })
 }
 
-onBeforeMount(async() => {
+onMounted(async() => {
   await getAudioAssets()
   await getBattleAudioAsset()
 })
