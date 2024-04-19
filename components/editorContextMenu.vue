@@ -10,10 +10,12 @@
             <template v-slot:activator="{ props }">
                 <v-list-item v-bind="props">Set starting point</v-list-item>
             </template>
-            <v-list-item>Player</v-list-item>
-            <v-list-item>Enemy</v-list-item>
+            <v-list-item @click="setStartingPoint(2)">Player</v-list-item>
+            <v-list-item @click="setStartingPoint(3)">Enemy</v-list-item>
         </v-list-group>
-        <v-list-item>Remove starting point</v-list-item>
+        <v-list-item 
+            :class="{'disabled': pointType < 2}"
+            @click="removeStartingPoint">Remove starting point</v-list-item>
         <v-list-item>Clear tiles on the map</v-list-item>
         <v-list-item>Expand map</v-list-item>
     </v-list>
@@ -24,6 +26,10 @@ import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 
 const { contextMenu } = storeToRefs(useDialogStore())
+const { levelData } = storeToRefs(useEditorStore())
+
+const pointType = ref<number>(-1)
+const pointer = ref<number>(-1)
 
 const props = defineProps({
     x: {
@@ -34,7 +40,22 @@ const props = defineProps({
         type: Number,
         default: 0
     },
+    row: {
+        type: Number,
+        default: 0
+    },
+    col: {
+        type: Number,
+        default: 0
+    }
 })
+
+// const emit = defineEmits([
+//     "setStartingPoint",
+//     "removeStartingPoint",
+//     "clearAll",
+//     "expand"
+// ])
 
 const contextRef = ref()
 
@@ -45,12 +66,57 @@ watch(() => [ props.x, props.y ], (newPosition) => {
         contextMenuElement.style.top = newPosition[1] + 'px'
         contextMenuElement.style.left = newPosition[0] + 'px'
         console.log(contextMenuElement)
+
+        levelData.value.player.find((p, index) => {
+            const { x, y } = p.startingPoint
+            if(x === props.col && y === props.row){
+                pointType.value = 2
+                pointer.value = index
+            }
+        })
+
+        levelData.value.enemy.find((p, index) => {
+            const { x, y } = p.startingPoint
+            if(x === props.col && y === props.row){
+                pointType.value = 3
+                pointer.value = index
+            }
+        })
+
+        console.log(pointType.value)
     }
 })
+
+const setStartingPoint = (type: number) => {
+    if(type === 2){
+        levelData.value.player.push({ startingPoint: { x: props.col, y: props.row } })
+    }else{
+        levelData.value.enemy.push({ startingPoint: { x: props.col, y: props.row } })
+        //TODO - Select enemy
+    }
+}
+
+const removeStartingPoint = (e: any) => {
+    if(pointType.value > 1){
+        if(pointType.value === 2){
+            levelData.value.player.splice(pointer.value, 1)
+        }else{
+            levelData.value.enemy.splice(pointer.value, 1)
+        }        
+    }else{
+        e.stopPropagation()
+    }
+}
+
 </script>
 
 <style>
 #contextMenu{
     position: absolute;
+}
+
+.disabled{
+    background: lightgray;
+    color: white;
 }
 </style>
