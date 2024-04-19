@@ -186,11 +186,11 @@ const canvasEvent = (e: any) => {
         case 2:
             // Right button
             // Open a context menu
-            pointedSpot.value.x = e.clientX
-            pointedSpot.value.y = e.clientY
             if(!contextMenu.value){
                 toggleDialog("context-menu")
             }
+            pointedSpot.value.x = e.clientX
+            pointedSpot.value.y = e.clientY
         break;
         default:
             // Other
@@ -428,8 +428,9 @@ onMounted(() => {
         })
     }
 
-    // Hide the default browser context menu
-    document.addEventListener("contextmenu", (e: any) => { e.preventDefault() })
+    // Hide the default browser context menu when right click on the canvas
+    canvasRef.value?.addEventListener("contextmenu", (e: any) => { e.preventDefault() })
+    document.addEventListener("click", () => { if(contextMenu.value)  toggleDialog("context-menu") })
 })
 </script>
 
