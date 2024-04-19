@@ -90,11 +90,14 @@ export const useEditorStore = defineStore('editor', () => {
      * @param id - The identifier of the levelData to find
      */
     const initEditor = async(id: string) => {
-        const request : levelDataResponse = await $fetch(`${mainStore.base_url}api/level/${id}`)
+        const { data } = await useAsyncData('getLevelData', () => $fetch(`${mainStore.base_url}api/level/${id}`))  
+
+        const request : levelDataResponse = data.value as levelDataResponse
 
         // Get image assets
         for(let [key, value] of Object.entries(assets.value)){
-            const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${key}`)
+            const { data } = await useAsyncData(`getImagetype${key}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${key}`))
+            const request_assets : levelAssetResponseModel = data.value as levelAssetResponseModel
             console.log("request:>>> ", request_assets)
             if(request_assets.status === 200){
                 assets.value[key as keyof levelAssetModle] = request_assets.assets
@@ -110,7 +113,9 @@ export const useEditorStore = defineStore('editor', () => {
 
     // Get audio assets
     const getAudioAssets = async() => {
-        const audioRequest : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/audio?type=general`)
+        const { data } = await useAsyncData('getAudioAsset', () => $fetch(`${mainStore.base_url}api/asset/audio?type=general`))
+
+        const audioRequest : levelAssetResponseModel = data.value as levelAssetResponseModel
 
         console.log(audioRequest)
 
@@ -120,8 +125,9 @@ export const useEditorStore = defineStore('editor', () => {
     }
 
     const getBattleAudioAsset = async() => {
-        const mainStore = useMainStore()
-        const audioRequest : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/audio?type=battle`)
+        const { data } = await useAsyncData('getBattleAudioAsset', () => $fetch(`${mainStore.base_url}api/asset/audio?type=battle`))
+
+        const audioRequest : levelAssetResponseModel = data.value as levelAssetResponseModel
 
         console.log(audioRequest)
 
@@ -167,17 +173,29 @@ export const useEditorStore = defineStore('editor', () => {
 
         formData.append("type", type)
 
-        const uploadResult : responseModel = await $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData })
+        const { data } = await useAsyncData('saveAsset', () => $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData }))
+
+        const uploadResult : responseModel = data.value as responseModel
 
         console.log(uploadResult)
 
         if(uploadResult.status === 200){
             // Update the asset listed in the store
-            const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${type}`)
+            const { data } = await useAsyncData(`getImageType${type}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${type}`))
+            const request_assets : levelAssetResponseModel = data.value as levelAssetResponseModel
+            console.log("request:>>> ", request_assets)
             console.log("request:>>> ", request_assets)
             if(request_assets.status === 200){
                 assets.value[type as keyof levelAssetModle] = request_assets.assets
             } 
+        }
+    }
+
+    const getMobData = async() => {
+        try {
+            
+        } catch (error) {
+            
         }
     }
 
