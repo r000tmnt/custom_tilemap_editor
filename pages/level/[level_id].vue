@@ -88,6 +88,7 @@
                
             <event-create-dialog />
             <event-edit-dialog />
+            <editor-context-menu :x="pointedSpot.x" :y="pointedSpot.y" />
     </section> 
 </template>
 
@@ -100,6 +101,7 @@ import { useRoute } from 'vue-router';
 import editorToolBar from '../../components/editorToolBar.vue'
 import editorAssets from '../../components/editorAssets.vue'
 import editorTileInfo from '../../components/editorTileInfo.vue'
+import editorContextMenu from '~/components/editorContextMenu.vue';
 import eventCreateDialog from '~/components/eventCreateDialog.vue';
 import eventEditDialog from '~/components/eventEditDialog.vue';
 
@@ -107,10 +109,13 @@ const route = useRoute()
 const { levelData, steps, tiles, selectedTile, mode, tileInfo } = storeToRefs(useEditorStore())
 const { initEditor, storeSteps, saveLevelData, getEventsonTile } = useEditorStore()
 const { tileSize, base_url } = storeToRefs(useMainStore())
+const { contextMenu } = storeToRefs(useDialogStore())
+const { toggleDialog } = useDialogStore()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
+const pointedSpot = ref({ x: 0, y: 0 })
 const column = ref<number[]>([3, 6, 3])
 
 const canvasEvent = (e: any) => {
@@ -127,6 +132,10 @@ const canvasEvent = (e: any) => {
     switch(mouseButton){
         case 0:
             // Left button
+            if(contextMenu.value){
+                toggleDialog("context-menu")
+            }
+
             switch(mode.value){
                 case "nav":
                     // Change tile info desc
@@ -177,6 +186,11 @@ const canvasEvent = (e: any) => {
         case 2:
             // Right button
             // Open a context menu
+            pointedSpot.value.x = e.clientX
+            pointedSpot.value.y = e.clientY
+            if(!contextMenu.value){
+                toggleDialog("context-menu")
+            }
         break;
         default:
             // Other
@@ -413,6 +427,9 @@ onMounted(() => {
             }
         })
     }
+
+    // Hide the default browser context menu
+    document.addEventListener("contextmenu", (e: any) => { e.preventDefault() })
 })
 </script>
 
