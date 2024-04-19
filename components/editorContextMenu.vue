@@ -6,7 +6,8 @@
         rounded
         elevation="12"
         :style="`${contextMenu? 'z-index: 10' : 'z-index:-1'}`">
-        <v-list-group value="Set starting point">
+        <v-list-group value="Set starting point"
+            @click.stop>
             <template v-slot:activator="{ props }">
                 <v-list-item v-bind="props">Set starting point</v-list-item>
             </template>
@@ -27,6 +28,7 @@ import { storeToRefs } from 'pinia';
 
 const { contextMenu } = storeToRefs(useDialogStore())
 const { levelData } = storeToRefs(useEditorStore())
+const { saveLevelData } = useEditorStore()
 
 const pointType = ref<number>(-1)
 const pointer = ref<number>(-1)
@@ -50,12 +52,11 @@ const props = defineProps({
     }
 })
 
-// const emit = defineEmits([
-//     "setStartingPoint",
-//     "removeStartingPoint",
-//     "clearAll",
-//     "expand"
-// ])
+const emit = defineEmits([
+    "setStartingPoint",
+    "removeStartingPoint",
+    "clearAll"
+])
 
 const contextRef = ref()
 
@@ -94,6 +95,9 @@ const setStartingPoint = (type: number) => {
         levelData.value.enemy.push({ startingPoint: { x: props.col, y: props.row } })
         //TODO - Select enemy
     }
+
+    emit("setStartingPoint", { x: props.col, y: props.row, type })
+    saveLevelData()
 }
 
 const removeStartingPoint = (e: any) => {
@@ -103,6 +107,7 @@ const removeStartingPoint = (e: any) => {
         }else{
             levelData.value.enemy.splice(pointer.value, 1)
         }        
+        // saveLevelData()
     }else{
         e.stopPropagation()
     }
