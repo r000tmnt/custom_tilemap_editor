@@ -88,7 +88,11 @@
                
             <event-create-dialog />
             <event-edit-dialog />
-            <editor-context-menu :x="pointedSpot.x" :y="pointedSpot.y" />
+            <editor-context-menu 
+                :x="pointedSpot.x" 
+                :y="pointedSpot.y"
+                :row="pointedSpot.row"
+                :col="pointedSpot.col" />
     </section> 
 </template>
 
@@ -115,7 +119,7 @@ const { toggleDialog } = useDialogStore()
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
-const pointedSpot = ref({ x: 0, y: 0 })
+const pointedSpot = ref({ x: 0, y: 0, row: 0, col: 0 })
 const column = ref<number[]>([3, 6, 3])
 
 const canvasEvent = (e: any) => {
@@ -191,6 +195,8 @@ const canvasEvent = (e: any) => {
             }
             pointedSpot.value.x = e.clientX
             pointedSpot.value.y = e.clientY
+            pointedSpot.value.row = row
+            pointedSpot.value.col = col
         break;
         default:
             // Other
