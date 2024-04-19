@@ -1,6 +1,15 @@
 <template>
-    <v-list v-if="contextMenu" id="contextMenu" ref="contextRef">
+    <v-list 
+        id="contextMenu" 
+        ref="contextRef"
+        border="md"
+        rounded
+        elevation="12"
+        :style="`${contextMenu? 'z-index: 10' : 'z-index:-1'}`">
         <v-list-group value="Set starting point">
+            <template v-slot:activator="{ props }">
+                <v-list-item v-bind="props">Set starting point</v-list-item>
+            </template>
             <v-list-item>Player</v-list-item>
             <v-list-item>Enemy</v-list-item>
         </v-list-group>
