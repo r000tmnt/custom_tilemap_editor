@@ -29,14 +29,18 @@
                         @mouseover="highlightColumn"
                         @mouseleave="leaveColumn">
                         <div class="control flex hide">
-                            <v-chip @click.stop
-                                @mouseover.stop="highlightControl">
-                                <v-icon icon="mdi-menu-left"></v-icon>
-                            </v-chip>
-                            <v-chip @click.stop
-                                @mouseover.stop="highlightControl">
-                                <v-icon icon="mdi-menu-right"></v-icon>
-                            </v-chip>
+                            <div class="customChip"
+                                @click.stop
+                                @mouseover.stop="highlightControl"
+                                @mouseleave.stop="leaveControl">
+                                &#8249;
+                            </div>
+                            <div class="customChip"
+                                @click.stop
+                                @mouseover.stop="highlightControl"
+                                @mouseleave.stop="leaveControl">
+                                &#8250;
+                            </div>
                         </div>
                     </div>
                 </v-col>
@@ -55,14 +59,18 @@
                         @mouseover="highlightColumn"
                         @mouseleave="leaveColumn">
                         <div class="control flex hide">
-                            <v-chip @click.stop
-                                @mouseover.stop="highlightControl">
-                                <v-icon icon="mdi-menu-left"></v-icon>
-                            </v-chip>
-                            <v-chip @click.stop
-                                @mouseover.stop="highlightControl">
-                                <v-icon icon="mdi-menu-right"></v-icon>
-                            </v-chip>
+                            <div class="customChip"
+                                @click.stop
+                                @mouseover.stop="highlightControl"
+                                @mouseleave.stop="leaveControl">
+                                &#8249;
+                            </div>
+                            <div class="customChip"
+                                @click.stop
+                                @mouseover.stop="highlightControl"
+                                @mouseleave.stop="leaveControl">
+                                &#8250;
+                            </div>
                         </div>                   
                     </div>
                     
@@ -327,6 +335,13 @@ const leaveColumn = (e: any) => {
     }
 }
 
+const leaveControl = (e: any) => {
+    if(e.target){
+        e.target.style.background = "grey"
+        e.target.style.color = "black"
+    }
+}
+
 onMounted(() => {
     console.log(route.params)
     if(route?.params?.level_id){
@@ -448,5 +463,17 @@ canvas{
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
+}
+
+.customChip{
+    background: 'grey';
+    color: black;
+    border-radius: 20%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 30px;
 }
 </style>
