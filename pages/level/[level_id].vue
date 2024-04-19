@@ -21,16 +21,29 @@
 
         <v-row class="editor">
                 <!-- tile assets -->
-                <v-col cols="3"
+                <v-col id="left" 
+                    :cols="column[0]"
                     class="col pa-2">
                     <editor-assets />
                     <div class="draggable border"
                         @mouseover="highlightColumn"
-                        @mouseleave="leaveColumn"></div>
+                        @mouseleave="leaveColumn">
+                        <div class="control flex hide">
+                            <v-chip @click.stop
+                                @mouseover.stop="highlightControl">
+                                <v-icon icon="mdi-menu-left"></v-icon>
+                            </v-chip>
+                            <v-chip @click.stop
+                                @mouseover.stop="highlightControl">
+                                <v-icon icon="mdi-menu-right"></v-icon>
+                            </v-chip>
+                        </div>
+                    </div>
                 </v-col>
 
                 <!-- tilemap editor -->
-                <v-col cols="6"
+                <v-col id="right" 
+                    :cols="column[1]"
                     class="col pa-2">
                     <!-- map layer -->
                     <canvas 
@@ -40,11 +53,23 @@
                     ></canvas>
                     <div class="draggable border"
                         @mouseover="highlightColumn"
-                        @mouseleave="leaveColumn"></div>
+                        @mouseleave="leaveColumn">
+                        <div class="control flex hide">
+                            <v-chip @click.stop
+                                @mouseover.stop="highlightControl">
+                                <v-icon icon="mdi-menu-left"></v-icon>
+                            </v-chip>
+                            <v-chip @click.stop
+                                @mouseover.stop="highlightControl">
+                                <v-icon icon="mdi-menu-right"></v-icon>
+                            </v-chip>
+                        </div>                   
+                    </div>
+                    
                 </v-col>
 
                 <!-- tile info -->
-                <v-col cols="3"
+                <v-col :cols="column[2]" 
                     class="col pa-2">
                     <editor-tile-info :width="canvasRef?.width" :height="canvasRef?.height" />
                     <!-- <div class="draggable border" 
@@ -78,6 +103,7 @@ const { tileSize, base_url } = storeToRefs(useMainStore())
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
+const column = ref<number[]>([3, 6, 3])
 
 const canvasEvent = (e: any) => {
     console.log('canvas mousedown event:>>> ', e)
@@ -278,21 +304,28 @@ const changeLayuout = (v: any) => {
 
 const highlightColumn = (e: any) => {
     console.log(e)
+    if(e.target.children[0]){
+        // e.target.classList.add('highlight')
+        // e.target.style.cursor = "col-resize"
+        e.target.children[0].classList.remove("hide")
+    }
+}
+
+const highlightControl = (e: any) => {
     if(e.target){
-        e.target.classList.add('highlight')
-        e.target.style.cursor = "col-resize"
+        e.target.style.background = "skyBlue"
+        e.target.style.color = "white"
     }
 }
 
 const leaveColumn = (e: any) => {
-    console.log(e)
-    if(e.target){
-        e.target.classList.remove('highlight')
-        e.target.style.cursor = "default"
+    // console.log(e)
+    if(e.target.children[0]){
+        // e.target.classList.remove('highlight')
+        // e.target.style.cursor = "default"
+        e.target.children[0].classList.add("hide")
     }
 }
-
-const columnResize = () => {}
 
 onMounted(() => {
     console.log(route.params)
@@ -355,10 +388,15 @@ onMounted(() => {
 </script>
 
 <style scoped>
+section{
+    height: 100vh;
+}
+
 .editor{
     margin-top: 10px;
     margin-left: 6px;
     width: 100vw;
+    height: 100%;
 }
 
 /* #canvasContainer{
@@ -373,15 +411,16 @@ onMounted(() => {
     position: absolute;
     border: 3px solid grey;
     width: 3px;
-    height: 100vh;
+    height: 100%;
     top: 0;
     right: 0;
+    /* overflow: visible; */
 }
 
-.highlight{
+/* .highlight{
     border: none;
     background-color: blue;
-}
+} */
 
 canvas{
     border: 1px solid gray;
@@ -393,5 +432,21 @@ canvas{
 
 .info{
     white-space: pre-line;
+}
+
+.flex{
+    display: flex;
+}
+
+.hide{
+    display: none;
+}
+
+.control{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
 }
 </style>
