@@ -30,13 +30,13 @@
                         @mouseleave="leaveColumn">
                         <div class="control flex hide">
                             <div class="customChip"
-                                @click.stop
+                                @click.stop="narrowColumn(0)"
                                 @mouseover.stop="highlightControl"
                                 @mouseleave.stop="leaveControl">
                                 &#8249;
                             </div>
                             <div class="customChip"
-                                @click.stop
+                                @click.stop="expandColumn(0)"
                                 @mouseover.stop="highlightControl"
                                 @mouseleave.stop="leaveControl">
                                 &#8250;
@@ -60,13 +60,13 @@
                         @mouseleave="leaveColumn">
                         <div class="control flex hide">
                             <div class="customChip"
-                                @click.stop
+                                @click.stop="narrowColumn(1)"
                                 @mouseover.stop="highlightControl"
                                 @mouseleave.stop="leaveControl">
                                 &#8249;
                             </div>
                             <div class="customChip"
-                                @click.stop
+                                @click.stop="expandColumn(1)"
                                 @mouseover.stop="highlightControl"
                                 @mouseleave.stop="leaveControl">
                                 &#8250;
@@ -337,8 +337,22 @@ const leaveColumn = (e: any) => {
 
 const leaveControl = (e: any) => {
     if(e.target){
-        e.target.style.background = "grey"
+        e.target.style.background = "lightgray"
         e.target.style.color = "black"
+    }
+}
+
+const narrowColumn = (index: number) => {
+    if(column.value[index] > 1){
+        column.value[index] -= 1
+        column.value[index + 1] += 1
+    }
+}
+
+const expandColumn = (index: number) => {
+    if(column.value[index] < 10){
+        column.value[index] += 1
+        column.value[index + 1] -= 1
     }
 }
 
@@ -420,6 +434,7 @@ section{
 
 .col{
     position: relative;
+    transition: all .3s ease-in-out;
 }
 
 .draggable{
@@ -466,7 +481,7 @@ canvas{
 }
 
 .customChip{
-    background: 'grey';
+    background: lightgray;
     color: black;
     border-radius: 20%;
     width: 30px;
