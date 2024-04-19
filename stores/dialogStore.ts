@@ -21,6 +21,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const optionCreateDialog = ref<boolean>(false)
     // On and off switch for event dialogue option effect
     const optionEffectDialog = ref<boolean>(false)
+    // On and off swith for editor context menu
+    const contextMenu = ref<boolean>(false)
     
     const toggleDialog = (type: string) => {
         switch(type){
@@ -54,6 +56,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'option-effect-create':
                 optionEffectDialog.value = !optionEffectDialog.value
             break;
+            case 'context-menu':
+                contextMenu.value = !contextMenu.value
+            break;
             // and more...
         }
     }
@@ -69,6 +74,7 @@ export const useDialogStore = defineStore('dialog', () => {
         dialougeCreateDialog,
         optionCreateDialog,
         optionEffectDialog,
+        contextMenu,
         toggleDialog
     }
 })
