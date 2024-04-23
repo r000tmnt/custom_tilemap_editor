@@ -28,20 +28,20 @@ interface keyEffectModel extends effectDataModel {
 }
 
 interface baseAttributeModel {
-    hp?: number
-    mp?: number
-    ap?: number
-    str?: number
-    def?: number
-    int?: number
-    spd?: number
-    spi?: number
-    lck?: number
-    maxHp?: number
-    maxMp?: number
-    maxAp?: number
-    moveSpeed?: number
-    sight?: number
+    hp: number
+    mp: number
+    ap: number
+    str: number
+    def: number
+    int: number
+    spd: number
+    spi: number
+    lck: number
+    maxHp: number
+    maxMp: number
+    maxAp: number
+    moveSpeed: number
+    sight: number
 }
 
 interface useConditionModel {
@@ -180,5 +180,6 @@ export{
     potionResponseModel,
     otherResponseModel,
     materialResponseModel,
-    itemState
+    itemState,
+    baseAttributeModel,
 }
