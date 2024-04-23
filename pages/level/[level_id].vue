@@ -94,7 +94,8 @@
                 :row="pointedSpot.row"
                 :col="pointedSpot.col"
                 @set-starting-point="drawPoint"
-                @remove-starting-point="clearPoint" />
+                @remove-starting-point="clearPoint"
+                @clear-all="clearMap"/>
     </section> 
 </template>
 
@@ -425,6 +426,12 @@ const clearPoint = (v:any) => {
     }    
 }
 
+const clearMap = () => {
+    context.value.fillStyle = '#000000'
+    context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
+    saveLevelData()
+}
+
 watch(() => canvasRef.value, (newVal) => {
     console.log("newVal :>>>", newVal)
     if(newVal){
@@ -442,7 +449,6 @@ watch(() => canvasRef.value, (newVal) => {
             for(let i=0; i < map.length; i++){
                 for(let j=0; j < map[i].length; j++){
                     const tile = levelData.value.assets[map[i][j]]
-                    const type = map[i][j]
                     const x = j * tileSize.value
                     const y = i * tileSize.value
                     const event = getEventsonTile(x, y)
@@ -461,11 +467,20 @@ watch(() => canvasRef.value, (newVal) => {
                         drawPoint({ type: 4, x: j, y: i })
                     }
 
-                    if(type === 2 || type === 3){
+                    if(levelData.value.player.find(p => p.startingPoint.x === j && p.startingPoint.y === i)){
                         const img = document.createElement('img')
-                        img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
+                        img.src = `/assets/images/class/class_fighter_1.png`
                         // console.log(img)
-                        tiles.value.push(img)
+                        // tiles.value.push(img)
+                        img.onload = () => {
+                            context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+                        }
+                    }
+
+                    if(levelData.value.enemy.find(e => e.startingPoint.x === j && e.startingPoint.y === i)){
+                        const img = document.createElement('img')
+                        img.src = "/assets/images/mob/mob_zombie_1.png"
+
                         img.onload = () => {
                             context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
                         }
