@@ -14,7 +14,7 @@ export const useCharacterStore = defineStore('character', () => {
             const mobRequest: mobResponseModel = await $fetch(`${mainStore.base_url}api/mob`)
 
             if(mobRequest.status === 200){
-                mobs.value = mobRequest.data
+                mobs.value = mobRequest.mobs
             }
         } catch (error) {
             console.log(error)
