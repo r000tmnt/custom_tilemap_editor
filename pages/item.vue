@@ -56,21 +56,20 @@ definePageMeta({
     layout: 'base'
 })
 
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { storeToRefs } from 'pinia' 
 
 const { base_url } = storeToRefs(useMainStore())
 const { toggleDialog } = useDialogStore()
 const { item } = storeToRefs(useItemStore())
-const { getItemData } = useItemStore()
+const { getItemType, getItemData } = useItemStore()
 
 console.log(base_url)
 
-onMounted(async() => {
+onBeforeMount(async() => {
+    await getItemType()
     await getItemData()
 })
-
-
 </script>
 
 <style scoped>
