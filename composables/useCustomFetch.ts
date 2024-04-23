@@ -20,7 +20,7 @@ export default async function $api(
     },
     onResponse({ request, response, options }) {
       // Process the response data
-      localStorage.setItem('token', response._data.token)
+      // localStorage.setItem('token', response._data.token)
     },
     onResponseError({ request, response, options }) {
       // Handle the response errors
