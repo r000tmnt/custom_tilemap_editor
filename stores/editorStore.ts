@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel, tileInfoModel, responseModel } from '~/types/level'
+import $api from '~/composables/useCustomFetch'
 
 export const useEditorStore = defineStore('editor', () => {
     // Default template for levelData
@@ -90,13 +91,18 @@ export const useEditorStore = defineStore('editor', () => {
      * @param id - The identifier of the levelData to find
      */
     const initEditor = async(id: string) => {
-        const { data } = await useAsyncData('getLevelData', () => $fetch(`${mainStore.base_url}api/level/${id}`))  
+        // const { data } = await useAsyncData('getLevelData', () => $fetch(`${mainStore.base_url}api/level/${id}`))  
+
+        const { data }= await $api(`${mainStore.base_url}api/level/${id}`)
 
         const request : levelDataResponse = data.value as levelDataResponse
 
         // Get image assets
         for(let [key, value] of Object.entries(assets.value)){
-            const { data } = await useAsyncData(`getImagetype${key}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${key}`))
+            // const { data } = await useAsyncData(`getImagetype${key}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${key}`))
+
+            const { data } = await $api(`${mainStore.base_url}api/asset/image?type=${key}`)
+
             const request_assets : levelAssetResponseModel = data.value as levelAssetResponseModel
             console.log("request:>>> ", request_assets)
             if(request_assets.status === 200){
@@ -113,7 +119,9 @@ export const useEditorStore = defineStore('editor', () => {
 
     // Get audio assets
     const getAudioAssets = async() => {
-        const { data } = await useAsyncData('getAudioAsset', () => $fetch(`${mainStore.base_url}api/asset/audio?type=general`))
+        // const { data } = await useAsyncData('getAudioAsset', () => $fetch(`${mainStore.base_url}api/asset/audio?type=general`))
+
+        const { data } = await $api(`${mainStore.base_url}api/asset/audio?type=general`)
 
         const audioRequest : levelAssetResponseModel = data.value as levelAssetResponseModel
 
@@ -125,7 +133,9 @@ export const useEditorStore = defineStore('editor', () => {
     }
 
     const getBattleAudioAsset = async() => {
-        const { data } = await useAsyncData('getBattleAudioAsset', () => $fetch(`${mainStore.base_url}api/asset/audio?type=battle`))
+        // const { data } = await useAsyncData('getBattleAudioAsset', () => $fetch(`${mainStore.base_url}api/asset/audio?type=battle`))
+
+        const { data } = await $api(`${mainStore.base_url}api/asset/audio?type=battle`)
 
         const audioRequest : levelAssetResponseModel = data.value as levelAssetResponseModel
 
@@ -173,7 +183,9 @@ export const useEditorStore = defineStore('editor', () => {
 
         formData.append("type", type)
 
-        const { data } = await useAsyncData('saveAsset', () => $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData }))
+        // const { data } = await useAsyncData('saveAsset', () => $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData }))
+
+        const { data } = await $api(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData })
 
         const uploadResult : responseModel = data.value as responseModel
 
@@ -181,7 +193,10 @@ export const useEditorStore = defineStore('editor', () => {
 
         if(uploadResult.status === 200){
             // Update the asset listed in the store
-            const { data } = await useAsyncData(`getImageType${type}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${type}`))
+            // const { data } = await useAsyncData(`getImageType${type}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${type}`))
+
+            const { data } = await $api(`${mainStore.base_url}api/asset/image?type=${type}`)
+
             const request_assets : levelAssetResponseModel = data.value as levelAssetResponseModel
             console.log("request:>>> ", request_assets)
             console.log("request:>>> ", request_assets)
@@ -205,7 +220,9 @@ export const useEditorStore = defineStore('editor', () => {
     const saveLevelData = async() => {
         try {
             const mainStore = useMainStore()
-            await $fetch(`${mainStore.base_url}api/level/${levelData.value}`, { method: 'PATCH', body: levelData.value })
+            // await $fetch(`${mainStore.base_url}api/level/${levelData.value}`, { method: 'PATCH', body: levelData.value })
+
+            await $api(`${mainStore.base_url}api/level/${levelData.value}`, { method: 'PATCH', body: levelData.value })
         } catch (error) {
             console.error("saveLevelData error :>>>", error)
         }
