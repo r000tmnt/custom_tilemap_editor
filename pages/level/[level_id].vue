@@ -1,5 +1,5 @@
 <template>
-    <v-container v-if="levelData === undefined">
+    <v-container v-if="levelData.map.length === 0">
         <v-row>
             <v-col cols="12" class="text-center">
                 Loading...
@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, watch, ref } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
 
@@ -400,70 +400,74 @@ const drawPoint = (v: any) => {
     context.value.restore()
 }
 
-onMounted(() => {
-    console.log(route.params)
-    if(route?.params?.level_id){
-        initEditor(String(route.params.level_id)).then(() => {
-            if(levelData.value !== undefined){
-                console.log(canvasRef.value)
-                if(canvasRef.value !== null){
-                    canvasRef.value.width = levelData.value.map[0].length * tileSize.value
-                    canvasRef.value.height = levelData.value.map.length * tileSize.value
-                    context.value = canvasRef.value.getContext("2d")
-                    canvasPosition.value = canvasRef.value.getBoundingClientRect()
+watch(() => canvasRef.value, (newVal) => {
+    console.log("newVal :>>>", newVal)
+    if(newVal){
+        console.log(canvasRef.value)
+        if(canvasRef.value !== null){
+            const map = levelData.value.map
+            canvasRef.value.width = map[0].length * tileSize.value
+            canvasRef.value.height = map.length * tileSize.value
+            context.value = canvasRef.value.getContext("2d")
+            canvasPosition.value = canvasRef.value.getBoundingClientRect()
 
-                    context.value.fillStyle = '#000000'
-                    context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
+            context.value.fillStyle = '#000000'
+            context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
 
-                    for(let i=0, map = levelData.value.map; i < map.length; i++){
-                        for(let j=0; j < map[i].length; j++){
-                            const tile = levelData.value.assets[map[i][j]]
-                            const type = map[i][j]
-                            const x = j * tileSize.value
-                            const y = i * tileSize.value
-                            const event = getEventsonTile(x, y)
-                            if(tile.length){
-                                console.log("tile :>>", tile)
-                                const img = document.createElement('img')
-                                img.src = `/assets/images/env/${tile}`
-                                // console.log(img)
-                                tiles.value.push(img)
-                                img.onload = () => {
-                                    context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
-                                }
-                            }
-
-                            if(event.length){
-                                drawPoint({ type: 4, x: j, y: i })
-                            }
-
-                            if(type === 2 || type === 3){
-                                const img = document.createElement('img')
-                                img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
-                                // console.log(img)
-                                tiles.value.push(img)
-                                img.onload = () => {
-                                    context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
-                                }
-                            }
+            for(let i=0; i < map.length; i++){
+                for(let j=0; j < map[i].length; j++){
+                    const tile = levelData.value.assets[map[i][j]]
+                    const type = map[i][j]
+                    const x = j * tileSize.value
+                    const y = i * tileSize.value
+                    const event = getEventsonTile(x, y)
+                    if(tile.length){
+                        console.log("tile :>>", tile)
+                        const img = document.createElement('img')
+                        img.src = `/assets/images/env/${tile}`
+                        // console.log(img)
+                        tiles.value.push(img)
+                        img.onload = () => {
+                            context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
                         }
                     }
 
-                    for(let i=0, player = levelData.value.player; i < player.length; i++){
-                        drawPoint({ type: 2, ...player[i].startingPoint })
+                    if(event.length){
+                        drawPoint({ type: 4, x: j, y: i })
                     }
 
-                    for(let i=0, enemy = levelData.value.enemy; i < enemy.length; i++){
-                        drawPoint({ type: 3, ...enemy[i].startingPoint })
+                    if(type === 2 || type === 3){
+                        const img = document.createElement('img')
+                        img.src = `/assets/images/${(type === 2)? 'class/class_fighter_1' : 'mob/mob_zombie_1'}.png`
+                        // console.log(img)
+                        tiles.value.push(img)
+                        img.onload = () => {
+                            context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+                        }
                     }
                 }
             }
-        })
+
+            for(let i=0, player = levelData.value.player; i < player.length; i++){
+                drawPoint({ type: 2, ...player[i].startingPoint })
+            }
+
+            for(let i=0, enemy = levelData.value.enemy; i < enemy.length; i++){
+                drawPoint({ type: 3, ...enemy[i].startingPoint })
+            }
+        }
     }
 
     // Hide the default browser context menu when right click on the canvas
     canvasRef.value?.addEventListener("contextmenu", (e: any) => { e.preventDefault() })
     document.addEventListener("click", () => { if(contextMenu.value)  toggleDialog("context-menu") })
+})
+
+onBeforeMount(() => {
+    console.log(route.params)
+    if(route?.params?.level_id){
+        initEditor(String(route.params.level_id))
+    }
 })
 </script>
 
