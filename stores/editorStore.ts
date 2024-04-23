@@ -119,28 +119,28 @@ export const useEditorStore = defineStore('editor', () => {
     const getAudioAssets = async() => {
         // const { data } = await useAsyncData('getAudioAsset', () => $fetch(`${mainStore.base_url}api/asset/audio?type=general`))
 
-        const { data } = await $api(`${mainStore.base_url}api/asset/audio?type=general`)
+        if(process.client){
+            const audioRequest : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/audio?type=general`)
 
-        const audioRequest : levelAssetResponseModel = data.value as levelAssetResponseModel
-
-        console.log(audioRequest)
-
-        if(audioRequest.status === 200){
-          audioAssets.value.general = audioRequest.assets  
+            console.log(audioRequest)
+    
+            if(audioRequest.status === 200){
+              audioAssets.value.general = audioRequest.assets  
+            }
         }
     }
 
     const getBattleAudioAsset = async() => {
         // const { data } = await useAsyncData('getBattleAudioAsset', () => $fetch(`${mainStore.base_url}api/asset/audio?type=battle`))
 
-        const { data } = await $api(`${mainStore.base_url}api/asset/audio?type=battle`)
+        if(process.client){
+            const audioRequest : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/audio?type=battle`)
 
-        const audioRequest : levelAssetResponseModel = data.value as levelAssetResponseModel
+            console.log(audioRequest)
 
-        console.log(audioRequest)
-
-        if(audioRequest.status === 200){
-          audioAssets.value.battle = audioRequest.assets  
+            if(audioRequest.status === 200){
+            audioAssets.value.battle = audioRequest.assets  
+            }            
         }
     }
 
@@ -201,14 +201,6 @@ export const useEditorStore = defineStore('editor', () => {
             if(request_assets.status === 200){
                 assets.value[type as keyof levelAssetModle] = request_assets.assets
             } 
-        }
-    }
-
-    const getMobData = async() => {
-        try {
-            
-        } catch (error) {
-            
         }
     }
 
