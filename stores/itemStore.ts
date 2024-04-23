@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { materialResponseModel, otherResponseModel, potionResponseModel, typeResponseModel, itemState, armorResponseModel, weaponResponseModel, keyResponseModel } from "~/types/item";
+import type { materialResponseModel, otherResponseModel, potionResponseModel, typeResponseModel, itemState, armorResponseModel, weaponResponseModel, keyResponseModel, itemTypeModel } from "~/types/item";
+import $api from "~/composables/useCustomFetch";
+
+// Define mainStore
+const mainStore = useMainStore()
 
 export const useItemStore = defineStore('item', () => {
     const item = ref<itemState>({
@@ -13,79 +17,83 @@ export const useItemStore = defineStore('item', () => {
         weapon: [],
     })
 
-    const type = ref([])
+    const type = ref<itemTypeModel[]>([])
+
+    const getItemType = async() => {
+        const { data } = await $api(`${mainStore.base_url}api/item/type`)
+
+        const request : typeResponseModel = data.value as typeResponseModel
+
+        request.data.forEach((value, index) => {
+            type.value[index] = value
+        });
+    }
 
     const getItemData = async() => {
-        // Define mainStore
-        const mainStore = useMainStore()
+        // Get the data of item for various types
+        for(let i=0; i < type.value.length; i++){
 
-        // Get types first
-        const requestType: typeResponseModel = await $fetch(`${mainStore.base_url}api/item/type`)
-        // console.log(requestType)
-        if(requestType.status === 200){
-            // Get the data of item for various types
-            for(let i=0, data = requestType.data; i < data.length; i++){
-                const type = data[i].type
-                switch(type){
-                    case 0:{
-                        const requestItem : potionResponseModel = await $fetch(`${mainStore.base_url}api/item/${data[i].category}`)
-                        console.log(requestItem)
-                        if(requestItem.status === 200){
-                            item.value.potion = requestItem.data
-                        }
+            const { data } = await $api(`${mainStore.base_url}api/item/${type.value[i].category}`)
+
+            switch(type.value[i].type){
+                case 0:{
+                    const requestItem : potionResponseModel = data.value as potionResponseModel
+                    console.log(requestItem)
+                    if(requestItem.status === 200){
+                        item.value.potion = requestItem.data
                     }
-                    break;
-                    case 1:{
-                        const requestItem : otherResponseModel = await $fetch(`${mainStore.base_url}api/item/${data[i].category}`)
-                        console.log(requestItem)
-                        if(requestItem.status === 200){
-                            item.value.other = requestItem.data
-                        }
-                    } 
-                    break;
-                    case 2:{
-                        const requestItem : materialResponseModel  = await $fetch(`${mainStore.base_url}api/item/${data[i].category}`)
-                        console.log(requestItem)
-                        if(requestItem.status === 200){
-                            item.value.material = requestItem.data
-                        }
-                    }
-                    case 3:{
-                        const requestItem : weaponResponseModel  = await $fetch(`${mainStore.base_url}api/item/${data[i].category}`)
-                        console.log(requestItem)
-                        if(requestItem.status === 200){
-                            item.value.weapon = requestItem.data
-                        }
-                    }
-                    break;
-                    case 4:{
-                        const requestItem: armorResponseModel = await $fetch(`${mainStore.base_url}api/item/${data[i].category}`)
-                        console.log(requestItem)
-                        if(requestItem.status === 200){
-                            item.value.armor = requestItem.data
-                        }
-                    }
-                    break;
-                    case 5:{
-                        // accessory
-                    }
-                    break;
-                    case 6:{
-                        const requestItem: keyResponseModel = await $fetch(`${mainStore.base_url}api/item/${data[i].category}`)
-                        console.log(requestItem)
-                        if(requestItem.status === 200){
-                            item.value.key = requestItem.data
-                        }
-                    }
-                    break;
                 }
+                break;
+                case 1:{
+                    const requestItem : otherResponseModel = data.value as otherResponseModel
+                    console.log(requestItem)
+                    if(requestItem.status === 200){
+                        item.value.other = requestItem.data
+                    }
+                } 
+                break;
+                case 2:{
+                    const requestItem : materialResponseModel  = data.value as materialResponseModel
+                    console.log(requestItem)
+                    if(requestItem.status === 200){
+                        item.value.material = requestItem.data
+                    }
+                }
+                case 3:{
+                    const requestItem : weaponResponseModel  = data.value as weaponResponseModel
+                    console.log(requestItem)
+                    if(requestItem.status === 200){
+                        item.value.weapon = requestItem.data
+                    }
+                }
+                break;
+                case 4:{
+                    const requestItem: armorResponseModel = data.value as armorResponseModel
+                    console.log(requestItem)
+                    if(requestItem.status === 200){
+                        item.value.armor = requestItem.data
+                    }
+                }
+                break;
+                case 5:{
+                    // accessory
+                }
+                break;
+                case 6:{
+                    const requestItem: keyResponseModel = data.value as keyResponseModel
+                    console.log(requestItem)
+                    if(requestItem.status === 200){
+                        item.value.key = requestItem.data
+                    }
+                }
+                break;
             }
         }
     }
 
     return {
         item,
-        type,
+        getItemType,
         getItemData
     }
 })
