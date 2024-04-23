@@ -56,7 +56,7 @@ import type { eventItemModel } from "~/types/level"
 
 
 const { item } = storeToRefs(useItemStore())
-const { getItemData } = useItemStore()
+const { getItemData, getItemType } = useItemStore()
 const { eventItemDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 
@@ -97,8 +97,9 @@ const updateEvent = () => {
     toggleDialog("event-item")
 }
 
-onBeforeMount(() => {
-    getItemData()
+onBeforeMount(async() => {
+    await getItemType()
+    await getItemData()
 })
 </script>
 
