@@ -1,17 +1,15 @@
 <template>
     <v-select
         label="Select"
-        :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+        :items="mobs.map((m: mobDataModel) => m.id)"
     ></v-select>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
+import type { mobDataModel } from '~/types/character';
 
 const { assets } = storeToRefs(useEditorStore())
-
-onMounted(() => {
-    
-})
+const { mobs } = storeToRefs(useCharacterStore())
 </script>
