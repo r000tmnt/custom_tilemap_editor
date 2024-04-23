@@ -33,11 +33,11 @@ export const useItemStore = defineStore('item', () => {
         // Get the data of item for various types
         for(let i=0; i < type.value.length; i++){
 
-            const { data } = await $api(`${mainStore.base_url}api/item/${type.value[i].category}`)
+            const data = await $fetch(`${mainStore.base_url}api/item/${type.value[i].category}`)
 
             switch(type.value[i].type){
                 case 0:{
-                    const requestItem : potionResponseModel = data.value as potionResponseModel
+                    const requestItem : potionResponseModel = data as potionResponseModel
                     console.log(requestItem)
                     if(requestItem.status === 200){
                         item.value.potion = requestItem.data
@@ -45,7 +45,7 @@ export const useItemStore = defineStore('item', () => {
                 }
                 break;
                 case 1:{
-                    const requestItem : otherResponseModel = data.value as otherResponseModel
+                    const requestItem : otherResponseModel = data as otherResponseModel
                     console.log(requestItem)
                     if(requestItem.status === 200){
                         item.value.other = requestItem.data
@@ -53,14 +53,14 @@ export const useItemStore = defineStore('item', () => {
                 } 
                 break;
                 case 2:{
-                    const requestItem : materialResponseModel  = data.value as materialResponseModel
+                    const requestItem : materialResponseModel  = data as materialResponseModel
                     console.log(requestItem)
                     if(requestItem.status === 200){
                         item.value.material = requestItem.data
                     }
                 }
                 case 3:{
-                    const requestItem : weaponResponseModel  = data.value as weaponResponseModel
+                    const requestItem : weaponResponseModel  = data as weaponResponseModel
                     console.log(requestItem)
                     if(requestItem.status === 200){
                         item.value.weapon = requestItem.data
@@ -68,7 +68,7 @@ export const useItemStore = defineStore('item', () => {
                 }
                 break;
                 case 4:{
-                    const requestItem: armorResponseModel = data.value as armorResponseModel
+                    const requestItem: armorResponseModel = data as armorResponseModel
                     console.log(requestItem)
                     if(requestItem.status === 200){
                         item.value.armor = requestItem.data
@@ -80,7 +80,7 @@ export const useItemStore = defineStore('item', () => {
                 }
                 break;
                 case 6:{
-                    const requestItem: keyResponseModel = data.value as keyResponseModel
+                    const requestItem: keyResponseModel = data as keyResponseModel
                     console.log(requestItem)
                     if(requestItem.status === 200){
                         item.value.key = requestItem.data
