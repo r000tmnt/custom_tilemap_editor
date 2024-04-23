@@ -16,6 +16,12 @@ export default defineNuxtConfig({
     "@pinia/nuxt"
     //...
   ],
+  routeRules: {
+    "/": { prerender: true },
+    "/item": { swr: true },
+    "/skill": { swr: true },
+    "/[level_id]": { ssr: false }
+  },
   // 設定 pinia store auto import
   pinia: {
     storesDirs: ['./stores/**']
