@@ -20,16 +20,22 @@
         <v-list-item>Clear tiles on the map</v-list-item>
         <v-list-item>Expand map</v-list-item>
     </v-list>
+
+    <event-enemy-selector @set-mob="setMobStartingPoint" />
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 
+import eventEnemySelector from './editorEnemySelector.vue'
+import type { mobDataModel } from '~/types/character';
+
 const { contextMenu } = storeToRefs(useDialogStore())
 const { levelData } = storeToRefs(useEditorStore())
 const { saveLevelData } = useEditorStore()
 const { getMobData } = useCharacterStore()
+const { toggleDialog } = useDialogStore()
 
 const pointType = ref<number>(-1)
 const pointer = ref<number>(-1)
@@ -56,7 +62,7 @@ const props = defineProps({
 const emit = defineEmits([
     "setStartingPoint",
     "removeStartingPoint",
-    "clearAll"
+    "clearAll",
 ])
 
 const contextRef = ref()
@@ -92,14 +98,23 @@ watch(() => [ props.x, props.y ], (newPosition) => {
 const setStartingPoint = (type: number) => {
     if(type === 2){
         levelData.value.player.push({ startingPoint: { x: props.col, y: props.row } })
+        emit("setStartingPoint", { x: props.col, y: props.row, type })
+        saveLevelData()
+        toggleDialog("context-menu")
     }else{
-        levelData.value.enemy.push({ startingPoint: { x: props.col, y: props.row } })
         //TODO - Select enemy
         getMobData()
+        toggleDialog("enemy-starting-point")
+        emit("setStartingPoint", { x: props.col, y: props.row, type })
     }
+}
 
-    emit("setStartingPoint", { x: props.col, y: props.row, type })
+const setMobStartingPoint = (mob: mobDataModel) => {
+    levelData.value.enemy[levelData.value.enemy.length - 1].job = mob.id
+    levelData.value.enemy[levelData.value.enemy.length - 1].name = mob.name
+    emit("setStartingPoint", { x: props.col, y: props.row, type: 3 })
     saveLevelData()
+    toggleDialog("context-menu")
 }
 
 const removeStartingPoint = (e: any) => {
@@ -109,7 +124,7 @@ const removeStartingPoint = (e: any) => {
         }else{
             levelData.value.enemy.splice(pointer.value, 1)
         }        
-        // saveLevelData()
+        emit("removeStartingPoint", { x: props.col, y: props.row, type: pointer.value })
     }else{
         e.stopPropagation()
     }
