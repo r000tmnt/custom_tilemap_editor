@@ -27,7 +27,7 @@ interface mobDataModel extends characterDataModel {
 }
 
 interface mobResponseModel extends responseModel {
-    data: mobDataModel[]
+    mobs: mobDataModel[]
 }
 
 export{
