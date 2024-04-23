@@ -17,7 +17,7 @@
         <v-list-item 
             :class="{'disabled': pointType < 2}"
             @click="removeStartingPoint">Remove starting point</v-list-item>
-        <v-list-item>Clear tiles on the map</v-list-item>
+        <v-list-item @click="clearMap">Clear tiles on the map</v-list-item>
         <v-list-item>Expand map</v-list-item>
     </v-list>
 
@@ -30,6 +30,7 @@ import { storeToRefs } from 'pinia';
 
 import eventEnemySelector from './editorEnemySelector.vue'
 import type { mobDataModel } from '~/types/character';
+import type { RouterViewProps } from 'vue-router';
 
 const { contextMenu } = storeToRefs(useDialogStore())
 const { levelData } = storeToRefs(useEditorStore())
@@ -127,6 +128,19 @@ const removeStartingPoint = (e: any) => {
         emit("removeStartingPoint", { x: props.col, y: props.row, type: pointer.value })
     }else{
         e.stopPropagation()
+    }
+}
+
+const clearMap = () => {
+    for(let i=0, row = levelData.value.map.length; i < row; i ++){
+        for(let j=0, col = levelData.value.map[i].length; j < col; j++){
+            levelData.value.map[i][j] = 0
+
+            if(i === (levelData.value.map.length - 1) && j === (levelData.value.map[0].length - 1)){
+                console.log(levelData.value.map)
+                emit("clearAll")
+            }
+        }
     }
 }
 
