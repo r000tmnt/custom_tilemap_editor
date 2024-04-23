@@ -23,6 +23,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const optionEffectDialog = ref<boolean>(false)
     // On and off swith for editor context menu
     const contextMenu = ref<boolean>(false)
+    // On and off switch for editor enemy selector
+    const enemySelector = ref<boolean>(false)
     
     const toggleDialog = (type: string) => {
         switch(type){
@@ -59,6 +61,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'context-menu':
                 contextMenu.value = !contextMenu.value
             break;
+            case 'enemy-starting-point':
+                enemySelector.value = !enemySelector.value
+            break;
             // and more...
         }
     }
@@ -75,6 +80,7 @@ export const useDialogStore = defineStore('dialog', () => {
         optionCreateDialog,
         optionEffectDialog,
         contextMenu,
+        enemySelector,
         toggleDialog
     }
 })
