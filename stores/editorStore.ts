@@ -101,9 +101,7 @@ export const useEditorStore = defineStore('editor', () => {
         for(let [key, value] of Object.entries(assets.value)){
             // const { data } = await useAsyncData(`getImagetype${key}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${key}`))
 
-            const { data } = await $api(`${mainStore.base_url}api/asset/image?type=${key}`)
-
-            const request_assets : levelAssetResponseModel = data.value as levelAssetResponseModel
+            const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${key}`)
             console.log("request:>>> ", request_assets)
             if(request_assets.status === 200){
                 assets.value[key as keyof levelAssetModle] = request_assets.assets
