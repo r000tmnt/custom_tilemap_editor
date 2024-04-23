@@ -93,7 +93,8 @@
                 :y="pointedSpot.y"
                 :row="pointedSpot.row"
                 :col="pointedSpot.col"
-                @set-starting-point="drawPoint" />
+                @set-starting-point="drawPoint"
+                @remove-starting-point="clearPoint" />
     </section> 
 </template>
 
@@ -398,6 +399,30 @@ const drawPoint = (v: any) => {
 
     context.value.fillRect(x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
     context.value.restore()
+}
+
+const clearPoint = (v:any) => {
+    const { x, y } = v
+
+    context.value.fillStyle = "#000000"
+
+    const xAxist = x * tileSize.value
+    const yAxist = y * tileSize.value
+    const index = levelData.value.map[y][x]
+    const asset = levelData.value.assets[index]
+
+    if(asset.length){
+        const tile = tiles.value.find(t => t.src.includes(asset))
+
+        if(tile){
+            context.value.fillRect(xAxist, yAxist, tileSize.value, tileSize.value)
+            context.value.drawImage(tile, xAxist, yAxist, tileSize.value, tileSize.value)
+        }else{
+            context.value.fillRect(xAxist, yAxist, tileSize.value, tileSize.value)
+        }        
+    }else{
+        context.value.fillRect(xAxist, yAxist, tileSize.value, tileSize.value)
+    }    
 }
 
 watch(() => canvasRef.value, (newVal) => {
