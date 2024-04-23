@@ -29,6 +29,7 @@ import { storeToRefs } from 'pinia';
 const { contextMenu } = storeToRefs(useDialogStore())
 const { levelData } = storeToRefs(useEditorStore())
 const { saveLevelData } = useEditorStore()
+const { getMobData } = useCharacterStore()
 
 const pointType = ref<number>(-1)
 const pointer = ref<number>(-1)
@@ -94,6 +95,7 @@ const setStartingPoint = (type: number) => {
     }else{
         levelData.value.enemy.push({ startingPoint: { x: props.col, y: props.row } })
         //TODO - Select enemy
+        getMobData()
     }
 
     emit("setStartingPoint", { x: props.col, y: props.row, type })
