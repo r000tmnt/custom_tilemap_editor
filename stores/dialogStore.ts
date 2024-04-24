@@ -25,6 +25,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const contextMenu = ref<boolean>(false)
     // On and off switch for editor enemy selector
     const enemySelector = ref<boolean>(false)
+    // On and off switch for editor map expander
+    const mapExpander = ref<boolean>(false)
     
     const toggleDialog = (type: string) => {
         switch(type){
@@ -64,6 +66,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'enemy-starting-point':
                 enemySelector.value = !enemySelector.value
             break;
+            case 'map-expander':
+                mapExpander.value = !mapExpander.value
+            break;
             // and more...
         }
     }
@@ -81,6 +86,7 @@ export const useDialogStore = defineStore('dialog', () => {
         optionEffectDialog,
         contextMenu,
         enemySelector,
+        mapExpander,
         toggleDialog
     }
 })
