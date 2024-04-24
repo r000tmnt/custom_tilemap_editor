@@ -44,22 +44,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import { storeToRefs } from 'pinia'
 
-const emit = defineEmits(['toggleLayout'])
+const { levelData, mode } = storeToRefs(useEditorStore())
+const { layers } = storeToRefs(useEditorStore())
 
-const layers = ref<any[]>([
-    { name: 'map', active: true },
-    { name: 'grid', active: true },
-    { name: 'player', active: true },
-    { name: 'event', active: true },
-])
+const emit = defineEmits(['toggleLayout'])
 
 const toggleLayout = (index: number) => {
     layers.value[index].active = !layers.value[index].active
     emit("toggleLayout", layers.value[index])
 }
-
-const { levelData, mode } = storeToRefs(useEditorStore())
 </script>
