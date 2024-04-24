@@ -62,6 +62,13 @@ export const useEditorStore = defineStore('editor', () => {
         events: []
     })
 
+    // Canvas layers
+    const layers = ref<any[]>([
+        { name: 'map', active: true },
+        { name: 'grid', active: true },
+        { name: 'player', active: true },
+        { name: 'event', active: true },
+    ])
     //
     const editEventIndex = ref<number>(0)
 
@@ -235,6 +242,7 @@ export const useEditorStore = defineStore('editor', () => {
         tileInfo,
         editEventIndex,
         audioAssets,
+        layers,
         initEditor,
         storeSteps,
         previousStep,
