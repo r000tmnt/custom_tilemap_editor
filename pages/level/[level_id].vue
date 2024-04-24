@@ -100,7 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted, watch, ref } from 'vue';
+import { onBeforeMount, watch, ref } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
 
@@ -113,9 +113,9 @@ import eventCreateDialog from '~/components/eventCreateDialog.vue';
 import eventEditDialog from '~/components/eventEditDialog.vue';
 
 const route = useRoute()
-const { levelData, steps, tiles, selectedTile, mode, tileInfo } = storeToRefs(useEditorStore())
+const { levelData, steps, tiles, selectedTile, mode, tileInfo, layers } = storeToRefs(useEditorStore())
 const { initEditor, storeSteps, saveLevelData, getEventsonTile } = useEditorStore()
-const { tileSize, base_url } = storeToRefs(useMainStore())
+const { tileSize } = storeToRefs(useMainStore())
 const { contextMenu } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 
@@ -220,60 +220,57 @@ const canvasKeyPressEvent = (e: any) => {
     }
 }
 
+// Check the other layers
+const checkLayers = (layers: any[]) => {
+    for(let i=0; i < layers.length; i++){
+        const { name, active } = layers[i]
+
+        if(active){
+            switch(name){
+                case "map":
+                    changeLayuout({ name: "map", active: true })
+                break;
+                case "grid":
+                    drawGrid()
+                break;
+                case "player":
+                    changeLayuout({ name: "player", active: true })
+                break;
+                case "event":
+                    changeLayuout({ name: "event", active: true })
+                break;
+            }
+        }
+    }
+}
+
 const changeLayuout = (v: any) => {
     if(!v.active){
         // Hide the layer
         switch(v.name){
-            case 'map':{
+            case 'map': case 'grid': 
                 context.value.clearRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
-                changeLayuout({ name: 'player', active: true })
-            }
-            break;
-            case 'grid':
-                context.value.clearRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
-                changeLayuout({ name: 'map', active: true })
-                changeLayuout({ name: 'player', active: true })
-                changeLayuout({ name: 'event', active: true })
-            break;
+
+                const tempLayer = layers.value.filter(l => l.name !== v.name)
+                checkLayers(tempLayer)
+            break
             case 'player':{
                 for(let i=0, player = levelData.value.player; i < player.length; i++){
                     const { x, y } = player[i].startingPoint
-                    context.value.fillStyle = '#000000'
-                    context.value.fillRect(x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+                    clearPoint({ x, y })
                 }
 
                 for(let i=0, enemy = levelData.value.enemy; i < enemy.length; i++){
                     const { x, y } = enemy[i].startingPoint
-                    context.value.fillStyle = '#000000'
-                    context.value.fillRect(x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+                    clearPoint({ x, y })
                 }
-
-                changeLayuout({ name: 'event', active: true })
             }
             break;
             case 'event':{
                 for(let i=0, event = levelData.value.event; i < event.length; i++){
                     if(Object.entries(event[i].position).length){
                         const { x, y } = event[i].position
-                        const type = levelData.value.map[y][x]
-                        const asset = levelData.value.assets[type]
-
-                        // Draw the tile covered by the yellow square
-                        if(asset.length){
-                            const tile = tiles.value.find(t => t.src.includes(asset))
-
-                            if(tile !== undefined){
-                                context.value.drawImage(tile, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
-                            }else{
-                                const newTile = document.createElement('img')
-                                newTile.src = `${base_url}${asset.substring(1, asset.length)}`
-                                tiles.value.push(newTile)
-
-                                newTile.onload = () => {
-                                    context.value.drawImage(newTile, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
-                                }
-                            }
-                        }
+                        clearPoint({ x, y })
                     }
                 }
             }
@@ -287,7 +284,6 @@ const changeLayuout = (v: any) => {
                 context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
                 for(let i=0, map = levelData.value.map; i < map.length; i++){
                     for(let j=0; j < map[i].length; j++){
-                        const type = map[i][j]
                         const x = j * tileSize.value
                         const y = i * tileSize.value
                         const tile = levelData.value.assets[map[i][j]]
@@ -303,7 +299,7 @@ const changeLayuout = (v: any) => {
                                 const img = document.createElement('img')
                                 img.src = `/assets/images/env/${tile}`
                                 // console.log(img)
-                                // tiles.value.push(img)
+                                tiles.value.push(img)
                                 img.onload = () => {
                                     context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
                                 }
@@ -311,6 +307,9 @@ const changeLayuout = (v: any) => {
                         }
                     }
                 }
+
+                const tempLayer = layers.value.filter(l => l.name !== v.name)
+                checkLayers(tempLayer)
             }
             break;
             case 'grid':
@@ -321,6 +320,7 @@ const changeLayuout = (v: any) => {
                     const { x, y } = player[i].startingPoint
                     const asset = tiles.value.find(t => t.src.includes("fighter"))
                     context.value.drawImage(asset, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+                    drawPoint({ x, y, type: 2 })
                 }
 
                 for(let i=0, enemy = levelData.value.enemy; i < enemy.length; i++){
@@ -328,6 +328,7 @@ const changeLayuout = (v: any) => {
                     const { x, y } = enemy[i].startingPoint
                     const asset = tiles.value.find(t => t.src.includes(job? job : 'zombie'))
                     context.value.drawImage(asset, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+                    drawPoint({ x, y, type: 3 })
                 }
             }
             break;
@@ -335,8 +336,7 @@ const changeLayuout = (v: any) => {
                 for(let i=0, event = levelData.value.event; i < event.length; i++){
                     if(Object.entries(event[i].position).length){
                         const { x, y } = event[i].position
-                        context.value.fillStyle = 'yellow'
-                        context.value.fillRect(x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+                        drawPoint({ x, y, type: 4 })
                     }
                 }
             }
@@ -435,7 +435,12 @@ const clearPoint = (v:any) => {
         }        
     }else{
         context.value.fillRect(xAxist, yAxist, tileSize.value, tileSize.value)
-    }    
+    }   
+    
+    if(layers.value[1].active){
+        context.value.strokeStyle = "rgba(211, 211, 211, .7)"
+        context.value.strokeRect(xAxist, yAxist, tileSize.value, tileSize.value)
+    }
 }
 
 const clearMap = () => {
@@ -445,9 +450,10 @@ const clearMap = () => {
 }
 
 const drawGrid = () => {
+    context.value.strokeStyle = "rgba(211, 211, 211, .7)"
+
     for(let i=0, map = levelData.value.map; i < map.length; i++){
         for(let j=0; j < map[i].length; j++){
-            context.value.strokeStyle = "rgba(211, 211, 211, .7)"
             context.value.strokeRect(j * tileSize.value, i * tileSize.value, tileSize.value, tileSize.value)
         }
     }
