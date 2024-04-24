@@ -53,7 +53,6 @@
                     <canvas 
                         ref="canvasRef"
                         @mousedown="canvasEvent"
-                        @keydown="canvasKeyPressEvent"
                     ></canvas>
                     <div class="draggable border"
                         @mouseover="highlightColumn"
@@ -95,7 +94,8 @@
                 :col="pointedSpot.col"
                 @set-starting-point="drawPoint"
                 @remove-starting-point="clearPoint"
-                @clear-all="clearMap"/>
+                @clear-all="clearMap"
+                @expand-map="drawCanvas"/>
     </section> 
 </template>
 
@@ -432,75 +432,81 @@ const clearMap = () => {
     saveLevelData()
 }
 
+const drawCanvas = () => {
+    if(canvasRef.value !== null){
+        const map = levelData.value.map
+        canvasRef.value.width = map[0].length * tileSize.value
+        canvasRef.value.height = map.length * tileSize.value
+        context.value = canvasRef.value.getContext("2d")
+        canvasPosition.value = canvasRef.value.getBoundingClientRect()
+        context.value.fillStyle = '#000000'
+        context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
+
+        for(let i=0; i < map.length; i++){
+            for(let j=0; j < map[i].length; j++){
+                const tile = levelData.value.assets[map[i][j]]
+                const x = j * tileSize.value
+                const y = i * tileSize.value
+                const event = getEventsonTile(x, y)
+                if(tile.length){
+                    console.log("tile :>>", tile)
+                    const img = document.createElement('img')
+                    img.src = `/assets/images/env/${tile}`
+                    // console.log(img)
+                    if(!tiles.value.find(t => t.src === img.src)){
+                        tiles.value.push(img)
+                    }
+                    img.onload = () => {
+                        context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+                    }
+                }
+
+                if(event.length){
+                    drawPoint({ type: 4, x: j, y: i })
+                }
+
+                if(levelData.value.player.find(p => p.startingPoint.x === j && p.startingPoint.y === i)){
+                    const img = document.createElement('img')
+                    img.src = `/assets/images/class/class_fighter_1.png`
+                    // console.log(img)
+                    // tiles.value.push(img)
+                    img.onload = () => {
+                        context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+                    }
+                }
+
+                if(levelData.value.enemy.find(e => e.startingPoint.x === j && e.startingPoint.y === i)){
+                    const img = document.createElement('img')
+                    img.src = "/assets/images/mob/mob_zombie_1.png"
+
+                    img.onload = () => {
+                        context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+                    }
+                }
+            }
+        }
+
+        for(let i=0, player = levelData.value.player; i < player.length; i++){
+            drawPoint({ type: 2, ...player[i].startingPoint })
+        }
+
+        for(let i=0, enemy = levelData.value.enemy; i < enemy.length; i++){
+            drawPoint({ type: 3, ...enemy[i].startingPoint })
+        }            
+    }
+}
+
 watch(() => canvasRef.value, (newVal) => {
     console.log("newVal :>>>", newVal)
     if(newVal){
         console.log(canvasRef.value)
-        if(canvasRef.value !== null){
-            const map = levelData.value.map
-            canvasRef.value.width = map[0].length * tileSize.value
-            canvasRef.value.height = map.length * tileSize.value
-            context.value = canvasRef.value.getContext("2d")
-            canvasPosition.value = canvasRef.value.getBoundingClientRect()
-
-            context.value.fillStyle = '#000000'
-            context.value.fillRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
-
-            for(let i=0; i < map.length; i++){
-                for(let j=0; j < map[i].length; j++){
-                    const tile = levelData.value.assets[map[i][j]]
-                    const x = j * tileSize.value
-                    const y = i * tileSize.value
-                    const event = getEventsonTile(x, y)
-                    if(tile.length){
-                        console.log("tile :>>", tile)
-                        const img = document.createElement('img')
-                        img.src = `/assets/images/env/${tile}`
-                        // console.log(img)
-                        tiles.value.push(img)
-                        img.onload = () => {
-                            context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
-                        }
-                    }
-
-                    if(event.length){
-                        drawPoint({ type: 4, x: j, y: i })
-                    }
-
-                    if(levelData.value.player.find(p => p.startingPoint.x === j && p.startingPoint.y === i)){
-                        const img = document.createElement('img')
-                        img.src = `/assets/images/class/class_fighter_1.png`
-                        // console.log(img)
-                        // tiles.value.push(img)
-                        img.onload = () => {
-                            context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
-                        }
-                    }
-
-                    if(levelData.value.enemy.find(e => e.startingPoint.x === j && e.startingPoint.y === i)){
-                        const img = document.createElement('img')
-                        img.src = "/assets/images/mob/mob_zombie_1.png"
-
-                        img.onload = () => {
-                            context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
-                        }
-                    }
-                }
-            }
-
-            for(let i=0, player = levelData.value.player; i < player.length; i++){
-                drawPoint({ type: 2, ...player[i].startingPoint })
-            }
-
-            for(let i=0, enemy = levelData.value.enemy; i < enemy.length; i++){
-                drawPoint({ type: 3, ...enemy[i].startingPoint })
-            }
-        }
+        drawCanvas()
     }
 
     // Hide the default browser context menu when right click on the canvas
     canvasRef.value?.addEventListener("contextmenu", (e: any) => { e.preventDefault() })
     document.addEventListener("click", () => { if(contextMenu.value)  toggleDialog("context-menu") })
+    document.addEventListener("keydown", canvasKeyPressEvent)
 })
 
 onBeforeMount(() => {
