@@ -93,7 +93,7 @@ const expandMap = () => {
                     if(diffHeigth > 0){
                         // Expand the map
                         const newRow = Array.from({length: newWidth.value}, (_, i) => i - i)
-                        for(let j=0, map = levelData.value.map; j < diffWidth; j++){
+                        for(let j=0, map = levelData.value.map; j < diffHeigth; j++){
                             if(((j + 1) % 2) === 0){
                                 map.push(newRow)
                             }else{
@@ -102,13 +102,11 @@ const expandMap = () => {
                         }
                     }else{
                         // Shrink the map
-                        for(let i=0, map = levelData.value.map; i < map.length; i++){
-                            for(let j=0; j < Math.abs(diffWidth); j++){
-                                if(((j + 1) % 2) === 0){
-                                    map.shift()
-                                }else{
-                                    map.pop()
-                                }
+                        for(let j=0, map = levelData.value.map; j < Math.abs(diffHeigth); j++){
+                            if(((j + 1) % 2) === 0){
+                                map.shift()
+                            }else{
+                                map.pop()
                             }
                         }
                     }
@@ -174,7 +172,7 @@ const expandMap = () => {
                     if(diffHeigth > 0){
                         // Expand the map
                         const newRow = Array.from({length: newWidth.value}, (_, i) => i - i)
-                        for(let j=0, map = levelData.value.map; j < diffWidth; j++){
+                        for(let j=0, map = levelData.value.map; j < diffHeigth; j++){
                             if(((j + 1) % 2) === 0){
                                 map.push(newRow)
                             }else{
@@ -183,13 +181,11 @@ const expandMap = () => {
                         }
                     }else{
                         // Shrink the map
-                        for(let i=0, map = levelData.value.map; i < map.length; i++){
-                            for(let j=0; j < Math.abs(diffWidth); j++){
-                                if(((j + 1) % 2) === 0){
-                                    map.shift()
-                                }else{
-                                    map.pop()
-                                }
+                        for(let j=0, map = levelData.value.map; j < Math.abs(diffHeigth); j++){
+                            if(((j + 1) % 2) === 0){
+                                map.shift()
+                            }else{
+                                map.pop()
                             }
                         }
                     }
@@ -263,7 +259,7 @@ const expandMap = () => {
                     if(diffHeigth > 0){
                         // Expand the map
                         const newRow = Array.from({length: newWidth.value}, (_, i) => i - i)
-                        for(let j=0, map = levelData.value.map; j < diffWidth; j++){
+                        for(let j=0, map = levelData.value.map; j < diffHeigth; j++){
                             if(((j + 1) % 2) === 0){
                                 map.push(newRow)
                             }else{
@@ -272,13 +268,11 @@ const expandMap = () => {
                         }
                     }else{
                         // Shrink the map
-                        for(let i=0, map = levelData.value.map; i < map.length; i++){
-                            for(let j=0; j < Math.abs(diffWidth); j++){
-                                if(((j + 1) % 2) === 0){
-                                    map.shift()
-                                }else{
-                                    map.pop()
-                                }
+                        for(let j=0, map = levelData.value.map; j < Math.abs(diffHeigth); j++){
+                            if(((j + 1) % 2) === 0){
+                                map.shift()
+                            }else{
+                                map.pop()
                             }
                         }
                     }
