@@ -50,9 +50,10 @@ import { storeToRefs } from 'pinia'
 const emit = defineEmits(['toggleLayout'])
 
 const layers = ref<any[]>([
-    { name: 'map', active: 'true' },
-    { name: 'player', active: 'true' },
-    { name: 'event', active: 'true' },
+    { name: 'map', active: true },
+    { name: 'grid', active: true },
+    { name: 'player', active: true },
+    { name: 'event', active: true },
 ])
 
 const toggleLayout = (index: number) => {
