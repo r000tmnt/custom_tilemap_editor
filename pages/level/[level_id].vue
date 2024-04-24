@@ -85,8 +85,8 @@
                 </v-col>
             </v-row>  
                
-            <event-create-dialog />
-            <event-edit-dialog />
+            <event-create-dialog v-if="createEventDialog" />
+            <event-edit-dialog v-if="editEventDialog" />
             <editor-context-menu 
                 :x="pointedSpot.x" 
                 :y="pointedSpot.y"
@@ -117,7 +117,7 @@ const route = useRoute()
 const { levelData, steps, tiles, selectedTile, mode, tileInfo, layers } = storeToRefs(useEditorStore())
 const { initEditor, storeSteps, saveLevelData, getEventsonTile } = useEditorStore()
 const { tileSize } = storeToRefs(useMainStore())
-const { contextMenu } = storeToRefs(useDialogStore())
+const { contextMenu, createEventDialog, editEventDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
