@@ -18,23 +18,25 @@
             :class="{'disabled': pointType < 2}"
             @click="removeStartingPoint">Remove starting point</v-list-item>
         <v-list-item @click="clearMap">Clear tiles on the map</v-list-item>
-        <v-list-item>Expand map</v-list-item>
+        <v-list-item @click="toggleDialog('map-expander')">Expand map</v-list-item>
     </v-list>
 
     <event-enemy-selector @set-mob="setMobStartingPoint" />
+    <editor-map-expander @expand-map="emit('expandMap')"/>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia';
-
-import eventEnemySelector from './editorEnemySelector.vue'
 import type { mobDataModel } from '~/types/character';
-import type { RouterViewProps } from 'vue-router';
+
+// Components
+import eventEnemySelector from './editorEnemySelector.vue'
+import editorMapExpander from './editorMapExpander.vue'
 
 const { contextMenu } = storeToRefs(useDialogStore())
 const { levelData } = storeToRefs(useEditorStore())
-const { saveLevelData } = useEditorStore()
+const { saveLevelData, storeSteps } = useEditorStore()
 const { getMobData } = useCharacterStore()
 const { toggleDialog } = useDialogStore()
 
@@ -64,6 +66,7 @@ const emit = defineEmits([
     "setStartingPoint",
     "removeStartingPoint",
     "clearAll",
+    "expandMap"
 ])
 
 const contextRef = ref()
@@ -138,6 +141,7 @@ const clearMap = () => {
 
             if(i === (levelData.value.map.length - 1) && j === (levelData.value.map[0].length - 1)){
                 console.log(levelData.value.map)
+                storeSteps(levelData.value.map)
                 emit("clearAll")
             }
         }
