@@ -114,5 +114,6 @@ export {
     eventDialogueModel,
     dialogueOptionModle,
     optionEffectModle,
-    effectItemReferenceModel
+    effectItemReferenceModel,
+    eventPositionModel
 }
