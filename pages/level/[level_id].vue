@@ -103,6 +103,7 @@
 import { onBeforeMount, watch, ref } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
+import type { eventPositionModel } from '~/types/level'
 
 // Components
 import editorToolBar from '../../components/editorToolBar.vue'
@@ -124,6 +125,7 @@ const context = ref()
 const canvasPosition = ref()
 const pointedSpot = ref({ x: 0, y: 0, row: 0, col: 0 })
 const column = ref<number[]>([3, 6, 3])
+const mouseTraker = ref<eventPositionModel[]>([])
 
 const canvasEvent = (e: any) => {
     console.log('canvas mousedown event:>>> ', e)
@@ -135,6 +137,32 @@ const canvasEvent = (e: any) => {
     const col = Math.floor( x / tileSize.value)
 
     const mouseButton = e.button
+
+    // Draw border on pointed tile
+    // Redraw border on the tile clicked before
+    if(mouseTraker.value.length){
+        const index = levelData.value.map[row][col]
+        const asset = levelData.value.assets[index]
+
+        context.value.fillStyle = "#000000"
+        context.value.clearRect(mouseTraker.value[0].x - 1, mouseTraker.value[0].y - 1, tileSize.value + 2, tileSize.value + 2)
+        context.value.fillRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
+
+        if(asset.length){
+            const tile = tiles.value.find(t => t.src.includes(asset))
+
+            if(tile){
+                context.value.drawImage(tile, mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
+            }
+        }
+        context.value.strokeStyle = "rgb(211, 211, 211)"
+        context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
+        mouseTraker.value.splice(0)
+    }
+
+    mouseTraker.value.push({ x: col * tileSize.value, y: row * tileSize.value })
+    context.value.strokeStyle = "yellow"
+    context.value.strokeRect(col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)
 
     switch(mouseButton){
         case 0:
@@ -438,7 +466,7 @@ const clearPoint = (v:any) => {
     }   
     
     if(layers.value[1].active){
-        context.value.strokeStyle = "rgba(211, 211, 211, .7)"
+        context.value.strokeStyle = "rgb(211, 211, 211)"
         context.value.strokeRect(xAxist, yAxist, tileSize.value, tileSize.value)
     }
 }
@@ -450,7 +478,7 @@ const clearMap = () => {
 }
 
 const drawGrid = () => {
-    context.value.strokeStyle = "rgba(211, 211, 211, .7)"
+    context.value.strokeStyle = "rgb(211, 211, 211)"
 
     for(let i=0, map = levelData.value.map; i < map.length; i++){
         for(let j=0; j < map[i].length; j++){
