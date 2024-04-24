@@ -229,6 +229,12 @@ const changeLayuout = (v: any) => {
                 changeLayuout({ name: 'player', active: true })
             }
             break;
+            case 'grid':
+                context.value.clearRect(0, 0, canvasRef?.value?.width, canvasRef?.value?.height)
+                changeLayuout({ name: 'map', active: true })
+                changeLayuout({ name: 'player', active: true })
+                changeLayuout({ name: 'event', active: true })
+            break;
             case 'player':{
                 for(let i=0, player = levelData.value.player; i < player.length; i++){
                     const { x, y } = player[i].startingPoint
@@ -306,6 +312,9 @@ const changeLayuout = (v: any) => {
                     }
                 }
             }
+            break;
+            case 'grid':
+                drawCanvas()
             break;
             case 'player':{
                 for(let i=0, player = levelData.value.player; i < player.length; i++){
@@ -435,6 +444,15 @@ const clearMap = () => {
     saveLevelData()
 }
 
+const drawGrid = () => {
+    for(let i=0, map = levelData.value.map; i < map.length; i++){
+        for(let j=0; j < map[i].length; j++){
+            context.value.strokeStyle = "rgba(211, 211, 211, .7)"
+            context.value.strokeRect(j * tileSize.value, i * tileSize.value, tileSize.value, tileSize.value)
+        }
+    }
+}
+
 const drawCanvas = () => {
     if(canvasRef.value !== null){
         const map = levelData.value.map
@@ -472,7 +490,9 @@ const drawCanvas = () => {
                     const img = document.createElement('img')
                     img.src = `/assets/images/class/class_fighter_1.png`
                     // console.log(img)
-                    // tiles.value.push(img)
+                    if(!tiles.value.find(t => t.src === img.src)){
+                        tiles.value.push(img)
+                    }
                     img.onload = () => {
                         context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
                     }
@@ -481,7 +501,9 @@ const drawCanvas = () => {
                 if(levelData.value.enemy.find(e => e.startingPoint.x === j && e.startingPoint.y === i)){
                     const img = document.createElement('img')
                     img.src = "/assets/images/mob/mob_zombie_1.png"
-
+                    if(!tiles.value.find(t => t.src === img.src)){
+                        tiles.value.push(img)
+                    }
                     img.onload = () => {
                         context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
                     }
@@ -495,7 +517,9 @@ const drawCanvas = () => {
 
         for(let i=0, enemy = levelData.value.enemy; i < enemy.length; i++){
             drawPoint({ type: 3, ...enemy[i].startingPoint })
-        }            
+        }  
+        
+        drawGrid()
     }
 }
 
