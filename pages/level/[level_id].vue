@@ -208,12 +208,15 @@ const canvasEvent = (e: any) => {
 }
 
 const canvasKeyPressEvent = (e: any) => {
-    // If the combination is ctrl + z
-    if(e.keyCode === 90 && e.ctrlKey){
-        // Take one step back
-        levelData.value.map = steps.value[steps.value.length - 1]
-        // Remove the step
-        steps.value.splice(steps.value.length - 1, 1)
+    // If there are steps for back tracking
+    if(steps.value.length){
+        // If the combination is ctrl + z
+        if(e.keyCode === 90 && e.ctrlKey){
+            // Take one step back
+            levelData.value.map = steps.value[steps.value.length - 1]
+            // Remove the step
+            steps.value.splice(steps.value.length - 1, 1)
+        }        
     }
 }
 
