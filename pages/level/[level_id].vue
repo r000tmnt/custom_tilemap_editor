@@ -138,32 +138,6 @@ const canvasEvent = (e: any) => {
 
     const mouseButton = e.button
 
-    // Draw border on pointed tile
-    // Redraw border on the tile clicked before
-    if(mouseTraker.value.length){
-        const index = levelData.value.map[row][col]
-        const asset = levelData.value.assets[index]
-
-        context.value.fillStyle = "#000000"
-        context.value.clearRect(mouseTraker.value[0].x - 1, mouseTraker.value[0].y - 1, tileSize.value + 2, tileSize.value + 2)
-        context.value.fillRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
-
-        if(asset.length){
-            const tile = tiles.value.find(t => t.src.includes(asset))
-
-            if(tile){
-                context.value.drawImage(tile, mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
-            }
-        }
-        context.value.strokeStyle = "rgb(211, 211, 211)"
-        context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
-        mouseTraker.value.splice(0)
-    }
-
-    mouseTraker.value.push({ x: col * tileSize.value, y: row * tileSize.value })
-    context.value.strokeStyle = "yellow"
-    context.value.strokeRect(col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)
-
     switch(mouseButton){
         case 0:
             // Left button
@@ -232,6 +206,36 @@ const canvasEvent = (e: any) => {
         default:
             // Other
         break;
+    }
+
+    if(layers.value[1].active){
+        // Draw border on pointed tile
+        // Redraw border on the tile clicked before
+        if(mouseTraker.value.length){
+            const oldRow = Math.floor(mouseTraker.value[0].y / tileSize.value)
+            const oldCol = Math.floor(mouseTraker.value[0].x / tileSize.value)
+            const index = levelData.value.map[oldRow][oldCol]
+            const asset = levelData.value.assets[index]
+
+            context.value.fillStyle = "#000000"
+            context.value.clearRect(mouseTraker.value[0].x - 1, mouseTraker.value[0].y - 1, tileSize.value + 2, tileSize.value + 2)
+            context.value.fillRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
+
+            if(asset.length){
+                const tile = tiles.value.find(t => t.src.includes(asset))
+
+                if(tile){
+                    context.value.drawImage(tile, mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
+                }
+            }
+            context.value.strokeStyle = "rgb(211, 211, 211)"
+            context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
+            mouseTraker.value.splice(0)
+        }
+
+        mouseTraker.value.push({ x: col * tileSize.value, y: row * tileSize.value })
+        context.value.strokeStyle = "yellow"
+        context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
     }
 }
 
