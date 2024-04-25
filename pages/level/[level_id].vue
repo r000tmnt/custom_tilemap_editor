@@ -506,7 +506,6 @@ const drawCanvas = () => {
                 const tile = levelData.value.assets[map[i][j]]
                 const x = j * tileSize.value
                 const y = i * tileSize.value
-                const event = getEventsonTile(x, y)
                 if(tile.length){
                     console.log("tile :>>", tile)
                     const img = document.createElement('img')
@@ -518,10 +517,6 @@ const drawCanvas = () => {
                     img.onload = () => {
                         context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
                     }
-                }
-
-                if(event.length){
-                    drawPoint({ type: 4, x: j, y: i })
                 }
 
                 if(levelData.value.player.find(p => p.startingPoint.x === j && p.startingPoint.y === i)){
@@ -547,6 +542,11 @@ const drawCanvas = () => {
                     }
                 }
             }
+        }
+
+        for(let i=0, event = levelData.value.event; i < event.length; i++){
+            const { x, y } = event[i].position
+            drawPoint({ type: 4, x, y })
         }
 
         for(let i=0, player = levelData.value.player; i < player.length; i++){
