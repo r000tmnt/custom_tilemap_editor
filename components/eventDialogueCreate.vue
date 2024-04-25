@@ -16,7 +16,8 @@
                     <v-col>
                         <!-- The person to show on the screen -->
                         <v-select title="Person"
-                            :rules="selectRules"></v-select>
+                            v-model="newDialogue.person"
+                            :items="characterList"></v-select>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -31,14 +32,15 @@
                         <!-- font size -->
                         <v-select title="Font size"
                             v-model="newDialogue.size"
-                            :items="fontSizes"></v-select>
+                            :items="fontSizes"
+                            :rules="selectRules"></v-select>
                     </v-col>
                 </v-row>
                 <v-row>
                     <v-col>
                         <!-- content -->
                         <v-textarea label="Content"
-                            :rules="selectRules"></v-textarea>
+                            :rules="inputRules"></v-textarea>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -53,7 +55,7 @@
                         <v-btn color="grey" 
                             @click="toggleDialog('scene-dialogue-create')"
                             class="mr-2">CANCEL</v-btn>
-                        <v-btn color="primary" @click="createDialog">CONFIRM</v-btn>
+                        <v-btn color="primary" @click="createDialogue">CONFIRM</v-btn>
                     </v-col>
                 </v-row>                
             </v-form>
@@ -74,6 +76,10 @@ const { selectRules, inputRules } = useRuleStore()
 
 const emit = defineEmits(["createDialogue"])
 
+const characterList = ref([
+    "unknow"
+])
+
 const fontSizes = ref<string[]>([
     "fontSize",
     "fontSize_md",
@@ -90,8 +96,8 @@ const newDialogue = ref<eventDialogueModel>({
 
 const formRef = ref()
 
-const createDialog = () => {
-    formRef.value?.validate((result: any) => {
+const createDialogue = () => {
+    formRef.value?.validate().then((result: any) => {
         if(result.valid){
             emit("createDialogue", newDialogue)
             toggleDialog("scene-dialogue-create")
