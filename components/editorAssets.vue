@@ -61,7 +61,7 @@ const selectTile = (v:any, index:number) => {
             selectedTile.value = newTile
         }else{
             // If it is an existing tile
-            selectedTile.value = tiles.value[index]
+            selectedTile.value = tiles.value[assetIndex]
         }
     }
 }
