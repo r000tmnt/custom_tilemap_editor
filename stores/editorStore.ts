@@ -216,11 +216,8 @@ export const useEditorStore = defineStore('editor', () => {
      */
     const saveLevelData = async() => {
         try {
-            const mainStore = useMainStore()
-            // await $fetch(`${mainStore.base_url}api/level/${levelData.value}`, { method: 'PATCH', body: levelData.value })
-
-            await $api(`${mainStore.base_url}api/level/${levelData.value}`, { method: 'PATCH', body: levelData.value })
-        } catch (error) {
+            await $fetch(`${mainStore.base_url}api/level/${levelData.value.id}`, { method: 'PATCH', body: levelData.value })
+        }catch(error){
             console.error("saveLevelData error :>>>", error)
         }
     }
