@@ -165,7 +165,7 @@ const resetFormState = () => {
 }
 
 // 編輯關卡事件
-const createEvent = async() => {
+const createEvent = () => {
     try{
         const pointer: number[] = []
         levelData.value.event.forEach((e, index) => {
@@ -177,7 +177,7 @@ const createEvent = async() => {
         tileInfo.value.events.forEach((e, index) => {
             levelData.value.event[pointer[index]] = e
         })
-        await saveLevelData()
+        saveLevelData()
         resetFormState()
     }catch(err){
         console.log(err)

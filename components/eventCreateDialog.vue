@@ -159,13 +159,10 @@ const updateEvent = (v: any) => {
 // 重設表單
 const resetFormState = () => {
     toggleDialog("event-create")
-    //if(tileInfo.value.events.length){
-      //  tileInfo.value.events.splice(tileInfo.value.events.length - 1, 1)
-    //}
 }
 
 // 新建關卡事件
-const createEvent = async() => {
+const createEvent = () => {
     if(tileInfo.value.events[tileInfo.value.events.length - 1].item.length || tileInfo.value.events[tileInfo.value.events.length - 1].scene.length){
         try{
             const pointer: number[] = []
@@ -178,7 +175,7 @@ const createEvent = async() => {
             tileInfo.value.events.forEach((e, index) => {
                 levelData.value.event[pointer[index]] = e
             })
-            await saveLevelData()
+            saveLevelData()
             resetFormState()
         }catch(err){
             console.log(err)
