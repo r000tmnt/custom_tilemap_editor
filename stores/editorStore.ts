@@ -69,6 +69,17 @@ export const useEditorStore = defineStore('editor', () => {
         { name: 'player', active: true },
         { name: 'event', active: true },
     ])
+
+    // Config options
+    const configOptions = ref<string[]>([
+        "Edit level name", 
+        "Edit conversation phase",
+        "Edit battle phase BGM",
+        "Edit level objective",
+        "Editor theme", 
+        "Language", 
+    ])
+
     //
     const editEventIndex = ref<number>(0)
 
