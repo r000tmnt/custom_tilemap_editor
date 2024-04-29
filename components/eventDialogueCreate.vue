@@ -100,7 +100,7 @@ const formRef = ref()
 const createDialogue = () => {
     formRef.value?.validate().then((result: any) => {
         if(result.valid){
-            emit("createDialogue", newDialogue)
+            emit("createDialogue", newDialogue.value)
             toggleDialog("scene-dialogue-create")
         }
     })

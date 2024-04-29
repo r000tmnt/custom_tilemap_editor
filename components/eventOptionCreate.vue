@@ -85,7 +85,7 @@ const confirmEffect = (v: optionEffectModle) => {
 const createOption = () => {
     formRef.value?.validate((result: any) => {
         if(result.valid){
-            emit("createOption", newOption)
+            emit("createOption", newOption.value)
             toggleDialog("'dialogue-option-create'")
         }
     })

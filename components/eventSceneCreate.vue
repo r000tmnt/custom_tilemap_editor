@@ -133,6 +133,7 @@ const setBackground = (path: string) => {
 }
 
 const confirmDialogue = (v: eventDialogueModel) => {
+  console.log("comfirmDialogue :>>>", v)
   newScene.value.dialogue.push(v)
 }
 
@@ -149,7 +150,7 @@ const confirmOption = (v: dialogueOptionModle) => {
 const createScene = () => {
   formRef.value?.validate().then((result: any) => {
     if(result.valid){
-      emit("createScene", newScene)
+      emit("createScene", newScene.value)
       toggleDialog("scene-create")
     }
   })
