@@ -15,7 +15,7 @@
                 <v-row>
                     <v-col>
                         <!-- The person to show on the screen -->
-                        <v-select title="Person"
+                        <v-select label="Person"
                             v-model="newDialogue.person"
                             :items="characterList"></v-select>
                     </v-col>
@@ -30,7 +30,7 @@
                 <v-row>
                     <v-col>
                         <!-- font size -->
-                        <v-select title="Font size"
+                        <v-select label="Font size"
                             v-model="newDialogue.size"
                             :items="fontSizes"
                             :rules="selectRules"></v-select>
