@@ -40,6 +40,7 @@
                     <v-col>
                         <!-- content -->
                         <v-textarea label="Content"
+                            v-model="newDialogue.content"
                             :rules="inputRules"></v-textarea>
                     </v-col>
                 </v-row>
