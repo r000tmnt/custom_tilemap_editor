@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel, tileInfoModel, responseModel } from '~/types/level'
+import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel, tileInfoModel, responseModel, levelEventModle } from '~/types/level'
 import $api from '~/composables/useCustomFetch'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -81,7 +81,7 @@ export const useEditorStore = defineStore('editor', () => {
      * @returns The array of events
      */
     const getEventsonTile = (x: number, y: number) => {
-        const events = []
+        const events: levelEventModle[] = []
     
         for(let i=0, levelEvent = levelData.value.event; i < levelEvent.length; i++){
             const eventPosition = levelEvent[i].position
