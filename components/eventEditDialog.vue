@@ -55,8 +55,7 @@
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
-                                    {{ `${index + 1}. Dialogue: ` }}
-                                    {{ item.value.dialogue[0].value.content }}
+                                    {{ `${index + 1}. Dialogue: ${item.dialogue[0].content}` }}
                                 </v-list-item>    
                             </template>
 
