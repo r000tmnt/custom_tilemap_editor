@@ -228,6 +228,26 @@ const canvasEvent = (e: any) => {
                     context.value.drawImage(tile, mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
                 }
             }
+
+            const event = getEventsonTile(oldCol, oldRow)
+
+            if(event.length){
+                drawPoint({ x: oldCol, y: oldRow, type: 4 })
+            }
+
+            const player = levelData.value.player.find(p => p.startingPoint.x === oldCol && p.startingPoint.y === oldRow)
+            const enemy = levelData.value.enemy.find(p => p.startingPoint.x === oldCol && p.startingPoint.y === oldRow)
+
+            if(player){
+                drawPoint({ x: oldCol, y: oldRow, type: 2 })
+                drawCharacterIcon({ x: mouseTraker.value[0].x, y: mouseTraker.value[0].y, type: 2 })
+            }
+
+            if(enemy){
+                drawPoint({ x: oldCol, y: oldRow, type: 3 })
+                drawCharacterIcon({ x: mouseTraker.value[0].x, y: mouseTraker.value[0].y, type: 3 })
+            }
+
             context.value.strokeStyle = "rgb(211, 211, 211)"
             context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
             mouseTraker.value.splice(0)
@@ -446,6 +466,28 @@ const drawPoint = (v: any) => {
     context.value.restore()
 }
 
+const drawCharacterIcon = (v:any) => {
+    const { x, y, type } = v
+
+    const icon = (type === 2)? "class/class_fighter_1" : "mob/mob_zombie_1"
+
+    const tile = tiles.value.find(t => t.src.includes(icon))
+
+    if(tile){
+        context.value.drawImage(tile, x, y, tileSize.value, tileSize.value)
+    }else{
+        const img = document.createElement('img')
+        img.src = `/assets/images/${icon}.png`
+        // console.log(img)
+        
+        img.onload = () => {
+            context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+        }
+
+        tiles.value.push(img)
+    }
+}
+
 const clearPoint = (v:any) => {
     const { x, y } = v
 
@@ -520,26 +562,11 @@ const drawCanvas = () => {
                 }
 
                 if(levelData.value.player.find(p => p.startingPoint.x === j && p.startingPoint.y === i)){
-                    const img = document.createElement('img')
-                    img.src = `/assets/images/class/class_fighter_1.png`
-                    // console.log(img)
-                    if(!tiles.value.find(t => t.src === img.src)){
-                        tiles.value.push(img)
-                    }
-                    img.onload = () => {
-                        context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
-                    }
+                    drawCharacterIcon({ x, y, type: 2 })
                 }
 
                 if(levelData.value.enemy.find(e => e.startingPoint.x === j && e.startingPoint.y === i)){
-                    const img = document.createElement('img')
-                    img.src = "/assets/images/mob/mob_zombie_1.png"
-                    if(!tiles.value.find(t => t.src === img.src)){
-                        tiles.value.push(img)
-                    }
-                    img.onload = () => {
-                        context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
-                    }
+                    drawCharacterIcon({ x, y, type: 3 })
                 }
             }
         }
