@@ -55,7 +55,8 @@
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
-                                    {{ item }}
+                                    {{ `${index + 1}. Dialogue: ` }}
+                                    {{ item.value.dialogue[0].value.content }}
                                 </v-list-item>    
                             </template>
 
@@ -117,14 +118,6 @@ const triggerType = ref<string[]>([
 
 const editContentType = ref()
 const selectedType = ref<string>("")
-
-const rules = [
-    (value: String | Number) => {
-        if (value) return true
-
-        return 'You must type something.'
-    },
-]
 
 const selectType = (type:string) => {
     selectedType.value = type
