@@ -46,8 +46,7 @@
 
                 <!-- Aduio file -->
                 <v-select label="Background audio"
-                  :items="audioAssets.general"
-                  :rules="selectRules">
+                  :items="audioAssets.general">
                   <template v-slot:prepend-item>
                       <v-file-input clearable 
                         label="Upload file"
@@ -148,7 +147,7 @@ const confirmOption = (v: dialogueOptionModle) => {
 }
 
 const createScene = () => {
-  formRef.value?.validate((result: any) => {
+  formRef.value?.validate().then((result: any) => {
     if(result.valid){
       emit("createScene", newScene)
       toggleDialog("scene-create")
