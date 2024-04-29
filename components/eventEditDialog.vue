@@ -90,7 +90,7 @@
     </v-dialog>
 
     <event-item-list @event-item-update="updateEvent"/>
-    <event-scene-create />
+    <event-scene-create @create-scene="updateEvent" />
 </template>
 
 <script setup lang="ts">
