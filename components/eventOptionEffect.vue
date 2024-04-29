@@ -92,7 +92,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue'
-import type { optionEffectModle, effectItemReferenceModel } from '~/types/level'
+import type { optionEffectModel, effectItemReferenceModel } from '~/types/level'
 
 const { optionEffectDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
@@ -142,7 +142,7 @@ const equipment = computed(() => {
     return allEquipment
 })
 
-const newEffect = ref<optionEffectModle>({
+const newEffect = ref<optionEffectModel>({
     target: "",
     attribute: "",
     value: ""

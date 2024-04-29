@@ -97,7 +97,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref, onBeforeMount } from 'vue'
-import type { eventSceneModel, dialogueOptionModle, eventDialogueModel } from '~/types/level'
+import type { eventSceneModel, dialogueOptionModel, eventDialogueModel } from '~/types/level'
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
 import eventDialogueCreate from './eventDialogueCreate.vue';
@@ -137,7 +137,7 @@ const confirmDialogue = (v: eventDialogueModel) => {
   newScene.value.dialogue.push(v)
 }
 
-const confirmOption = (v: dialogueOptionModle) => {
+const confirmOption = (v: dialogueOptionModel) => {
   newScene.value.dialogue.push({
     person: "",
     style: "",

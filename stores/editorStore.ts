@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { levleDataModle, levelDataResponse, levelAssetModle, levelAssetResponseModel, tileInfoModel, responseModel, levelEventModle } from '~/types/level'
+import type { levleDataModel, levelDataResponse, levelAssetModel, levelAssetResponseModel, tileInfoModel, responseModel, levelEventModel } from '~/types/level'
 import $api from '~/composables/useCustomFetch'
 
 export const useEditorStore = defineStore('editor', () => {
     // Default template for levelData
-    const levelData = ref<levleDataModle>({
+    const levelData = ref<levleDataModel>({
         id: "",
         name: "",
         map: [],
@@ -20,7 +20,7 @@ export const useEditorStore = defineStore('editor', () => {
     })
 
     // Image assets
-    const assets = ref<levelAssetModle>({
+    const assets = ref<levelAssetModel>({
         bg: [],
         env: [],
         class: [],
@@ -92,7 +92,7 @@ export const useEditorStore = defineStore('editor', () => {
      * @returns The array of events
      */
     const getEventsonTile = (x: number, y: number) => {
-        const events: levelEventModle[] = []
+        const events: levelEventModel[] = []
     
         for(let i=0, levelEvent = levelData.value.event; i < levelEvent.length; i++){
             const eventPosition = levelEvent[i].position
@@ -122,7 +122,7 @@ export const useEditorStore = defineStore('editor', () => {
             const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${key}`)
             console.log("request:>>> ", request_assets)
             if(request_assets.status === 200){
-                assets.value[key as keyof levelAssetModle] = request_assets.assets
+                assets.value[key as keyof levelAssetModel] = request_assets.assets
             }  
         }
 
@@ -217,7 +217,7 @@ export const useEditorStore = defineStore('editor', () => {
             console.log("request:>>> ", request_assets)
             console.log("request:>>> ", request_assets)
             if(request_assets.status === 200){
-                assets.value[type as keyof levelAssetModle] = request_assets.assets
+                assets.value[type as keyof levelAssetModel] = request_assets.assets
             } 
         }
     }

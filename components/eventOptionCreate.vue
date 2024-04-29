@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue'
-import type { dialogueOptionModle, optionEffectModle } from '~/types/level'
+import type { dialogueOptionModel, optionEffectModel } from '~/types/level'
 
 import eventOptionEffect from './eventOptionEffect.vue';
 
@@ -70,7 +70,7 @@ const emit = defineEmits(["createOption"])
 
 const formRef = ref()
 
-const newOption = ref<dialogueOptionModle>({
+const newOption = ref<dialogueOptionModel>({
     value: "",
     style: "#ffffff",
     size: "",
@@ -78,7 +78,7 @@ const newOption = ref<dialogueOptionModle>({
     effect: []
 })
 
-const confirmEffect = (v: optionEffectModle) => {
+const confirmEffect = (v: optionEffectModel) => {
     newOption.value.effect.push(v)
 }
 

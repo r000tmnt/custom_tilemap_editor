@@ -1,7 +1,7 @@
 import responseModel from "./serverResponse"
 
 interface levelDataResponse extends responseModel {
-    data: levleDataModle
+    data: levleDataModel
 }
 
 interface levelList extends responseModel {
@@ -9,19 +9,19 @@ interface levelList extends responseModel {
     err? : {}
 }
 
-interface optionEffectModle {
+interface optionEffectModel {
     target: string
     attribute: string
     type?: number
     value: number | string
 }
 
-interface dialogueOptionModle {
+interface dialogueOptionModel {
     value: string
     style: string
     size: string
     content: string
-    effect: optionEffectModle[]
+    effect: optionEffectModel[]
 }
 
 interface eventDialogueModel {
@@ -30,7 +30,7 @@ interface eventDialogueModel {
     size: string
     content: string
     audio?: string[]
-    option?: dialogueOptionModle[]
+    option?: dialogueOptionModel[]
 }
 
 interface eventSceneModel{
@@ -51,7 +51,7 @@ interface eventItemModel{
     type: number
 }
 
-interface levelEventModle {
+interface levelEventModel {
     position: eventPositionModel
     item: eventItemModel[]
     scene: eventSceneModel[]
@@ -59,7 +59,7 @@ interface levelEventModle {
 }
 
 interface tileInfoModel extends eventPositionModel {
-    events: levelEventModle[]
+    events: levelEventModel[]
 }
 
 interface characterReferenceModel {
@@ -68,11 +68,11 @@ interface characterReferenceModel {
     startingPoint: eventPositionModel
 }
 
-interface levleDataModle {
+interface levleDataModel {
     id: string
     name: string
     map: number[][]
-    event: levelEventModle[]
+    event: levelEventModel[]
     phase: string[]
     enemy: characterReferenceModel[]
     player: characterReferenceModel[]
@@ -87,7 +87,7 @@ interface levelAssetResponseModel{
     assets: string[]
 }
 
-interface levelAssetModle {
+interface levelAssetModel {
     bg: string[]
     env: string[]
     class: string[]
@@ -104,16 +104,16 @@ export {
     responseModel,
     levelList,
     levelDataResponse, 
-    levleDataModle, 
-    levelEventModle ,
-    levelAssetModle,
+    levleDataModel, 
+    levelEventModel ,
+    levelAssetModel,
     levelAssetResponseModel,
     tileInfoModel,
     eventItemModel,
     eventSceneModel,
     eventDialogueModel,
-    dialogueOptionModle,
-    optionEffectModle,
+    dialogueOptionModel,
+    optionEffectModel,
     effectItemReferenceModel,
     eventPositionModel
 }
