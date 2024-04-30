@@ -1,102 +1,105 @@
 <template>
-    <v-container v-if="levelData.map.length === 0">
-        <v-row>
-            <v-col cols="12" class="text-center">
-                Loading...
-            </v-col>
-            <v-col cols="12">
-                <v-progress-linear
-                    color="deep-purple-accent-4"
-                    height="6"
-                    indeterminate
-                    rounded
-                ></v-progress-linear>
-            </v-col>
-        </v-row>
-    </v-container>
+    <v-theme-provider theme="light" with-background>
+        <v-container v-if="levelData.map.length === 0">
+            <v-row>
+                <v-col cols="12" class="text-center">
+                    Loading...
+                </v-col>
+                <v-col cols="12">
+                    <v-progress-linear
+                        color="deep-purple-accent-4"
+                        height="6"
+                        indeterminate
+                        rounded
+                    ></v-progress-linear>
+                </v-col>
+            </v-row>
+        </v-container>
 
-    <section v-else>
-        <!-- paint brushes and other tools -->
-        <editor-tool-bar @toggle-layout="changeLayuout" />
+        <section v-else>
+            <!-- paint brushes and other tools -->
+            <editor-tool-bar @toggle-layout="changeLayuout" />
 
-        <v-row class="editor">
-                <!-- tile assets -->
-                <v-col id="left" 
-                    :cols="column[0]"
-                    class="col pa-2">
-                    <editor-assets />
-                    <div class="draggable border"
-                        @mouseover="highlightColumn"
-                        @mouseleave="leaveColumn">
-                        <div class="control flex hide">
-                            <div class="customChip"
-                                @click.stop="narrowColumn(0)"
-                                @mouseover.stop="highlightControl"
-                                @mouseleave.stop="leaveControl">
-                                &#8249;
-                            </div>
-                            <div class="customChip"
-                                @click.stop="expandColumn(0)"
-                                @mouseover.stop="highlightControl"
-                                @mouseleave.stop="leaveControl">
-                                &#8250;
+            <v-row class="editor">
+                    <!-- tile assets -->
+                    <v-col id="left" 
+                        :cols="column[0]"
+                        class="col pa-2">
+                        <editor-assets />
+                        <div class="draggable border"
+                            @mouseover="highlightColumn"
+                            @mouseleave="leaveColumn">
+                            <div class="control flex hide">
+                                <div class="customChip"
+                                    @click.stop="narrowColumn(0)"
+                                    @mouseover.stop="highlightControl"
+                                    @mouseleave.stop="leaveControl">
+                                    &#8249;
+                                </div>
+                                <div class="customChip"
+                                    @click.stop="expandColumn(0)"
+                                    @mouseover.stop="highlightControl"
+                                    @mouseleave.stop="leaveControl">
+                                    &#8250;
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </v-col>
+                    </v-col>
 
-                <!-- tilemap editor -->
-                <v-col id="right" 
-                    :cols="column[1]"
-                    class="col pa-2">
-                    <!-- map layer -->
-                    <canvas 
-                        ref="canvasRef"
-                        @mousedown="canvasEvent"
-                    ></canvas>
-                    <div class="draggable border"
-                        @mouseover="highlightColumn"
-                        @mouseleave="leaveColumn">
-                        <div class="control flex hide">
-                            <div class="customChip"
-                                @click.stop="narrowColumn(1)"
-                                @mouseover.stop="highlightControl"
-                                @mouseleave.stop="leaveControl">
-                                &#8249;
-                            </div>
-                            <div class="customChip"
-                                @click.stop="expandColumn(1)"
-                                @mouseover.stop="highlightControl"
-                                @mouseleave.stop="leaveControl">
-                                &#8250;
-                            </div>
-                        </div>                   
-                    </div>
-                    
-                </v-col>
+                    <!-- tilemap editor -->
+                    <v-col id="right" 
+                        :cols="column[1]"
+                        class="col pa-2">
+                        <!-- map layer -->
+                        <canvas 
+                            ref="canvasRef"
+                            @mousedown="canvasEvent"
+                        ></canvas>
+                        <div class="draggable border"
+                            @mouseover="highlightColumn"
+                            @mouseleave="leaveColumn">
+                            <div class="control flex hide">
+                                <div class="customChip"
+                                    @click.stop="narrowColumn(1)"
+                                    @mouseover.stop="highlightControl"
+                                    @mouseleave.stop="leaveControl">
+                                    &#8249;
+                                </div>
+                                <div class="customChip"
+                                    @click.stop="expandColumn(1)"
+                                    @mouseover.stop="highlightControl"
+                                    @mouseleave.stop="leaveControl">
+                                    &#8250;
+                                </div>
+                            </div>                   
+                        </div>
+                        
+                    </v-col>
 
-                <!-- tile info -->
-                <v-col :cols="column[2]" 
-                    class="col pa-2">
-                    <editor-tile-info :width="canvasRef?.width" :height="canvasRef?.height" />
-                    <!-- <div class="draggable border" 
-                    ref="draggableRefs"
-                    @mousemove="highlightColumn(2)"></div> -->
-                </v-col>
-            </v-row>  
-               
-            <event-create-dialog v-if="createEventDialog" />
-            <event-edit-dialog v-if="editEventDialog" />
-            <editor-context-menu 
-                :x="pointedSpot.x" 
-                :y="pointedSpot.y"
-                :row="pointedSpot.row"
-                :col="pointedSpot.col"
-                @set-starting-point="drawPoint"
-                @remove-starting-point="clearPoint"
-                @clear-all="clearMap"
-                @expand-map="drawCanvas"/>
-    </section> 
+                    <!-- tile info -->
+                    <v-col :cols="column[2]" 
+                        class="col pa-2">
+                        <editor-tile-info :width="canvasRef?.width" :height="canvasRef?.height" />
+                        <!-- <div class="draggable border" 
+                        ref="draggableRefs"
+                        @mousemove="highlightColumn(2)"></div> -->
+                    </v-col>
+                </v-row>  
+                
+                <event-create-dialog v-if="createEventDialog" />
+                <event-edit-dialog v-if="editEventDialog" />
+                <editor-context-menu 
+                    :x="pointedSpot.x" 
+                    :y="pointedSpot.y"
+                    :row="pointedSpot.row"
+                    :col="pointedSpot.col"
+                    @set-starting-point="drawPoint"
+                    @remove-starting-point="clearPoint"
+                    @clear-all="clearMap"
+                    @expand-map="drawCanvas"/>
+        </section>         
+    </v-theme-provider>
+
 </template>
 
 <script setup lang="ts">
