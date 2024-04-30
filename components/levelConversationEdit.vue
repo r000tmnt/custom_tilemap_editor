@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-      v-model="levelNameEdit"
+      v-model="levelConversationEdit"
       width="auto"
       persistent
     >
@@ -22,7 +22,7 @@
         </v-form>
 
         <div  class="d-flex justify-end">
-            <v-btn color="gray" class="mr-2" @click="toggleDialog('level-name-edit')">CANCEL</v-btn>
+            <v-btn color="gray" class="mr-2" @click="toggleDialog('level-conversation-edit')">CANCEL</v-btn>
             <v-btn color="primary" @click="">CONFIRM</v-btn>
         </div>
      </v-card>
@@ -39,7 +39,7 @@ import type { levelEventModel } from '~/types/level';
 import eventSceneCreate from './event/eventSceneCreate.vue';
 
 const { levelData } = storeToRefs(useEditorStore())
-const { levelNameEdit } = storeToRefs(useDialogStore())
+const { levelConversationEdit } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 
 // const newName = ref<string>(`${levelData.value.name}`)
