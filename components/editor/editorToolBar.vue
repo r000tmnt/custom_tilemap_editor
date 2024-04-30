@@ -61,11 +61,13 @@
     </v-app-bar>  
 
     <level-name-edit />
+    <level-conversation-edit />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import levelNameEdit from '../levelNameEdit.vue';
+import levelConversationEdit from '../levelConversationEdit.vue';
 
 const { levelData, mode } = storeToRefs(useEditorStore())
 const { layers, configOptions } = storeToRefs(useEditorStore())
@@ -80,6 +82,7 @@ const toggleOptions = (option: string) => {
             toggleDialog("level-name-edit")
         break;
         case "Edit conversation phase":
+            toggleDialog("level-conversation-edit")
         break;
         case "Edit battle phase BGM":
         break;
