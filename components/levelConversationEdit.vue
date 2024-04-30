@@ -15,7 +15,7 @@
                 v-model="newName"></v-text-field> -->
                 <v-btn color="secondary" @click="toggleDialog('scene-create')">Add Scene</v-btn>
                 <v-list-item 
-                    v-for="(item, index) in levelData.event.filter((e: levelEventModel) => Object.entries(e.position).length)"
+                    v-for="(item, index) in levelData.event.filter((e: levelEventModel) => Object.entries(e.position).length === 0)"
                     :key="index">
                     {{ `${index + 1}. Scene: ${item}` }}
                 </v-list-item> 
