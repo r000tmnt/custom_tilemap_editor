@@ -59,10 +59,13 @@
                  </v-menu>
         </template>
     </v-app-bar>  
+
+    <level-name-edit />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import levelNameEdit from './levelNameEdit.vue';
 
 const { levelData, mode } = storeToRefs(useEditorStore())
 const { layers, configOptions } = storeToRefs(useEditorStore())
@@ -71,6 +74,7 @@ const { toggleDialog } = useDialogStore()
 const emit = defineEmits(['toggleLayout'])
 
 const toggleOptions = (option: string) => {
+    console.log(option)
     switch(option){
         case "Edit level name":
             toggleDialog("level-name-edit")
