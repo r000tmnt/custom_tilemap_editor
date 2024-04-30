@@ -26,10 +26,10 @@
                         :key="index"
                         :value="index"
                         >
-                        <v-list-item-title class="d-flex justify-space-between">
-                            {{ item.name }}
-                            <v-icon :icon="(item.active)? 'mdi-eye' : 'mdi-eye-closed'" @click="toggleLayout(index)"></v-icon>
-                        </v-list-item-title>
+                            <v-list-item-title class="d-flex justify-space-between">
+                                {{ item.name }}
+                                <v-icon :icon="(item.active)? 'mdi-eye' : 'mdi-eye-closed'" @click="toggleLayout(index)"></v-icon>
+                            </v-list-item-title>
                         </v-list-item>
                     </v-list>
                  </v-menu>
@@ -38,7 +38,25 @@
 
         <template v-slot:append>
             <v-btn icon="mdi-export"></v-btn>
-            <v-btn icon="mdi-cog"></v-btn>
+            <!-- <v-btn icon="mdi-cog"></v-btn> -->
+            <v-menu :close-on-content-click="false" width="200">
+                    <template v-slot:activator="{ props }">
+                        <v-btn icon="mdi-cog" v-bind="props"></v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-item
+                        v-for="(item, index) in configOptions"
+                        :key="index"
+                        :value="index"
+                        @click="toggleOptions(item)"
+                        >
+                            <v-list-item-title>
+                                {{ item }}
+                                <!-- <v-icon :icon="(item.active)? 'mdi-eye' : 'mdi-eye-closed'" @click="toggleLayout(index)"></v-icon> -->
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                 </v-menu>
         </template>
     </v-app-bar>  
 </template>
@@ -47,9 +65,28 @@
 import { storeToRefs } from 'pinia'
 
 const { levelData, mode } = storeToRefs(useEditorStore())
-const { layers } = storeToRefs(useEditorStore())
+const { layers, configOptions } = storeToRefs(useEditorStore())
+const { toggleDialog } = useDialogStore()
 
 const emit = defineEmits(['toggleLayout'])
+
+const toggleOptions = (option: string) => {
+    switch(option){
+        case "Edit level name":
+            toggleDialog("level-name-edit")
+        break;
+        case "Edit conversation phase":
+        break;
+        case "Edit battle phase BGM":
+        break;
+        case "Edit level objective":
+        break;
+        case "Edit theme":
+        break;
+        case "Language":
+        break;
+    }
+}
 
 const toggleLayout = (index: number) => {
     layers.value[index].active = !layers.value[index].active
