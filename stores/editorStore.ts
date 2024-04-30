@@ -251,6 +251,7 @@ export const useEditorStore = defineStore('editor', () => {
         editEventIndex,
         audioAssets,
         layers,
+        configOptions,
         initEditor,
         storeSteps,
         previousStep,
