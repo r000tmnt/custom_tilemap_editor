@@ -11,7 +11,7 @@
             v-for="(img, index) in assets.env"
             :key="img" 
             v-slot="{ isSelected, selectedClass, toggle }"
-            @group:selected="(v) => selectTile(v, index)">
+            @group:selected="(v: any) => selectTile(v, index)">
                 <v-card
                 :class="['d-flex align-center bg-grey', selectedClass]"
                 :height="tileSize"

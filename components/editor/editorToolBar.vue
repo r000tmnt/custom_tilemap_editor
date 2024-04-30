@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import levelNameEdit from './levelNameEdit.vue';
+import levelNameEdit from '../levelNameEdit.vue';
 
 const { levelData, mode } = storeToRefs(useEditorStore())
 const { layers, configOptions } = storeToRefs(useEditorStore())
