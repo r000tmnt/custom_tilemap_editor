@@ -109,12 +109,12 @@ import { useRoute } from 'vue-router';
 import type { eventPositionModel } from '~/types/level'
 
 // Components
-import editorToolBar from '../../components/editorToolBar.vue'
-import editorAssets from '../../components/editorAssets.vue'
-import editorTileInfo from '../../components/editorTileInfo.vue'
-import editorContextMenu from '~/components/editorContextMenu.vue';
-import eventCreateDialog from '~/components/eventCreateDialog.vue';
-import eventEditDialog from '~/components/eventEditDialog.vue';
+import editorToolBar from '~/components/editor/editorToolBar.vue'
+import editorAssets from '~/components/editor/editorAssets.vue'
+import editorTileInfo from '~/components/editor/editorTileInfo.vue'
+import editorContextMenu from '~/components/editor/editorContextMenu.vue';
+import eventCreateDialog from '~/components/event/eventCreateDialog.vue';
+import eventEditDialog from '~/components/event/eventEditDialog.vue';
 
 const route = useRoute()
 const { levelData, steps, tiles, selectedTile, mode, tileInfo, layers } = storeToRefs(useEditorStore())
@@ -687,4 +687,4 @@ canvas{
     font-weight: 700;
     line-height: 30px;
 }
-</style>
+</style>..../../components/editor/editorTileInfo.vue../../components/editor/editorToolBar.vue/../components/editor/editorAssets.vue
