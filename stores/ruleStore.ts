@@ -14,7 +14,7 @@ export const useRuleStore = defineStore('rule', () => {
         (value: any) => {
             if(value) return true
     
-            return 'You must provide a number'
+            return 'You must type something'
         }
     ]
 
