@@ -27,6 +27,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const enemySelector = ref<boolean>(false)
     // On and off switch for editor map expander
     const mapExpander = ref<boolean>(false)
+    // On and off switch for level name edit input
+    const levelNameEdit = ref<boolean>(false)
     
     const toggleDialog = (type: string) => {
         switch(type){
@@ -69,6 +71,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'map-expander':
                 mapExpander.value = !mapExpander.value
             break;
+            case 'level-name-edit':
+                levelNameEdit.value = !levelNameEdit.value
+            break;
             // and more...
         }
     }
@@ -87,6 +92,7 @@ export const useDialogStore = defineStore('dialog', () => {
         contextMenu,
         enemySelector,
         mapExpander,
+        levelNameEdit,
         toggleDialog
     }
 })
