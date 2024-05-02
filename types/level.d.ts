@@ -134,4 +134,5 @@ export {
     optionEffectModel,
     effectItemReferenceModel,
     eventPositionModel,
+    objetiveDataModel
 }
