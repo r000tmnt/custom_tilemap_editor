@@ -56,8 +56,14 @@
                   </tmplate>
 
                   <template v-else>
-                    <v-select label="Target" v-model="levelData.objective.fail.target"></v-select>
-                    <v-text-field label="value" type="numer" v-model="levelData.objective.fail.value"></v-text-field>
+                    <v-select label="Target" 
+                      v-model="levelData.objective.fail.target"
+                      :items="objectiveTarget"
+                      @update:model-value="setValueLimit"></v-select>
+                    <v-text-field label="value" 
+                      type="numer" 
+                      v-model="levelData.objective.fail.value"
+                      @update:model-value="updateValue"></v-text-field>
 
                     <div class="d-flex justify-end">
                       <v-icon icon="mdi-close" color="grey" class="mr-2" @click="cancelEdit"></v-icon>
@@ -87,13 +93,19 @@
                   </tmplate>
 
                   <template v-else>
-                    <v-list-group v-for="option in levelData.objective.optional" 
+                    <v-list-group v-for="(option, index) in levelData.objective.optional" 
                         :key="option.target" 
                         value="Prize">
                         <template v-slot:activator="{ props }">
                           <v-list-item v-bind="props">
-                            <v-select label="Target" v-model="option.target"></v-select>
-                            <v-text-field label="Value" type="number" v-model="option.value"></v-text-field>
+                            <v-select label="Target" 
+                              v-model="option.target"
+                              :items="objectiveTarget"
+                              @update:model-value="setValueLimit"></v-select>
+                            <v-text-field label="Value" 
+                              type="number" 
+                              v-model="option.value"
+                              @update:model-value="updateOption(index)"></v-text-field>
                           </v-list-item>                        
                         </template>
                         
@@ -101,9 +113,8 @@
                         <v-list-item v-for="bonus in option.prize">
                           <v-select label="prize" v-model="bonus.id"></v-select>
                           <v-text-field label="Value" type="number" v-model="bonus.amount"></v-text-field>
-                          <v-icon color="secondary" icon="mdi-note-edit-outline" @click="editObjective = 'optional'"></v-icon>
                         </v-list-item>
-                        <v-icon icon="mdi-plus"></v-icon>
+                        <v-icon icon="mdi-plus" color="secondary"></v-icon>
                       </v-list-group>
 
                       <div class="d-flex justify-end">
@@ -203,9 +214,13 @@ const updateValue = (v: any) => {
       case 'fail':
         levelData.value.objective.fail.value = targetLimit.value
       break;
-      case 'optional':
-      break;
     }
+  }
+}
+
+const updateOption = (index: number) => {
+  if(levelData.value.objective.optional[index].value > targetLimit.value){
+    levelData.value.objective.optional[index].value = targetLimit.value 
   }
 }
 
