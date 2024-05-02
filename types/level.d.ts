@@ -68,6 +68,24 @@ interface characterReferenceModel {
     startingPoint: eventPositionModel
 }
 
+interface objetivePrizeModel {
+    id: string
+    type: number
+    amount: number
+}
+
+interface objetiveDataModel {
+    target: string
+    value: number
+    prize?: objetivePrizeModel[]
+}
+
+interface levelObjectiveModel {
+    victory: objetiveDataModel
+    fail: objetiveDataModel
+    optional: objetiveDataModel[]
+}
+
 interface levleDataModel {
     id: string
     name: string
@@ -76,7 +94,7 @@ interface levleDataModel {
     phase: string[]
     enemy: characterReferenceModel[]
     player: characterReferenceModel[]
-    objective: {}
+    objective: levelObjectiveModel
     audio: string
     assets: string[]
     difficulty: number
@@ -115,5 +133,5 @@ export {
     dialogueOptionModel,
     optionEffectModel,
     effectItemReferenceModel,
-    eventPositionModel
+    eventPositionModel,
 }
