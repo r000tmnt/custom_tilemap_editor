@@ -19,13 +19,13 @@
             <p>Level objectives</p>
             <v-list>
                 <v-list-item title="Victory">
-                  <tmplate v-if="editObjective !== 'victory'">
+                  <template v-if="editObjective !== 'victory'">
                     <span>
                       {{ `Target: ${levelData.objective.victory.target}\nValue: ${levelData.objective.victory.value}` }}
                     </span>
                     
                     <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="changeEditTarget('victory')"></v-icon>
-                  </tmplate>
+                  </template>
 
                   <template v-else>
                     <v-select label="Target" 
@@ -47,13 +47,13 @@
                   </template>
                 </v-list-item>
                 <v-list-item title="Fail">
-                  <tmplate v-if="editObjective !== 'fail'">
+                  <template v-if="editObjective !== 'fail'">
                     <span>
                       {{ `Target: ${levelData.objective.victory.target}\nValue: ${levelData.objective.victory.value}` }}
                     </span>
 
                     <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="changeEditTarget('fail')"></v-icon>
-                  </tmplate>
+                  </template>
 
                   <template v-else>
                     <v-select label="Target" 
@@ -72,7 +72,7 @@
                   </template>
                 </v-list-item>
                 <v-list-item title="Optional">
-                  <tmplate v-if="editObjective !== 'optional'">
+                  <template v-if="editObjective !== 'optional'">
                       <v-list-group v-for="option in levelData.objective.optional" 
                         :key="option.target" 
                         value="Prize">
@@ -90,7 +90,7 @@
                           {{ `Id: ${bonus.id}\nAmount: ${bonus.amount}` }}
                         </v-list-item>
                       </v-list-group>
-                  </tmplate>
+                  </template>
 
                   <template v-else>
                     <v-list-group v-for="(option, index) in levelData.objective.optional" 
@@ -110,11 +110,19 @@
                         </template>
                         
                         {{ `Prize: ` }}
-                        <v-list-item v-for="bonus in option.prize">
-                          <v-select label="prize" v-model="bonus.id"></v-select>
-                          <v-text-field label="Value" type="number" v-model="bonus.amount"></v-text-field>
+                        <v-list-item v-for="(bonus, pointer) in option.prize">
+                          <v-select label="Prize"
+                            v-model="bonus.id"
+                            :items="prizeList"
+                            @update:model-value="setPrize(bonus.id, index, pointer)">
+                          </v-select>
+                          <v-text-field label="Value" 
+                            type="number" 
+                            v-model="bonus.amount"></v-text-field>
                         </v-list-item>
-                        <v-icon icon="mdi-plus" color="secondary"></v-icon>
+                        <v-icon icon="mdi-plus" 
+                          color="secondary"
+                          @click="stackUpPrize(index)"></v-icon>
                       </v-list-group>
 
                       <div class="d-flex justify-end">
@@ -137,13 +145,16 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
-import type { objetiveDataModel } from '~/types/level'
+import { ref, computed, onBeforeMount } from 'vue';
+import type { objectiveDataModel, objectiveOptionalModel } from '~/types/level'
+import type { itemState } from '~/types/item'
 
 const { levelData } = storeToRefs(useEditorStore())
 const { levelNameEdit } = storeToRefs(useDialogStore())
+const { item, type } = storeToRefs(useItemStore())
 const { toggleDialog } = useDialogStore()
 const { inputRules } = useRuleStore()
+const { getItemType, getItemData } = useItemStore()
 
 const newName = ref<string>(`${levelData.value.name}`)
 const formRef = ref()
@@ -154,9 +165,27 @@ const objectiveTarget = ref<string[]>([
   "turn"
 ])
 
+const prizeList = computed(() => {
+  const allItemId: string[] = []
+  for(let [key, value] of Object.entries(item.value)){
+    console.log(key)
+    console.log(item.value[key as keyof itemState])
+    item.value[key as keyof itemState].forEach(i => {
+      console.log(i)
+      allItemId.push(i.id)
+    })
+  }
+
+  allItemId.push("exp")
+
+  return allItemId
+})
+
+console.log(prizeList)
+
 const targetLimit = ref<number>(0)
 
-const objectiveBackUp = ref<objetiveDataModel | objetiveDataModel[]>({ target: "", value: 0 })
+const objectiveBackUp = ref<objectiveDataModel | objectiveOptionalModel[]>({ target: "", value: 0 })
 
 const changeEditTarget = (target: string) => {
   switch(editObjective.value){
@@ -178,13 +207,13 @@ const changeEditTarget = (target: string) => {
 const cancelEdit = () => {
   switch(editObjective.value){
       case 'victory':
-        levelData.value.objective.victory = objectiveBackUp.value as objetiveDataModel
+        levelData.value.objective.victory = objectiveBackUp.value as objectiveDataModel
       break;
       case 'fail':
-        levelData.value.objective.fail = objectiveBackUp.value as objetiveDataModel
+        levelData.value.objective.fail = objectiveBackUp.value as objectiveDataModel
       break;
       case 'optional':
-        levelData.value.objective.optional = objectiveBackUp.value as objetiveDataModel[]
+        levelData.value.objective.optional = objectiveBackUp.value as objectiveOptionalModel[]
       break;
     }
 }
@@ -224,6 +253,26 @@ const updateOption = (index: number) => {
   }
 }
 
+const setPrize = (id: string, index: number, pointer: number) => {
+  console.log(id)
+  console.log(index)
+  console.log(pointer)
+
+  const itemType = id.split("_")[0]
+  
+  const typeValue = type.value.find(t => t.category === itemType)
+  if(typeValue)
+    levelData.value.objective.optional[index].prize[pointer].type = typeValue.type
+}
+
+const stackUpPrize = (index: number) => {
+  levelData.value.objective.optional[index].prize?.push({
+    id: "",
+    type: 0,
+    amount: 0
+  })
+}
+
 const changeLevelName = () => {
     formRef.value?.validate().then((result: any) => {
         if(result.vaild){
@@ -232,6 +281,11 @@ const changeLevelName = () => {
         }
     })
 }
+
+onBeforeMount(async() => {
+  await getItemType()
+  await getItemData()
+})
 </script>
 
 <style scoped>
