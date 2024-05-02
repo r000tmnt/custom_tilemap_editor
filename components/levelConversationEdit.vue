@@ -23,7 +23,7 @@
 
         <div  class="d-flex justify-end">
             <v-btn color="gray" class="mr-2" @click="toggleDialog('level-conversation-edit')">CANCEL</v-btn>
-            <v-btn color="primary" @click="">CONFIRM</v-btn>
+            <v-btn color="primary" @click="createEvent">CONFIRM</v-btn>
         </div>
      </v-card>
     </v-dialog>
@@ -41,11 +41,19 @@ import eventSceneCreate from './event/eventSceneCreate.vue';
 const { levelData } = storeToRefs(useEditorStore())
 const { levelConversationEdit } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
+const { saveLevelData } = useEditorStore()
 
 // const newName = ref<string>(`${levelData.value.name}`)
 const formRef = ref()
 
 const createConversationScene = (v: any) => {
     console.log(v)
+    const battlePhaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
+    // Insert the event before battlephase
+    levelData.value.event.splice(battlePhaseIndex, 0, v)
+}
+
+const createEvent = () => {
+    saveLevelData()
 }
 </script>
