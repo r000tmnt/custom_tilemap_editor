@@ -74,16 +74,19 @@ interface objetivePrizeModel {
     amount: number
 }
 
-interface objetiveDataModel {
+interface objectiveDataModel {
     target: string
     value: number
-    prize?: objetivePrizeModel[]
+}
+
+interface objectiveOptionalModel extends objectiveDataModel {
+    prize: objetivePrizeModel[]
 }
 
 interface levelObjectiveModel {
-    victory: objetiveDataModel
-    fail: objetiveDataModel
-    optional: objetiveDataModel[]
+    victory: objectiveDataModel
+    fail: objectiveDataModel
+    optional: objectiveOptionalModel[]
 }
 
 interface levleDataModel {
@@ -134,5 +137,6 @@ export {
     optionEffectModel,
     effectItemReferenceModel,
     eventPositionModel,
-    objetiveDataModel
+    objectiveDataModel,
+    objectiveOptionalModel
 }
