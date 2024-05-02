@@ -13,7 +13,17 @@ export const useEditorStore = defineStore('editor', () => {
         phase: [],
         enemy: [],
         player: [],
-        objective: {},
+        objective: {
+            victory: {
+                target: "",
+                value: 0
+            },
+            fail: {
+                target: "",
+                value: 0
+            },
+            optional: []
+        },
         audio: "",
         assets: [],
         difficulty: 0
@@ -72,10 +82,8 @@ export const useEditorStore = defineStore('editor', () => {
 
     // Config options
     const configOptions = ref<string[]>([
-        "Edit level name", 
+        "Edit level info", 
         "Edit conversation phase",
-        "Edit battle phase BGM",
-        "Edit level objective",
         "Editor theme", 
         "Language", 
     ])
