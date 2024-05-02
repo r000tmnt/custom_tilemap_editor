@@ -1,5 +1,5 @@
 <template>
-    <v-theme-provider theme="light" with-background>
+    <v-theme-provider :theme="editorTheme" with-background>
         <v-container v-if="levelData.map.length === 0">
             <v-row>
                 <v-col cols="12" class="text-center">
@@ -117,7 +117,7 @@ import eventCreateDialog from '~/components/event/eventCreateDialog.vue';
 import eventEditDialog from '~/components/event/eventEditDialog.vue';
 
 const route = useRoute()
-const { levelData, steps, tiles, selectedTile, mode, tileInfo, layers } = storeToRefs(useEditorStore())
+const { levelData, steps, tiles, selectedTile, mode, tileInfo, layers, editorTheme } = storeToRefs(useEditorStore())
 const { initEditor, storeSteps, saveLevelData, getEventsonTile } = useEditorStore()
 const { tileSize } = storeToRefs(useMainStore())
 const { contextMenu, createEventDialog, editEventDialog } = storeToRefs(useDialogStore())
