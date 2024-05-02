@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-      v-model="levelNameEdit"
+      v-model="levelInfoEdit"
       width="auto"
       persistent
     >
@@ -118,7 +118,8 @@
                           </v-select>
                           <v-text-field label="Value" 
                             type="number" 
-                            v-model="bonus.amount"></v-text-field>
+                            v-model="bonus.amount"
+                            @update:model-value="updateOptionValue(bonus.id, index, pointer)"></v-text-field>
                         </v-list-item>
                         <v-icon icon="mdi-plus" 
                           color="secondary"
@@ -136,7 +137,7 @@
 
         <div  class="d-flex justify-end">
             <v-btn color="gray" class="mr-2" @click="toggleDialog('level-name-edit')">CANCEL</v-btn>
-            <v-btn color="primary" @click="changeLevelName">CONFIRM</v-btn>
+            <v-btn color="primary" @click="updateLevelInfo">CONFIRM</v-btn>
         </div>
      </v-card>
     </v-dialog>
@@ -150,11 +151,12 @@ import type { objectiveDataModel, objectiveOptionalModel } from '~/types/level'
 import type { itemState } from '~/types/item'
 
 const { levelData } = storeToRefs(useEditorStore())
-const { levelNameEdit } = storeToRefs(useDialogStore())
+const { levelInfoEdit } = storeToRefs(useDialogStore())
 const { item, type } = storeToRefs(useItemStore())
 const { toggleDialog } = useDialogStore()
 const { inputRules } = useRuleStore()
 const { getItemType, getItemData } = useItemStore()
+const { saveLevelData } = useEditorStore()
 
 const newName = ref<string>(`${levelData.value.name}`)
 const formRef = ref()
@@ -265,6 +267,20 @@ const setPrize = (id: string, index: number, pointer: number) => {
     levelData.value.objective.optional[index].prize[pointer].type = typeValue.type
 }
 
+const updateOptionValue = (id: string, index: number, pointer: number) => {
+  const itemType = id.split("_")[0]
+  
+  const itemData = item.value[itemType as keyof itemState]
+
+  const theItem = itemData.find(i => i.id === id)
+
+  if(theItem){
+    if(levelData.value.objective.optional[index].prize[pointer].amount >= theItem.stackLimit){
+      levelData.value.objective.optional[index].prize[pointer].amount = theItem.stackLimit
+    }
+  }
+}
+
 const stackUpPrize = (index: number) => {
   levelData.value.objective.optional[index].prize?.push({
     id: "",
@@ -273,10 +289,11 @@ const stackUpPrize = (index: number) => {
   })
 }
 
-const changeLevelName = () => {
+const updateLevelInfo = () => {
     formRef.value?.validate().then((result: any) => {
         if(result.vaild){
             levelData.value.name = newName.value
+            saveLevelData()
             toggleDialog("level-name-edit")            
         }
     })
