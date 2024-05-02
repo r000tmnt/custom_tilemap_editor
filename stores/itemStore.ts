@@ -93,6 +93,7 @@ export const useItemStore = defineStore('item', () => {
 
     return {
         item,
+        type,
         getItemType,
         getItemData
     }
