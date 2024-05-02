@@ -88,6 +88,8 @@ export const useEditorStore = defineStore('editor', () => {
         "Language", 
     ])
 
+    const editorTheme = ref<string>("light")
+
     //
     const editEventIndex = ref<number>(0)
 
@@ -151,7 +153,7 @@ export const useEditorStore = defineStore('editor', () => {
             console.log(audioRequest)
     
             if(audioRequest.status === 200){
-              audioAssets.value.general = audioRequest.assets  
+                audioAssets.value.general = audioRequest.assets  
             }
         }
     }
@@ -260,6 +262,7 @@ export const useEditorStore = defineStore('editor', () => {
         audioAssets,
         layers,
         configOptions,
+        editorTheme,
         initEditor,
         storeSteps,
         previousStep,
