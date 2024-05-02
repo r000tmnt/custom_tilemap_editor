@@ -51,7 +51,14 @@
                         @click="toggleOptions(item)"
                         >
                             <v-list-item-title>
-                                {{ item }}
+                                <template v-if="item.includes('theme')">
+                                    <v-switch :label="editorTheme"
+                                        @update:model-value="switchTheme"></v-switch>
+                                </template>
+
+                                <template v-else>
+                                    {{ item }}
+                                </template>
                                 <!-- <v-icon :icon="(item.active)? 'mdi-eye' : 'mdi-eye-closed'" @click="toggleLayout(index)"></v-icon> -->
                             </v-list-item-title>
                         </v-list-item>
@@ -69,7 +76,7 @@ import { storeToRefs } from 'pinia'
 import levelInfoEdit from '../levelInfoEdit.vue';
 import levelConversationEdit from '../levelConversationEdit.vue';
 
-const { levelData, mode } = storeToRefs(useEditorStore())
+const { levelData, mode, editorTheme } = storeToRefs(useEditorStore())
 const { layers, configOptions } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 
@@ -98,5 +105,15 @@ const toggleOptions = (option: string) => {
 const toggleLayout = (index: number) => {
     layers.value[index].active = !layers.value[index].active
     emit("toggleLayout", layers.value[index])
+}
+
+const switchTheme = (v: any) => {
+    console.log(v)
+
+    if(v){
+        editorTheme.value = 'dark'
+    }else{
+        editorTheme.value = 'light'
+    }
 }
 </script>
