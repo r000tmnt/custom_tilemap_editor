@@ -24,7 +24,7 @@
                       {{ `Target: ${levelData.objective.victory.target}\nValue: ${levelData.objective.victory.value}` }}
                     </span>
                     
-                    <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="editObjective = 'victory'"></v-icon>
+                    <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="changeEditTarget('victory')"></v-icon>
                   </tmplate>
 
                   <template v-else>
@@ -33,11 +33,14 @@
                       :items="objectiveTarget"
                       @update:model-value="setValueLimit"
                     ></v-select>
-                    <v-text-field label="value" type="numer" v-model="levelData.objective.victory.value"></v-text-field>
+                    <v-text-field label="value" 
+                      type="numer" 
+                      v-model="levelData.objective.victory.value"
+                      @update:model-value="updateValue"></v-text-field>
                     <!-- <v-select label="Prize"></v-select> -->
 
                     <div class="d-flex justify-end">
-                      <v-icon icon="mdi-close" color="grey" class="mr-2" @click="editObjective = ''"></v-icon>
+                      <v-icon icon="mdi-close" color="grey" class="mr-2" @click="cancelEdit"></v-icon>
                       <v-icon icon="mdi-check" color="primary" @click="editObjective = ''"></v-icon>
                     </div>
                     
@@ -49,14 +52,17 @@
                       {{ `Target: ${levelData.objective.victory.target}\nValue: ${levelData.objective.victory.value}` }}
                     </span>
 
-                    <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="editObjective = 'fail'"></v-icon>
+                    <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="changeEditTarget('fail')"></v-icon>
                   </tmplate>
 
                   <template v-else>
                     <v-select label="Target" v-model="levelData.objective.fail.target"></v-select>
                     <v-text-field label="value" type="numer" v-model="levelData.objective.fail.value"></v-text-field>
 
-                    <v-icon icon="mdi-check" color="primary" @click="editObjective = ''"></v-icon>
+                    <div class="d-flex justify-end">
+                      <v-icon icon="mdi-close" color="grey" class="mr-2" @click="cancelEdit"></v-icon>
+                      <v-icon icon="mdi-check" color="primary" @click="editObjective = ''"></v-icon>
+                    </div>
                   </template>
                 </v-list-item>
                 <v-list-item title="Optional">
@@ -69,7 +75,7 @@
                             <span>
                               {{ `Target: ${option.target}\nValue: ${option.value}` }}
                             </span>
-                            <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="editObjective = 'optional'"></v-icon>
+                            <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="changeEditTarget('optional')"></v-icon>
                           </v-list-item>                        
                         </template>
 
@@ -100,7 +106,10 @@
                         <v-icon icon="mdi-plus"></v-icon>
                       </v-list-group>
 
-                    <v-btn icon="mdi-check" @click="editObjective = ''"></v-btn>
+                      <div class="d-flex justify-end">
+                        <v-icon icon="mdi-close" color="grey" class="mr-2" @click="cancelEdit"></v-icon>
+                        <v-icon icon="mdi-check" color="primary" @click="editObjective = ''"></v-icon>
+                      </div>
                   </template>
                 </v-list-item>
             </v-list>
@@ -118,6 +127,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
+import type { objetiveDataModel } from '~/types/level'
 
 const { levelData } = storeToRefs(useEditorStore())
 const { levelNameEdit } = storeToRefs(useDialogStore())
@@ -135,6 +145,39 @@ const objectiveTarget = ref<string[]>([
 
 const targetLimit = ref<number>(0)
 
+const objectiveBackUp = ref<objetiveDataModel | objetiveDataModel[]>({ target: "", value: 0 })
+
+const changeEditTarget = (target: string) => {
+  switch(editObjective.value){
+      case 'victory':
+        objectiveBackUp.value = levelData.value.objective.victory
+      break;
+      case 'fail':
+        objectiveBackUp.value = levelData.value.objective.fail
+      break;
+      case 'optional':
+        objectiveBackUp.value = levelData.value.objective.optional
+      break;
+    }
+
+    editObjective.value = target
+}
+
+// Revert the data back to the previous state
+const cancelEdit = () => {
+  switch(editObjective.value){
+      case 'victory':
+        levelData.value.objective.victory = objectiveBackUp.value as objetiveDataModel
+      break;
+      case 'fail':
+        levelData.value.objective.fail = objectiveBackUp.value as objetiveDataModel
+      break;
+      case 'optional':
+        levelData.value.objective.optional = objectiveBackUp.value as objetiveDataModel[]
+      break;
+    }
+}
+
 const setValueLimit = (v: any) => {
   console.log(v)
   switch(v){
@@ -147,6 +190,22 @@ const setValueLimit = (v: any) => {
     case 'turn':
       targetLimit.value = Infinity
     break;
+  }
+}
+
+const updateValue = (v: any) => {
+  console.log(v)
+  if(Number(v) > targetLimit.value){
+    switch(editObjective.value){
+      case 'victory':
+        levelData.value.objective.victory.value = targetLimit.value
+      break;
+      case 'fail':
+        levelData.value.objective.fail.value = targetLimit.value
+      break;
+      case 'optional':
+      break;
+    }
   }
 }
 
