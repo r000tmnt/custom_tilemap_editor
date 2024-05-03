@@ -9,9 +9,9 @@
         width="800"
         max-height="1000"
         :scrollable="true"
-        title="Create new event"
+        title="Edit event scene"
       >
-        <v-form ref="formRef">
+        <v-form ref="formRef" class="pt-4 px-5">
             <v-container>
                 <!-- Background image file -->
                 <!-- <v-select label="Background image"
@@ -68,26 +68,19 @@
                     <v-btn @click="toggleDialog('dialogue-option-create')">Create option</v-btn>
                 </v-card-actions>
 
-                <!-- Conversation to edit -->
-                <template v-if="!configState">
-                  <v-expansion-panels v-for="(scene, index) in props.scene as eventSceneModel[]" :key="index">
-                      <v-expansion-panel>
-                          <v-expansion-panel-title>{{ `SCENE ${index + 1}` }}</v-expansion-panel-title>
-                          <!-- Dialogue -->
-                          <v-list v-for="(dialogue, index) in scene.dialogue">
-                              {{ dialogue.content }}
-                          </v-list>
-                      </v-expansion-panel>
-                  </v-expansion-panels>                
-                </template>
+                <!-- Dialogue -->
+                <v-list v-for="(dialogue, index) in newScene.dialogue">
+                    {{ dialogue.content }}
+                </v-list>  
             </v-container>
         </v-form>
+
         <v-row>
           <v-col class="d-flex justify-end">
                 <v-btn color="grey" 
                   @click="toggleDialog('scene-edit')"
                   class="mr-2">CANCEL</v-btn>
-                <v-btn color="primary" @click="createScene">CONFIRM</v-btn>            
+                <v-btn color="primary" @click="editScene">CONFIRM</v-btn>            
           </v-col>
         </v-row>
       </v-card>
@@ -100,7 +93,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref, onBeforeMount, computed} from 'vue'
+import { ref, onBeforeMount, computed, onMounted} from 'vue'
 import type { eventSceneModel, dialogueOptionModel, eventDialogueModel } from '~/types/level'
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
@@ -109,36 +102,27 @@ import eventOptionCreate from './eventOptionCreate.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneEditDialog } = storeToRefs(useDialogStore())
-const { tileInfo, editEventIndex, audioAssets, assets, configState, levelData } = storeToRefs(useEditorStore())
+const { tileInfo, editEventIndex, audioAssets, assets, levelData } = storeToRefs(useEditorStore())
 const { selectRules, inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
 
 const props = defineProps({
     scene: {
-        type: Array,
-        default: [
-            {
+        type: Object,
+        default: {
                 background: "",
                 people: 0,
                 audio: "",
                 dialogue: []
             }
-        ]
-    }
+    },
 })
 
-const emit = defineEmits(["createScene"])
+const emit = defineEmits(["editScene"])
 
 const formRef = ref()
 
-const newScene = ref<eventSceneModel>({
-  background: "",
-  audio: "",
-  people: 1,
-  dialogue: []
-})
-
-const eventBeforeBattle = computed(() => levelData.value.event.filter(e => !Object.entries(e.position).length))
+const newScene = ref<eventSceneModel>(JSON.parse(JSON.stringify(props.scene)))
 
 const updatePeopleInScene = (e: any) => {
   if(Number(e.target.value) <= 0){
@@ -167,14 +151,18 @@ const confirmOption = (v: dialogueOptionModel) => {
   })
 }
 
-const createScene = () => {
+const editScene = () => {
   formRef.value?.validate().then((result: any) => {
     if(result.valid){
-      emit("createScene", newScene.value)
-      toggleDialog("scene-create")
+      emit("editScene", newScene.value)
+      toggleDialog("scene-edit")
     }
   })
 }
+
+onMounted(() => {
+    console.log(props.scene)
+})
 
 onBeforeMount(async() => {
   await getAudioAssets()
