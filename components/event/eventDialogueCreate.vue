@@ -11,7 +11,7 @@
             :scrollable="true"
             title="Create new event"
         >
-            <v-form ref="formRef">
+            <v-form ref="formRef" class="pt-4 px-5">
                 <v-row>
                     <v-col>
                         <!-- The person to show on the screen -->
@@ -23,6 +23,7 @@
                 <v-row>
                     <v-col>
                         <!-- font color -->
+                        <p>Font color</p>
                         <v-color-picker v-model="newDialogue.style"
                             :rules="inputRules"></v-color-picker>
                     </v-col>
@@ -47,7 +48,7 @@
                 <v-row>
                     <v-col>
                         <!-- audio (optional) -->
-                        <v-select title="click audio"
+                        <v-select label="click audio (optional)"
                             :items="audioAssets.general"></v-select>
                     </v-col>
                 </v-row>
