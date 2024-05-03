@@ -90,10 +90,15 @@
       </v-card>
     </v-dialog>
 
-    <event-scene-bg-gallery @set-scene-back-ground="setBackground" />
-    <event-dialogue-create @create-dialogue="confirmDialogue" />
-    <event-dialogue-edit :dialogue="dialogueToEdit" @edit-dialogue="updateDialogue" />
-    <event-option-create @create-option="confirmOption" />
+    <event-scene-bg-gallery v-if="bgAssetsGalleryDialog" 
+        @set-scene-back-ground="setBackground" />
+    <event-dialogue-create v-if="dialougeCreateDialog" 
+      @create-dialogue="confirmDialogue" />
+    <event-dialogue-edit v-if="dialogueEditDialog" 
+      :dialogue="dialogueToEdit" 
+      @edit-dialogue="updateDialogue" />
+    <event-option-create v-if="optionCreateDialog" 
+        @create-option="confirmOption" />
 </template>
 
 <script setup lang="ts">
@@ -109,6 +114,7 @@ import eventDialogueEdit from './eventDialogueEdit.vue';
 const { toggleDialog } = useDialogStore()
 const { eventSceneEditDialog } = storeToRefs(useDialogStore())
 const { tileInfo, editEventIndex, audioAssets, assets, levelData } = storeToRefs(useEditorStore())
+const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionCreateDialog } = storeToRefs(useDialogStore())
 const { selectRules, inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
 

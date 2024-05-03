@@ -70,8 +70,12 @@
 
                 <!-- Dialogue -->
                 <v-list v-for="(dialogue, index) in newScene.dialogue">
-                    {{ dialogue.content }}
-                </v-list>
+                    {{ `${index + 1}. ${dialogue.content}` }}
+                    <v-icon class="ml-2" 
+                        color="secondary" 
+                        icon="mdi-note-edit-outline"
+                        @click="editDialogue(index)"></v-icon>
+                </v-list> 
             </v-container>
         </v-form>
         <v-row>
@@ -85,9 +89,15 @@
       </v-card>
     </v-dialog>
 
-    <event-scene-bg-gallery @set-scene-back-ground="setBackground" />
-    <event-dialogue-create @create-dialogue="confirmDialogue" />
-    <event-option-create @create-option="confirmOption" />
+    <event-scene-bg-gallery v-if="bgAssetsGalleryDialog" 
+        @set-scene-back-ground="setBackground" />
+    <event-dialogue-create v-if="dialougeCreateDialog" 
+      @create-dialogue="confirmDialogue" />
+    <event-dialogue-edit v-if="dialogueEditDialog" 
+      :dialogue="dialogueToEdit" 
+      @edit-dialogue="updateDialogue" />
+    <event-option-create v-if="optionCreateDialog" 
+        @create-option="confirmOption" />
 </template>
 
 <script setup lang="ts">
@@ -98,10 +108,12 @@ import type { eventSceneModel, dialogueOptionModel, eventDialogueModel } from '~
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
 import eventDialogueCreate from './eventDialogueCreate.vue';
 import eventOptionCreate from './eventOptionCreate.vue';
+import eventDialogueEdit from './eventDialogueEdit.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
 const { tileInfo, editEventIndex, audioAssets, assets, levelData } = storeToRefs(useEditorStore())
+const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionCreateDialog } = storeToRefs(useDialogStore())
 const { selectRules, inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
 
@@ -116,7 +128,14 @@ const newScene = ref<eventSceneModel>({
   dialogue: []
 })
 
-const eventBeforeBattle = computed(() => levelData.value.event.filter(e => !Object.entries(e.position).length))
+const dialogueToEdit = ref<eventDialogueModel>()
+const editIndex = ref<number>(-1)
+
+const editDialogue = (index: number) => {
+    editIndex.value = index
+    dialogueToEdit.value = newScene.value.dialogue[index]
+    toggleDialog("scene-dialogue-edit")
+}
 
 const updatePeopleInScene = (e: any) => {
   if(Number(e.target.value) <= 0){
@@ -143,6 +162,11 @@ const confirmOption = (v: dialogueOptionModel) => {
     content: "",
     option: [ v ]
   })
+}
+
+const updateDialogue = (v: eventDialogueModel) => {
+    console.log("updateDialogue :>>>", v)
+    newScene.value.dialogue[editIndex.value] = v
 }
 
 const createScene = () => {
