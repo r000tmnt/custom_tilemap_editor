@@ -90,6 +90,8 @@ export const useEditorStore = defineStore('editor', () => {
 
     const editorTheme = ref<string>("light")
 
+    const configState = ref<boolean>(false)
+
     //
     const editEventIndex = ref<number>(0)
 
@@ -263,6 +265,7 @@ export const useEditorStore = defineStore('editor', () => {
         layers,
         configOptions,
         editorTheme,
+        configState,
         initEditor,
         storeSteps,
         previousStep,
