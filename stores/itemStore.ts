@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { materialResponseModel, otherResponseModel, potionResponseModel, typeResponseModel, itemState, armorResponseModel, weaponResponseModel, keyResponseModel, itemTypeModel } from "~/types/item";
 import $api from "~/composables/useCustomFetch";
+import type responseModel from "~/types/serverResponse";
 
 // Define mainStore
 const mainStore = useMainStore()
@@ -91,10 +92,24 @@ export const useItemStore = defineStore('item', () => {
         }
     }
 
+    const deleteItemData = async(type: string, index:number) => {
+        const itemforDelete = item.value[type as keyof itemState].splice(index, 1)
+
+        const deleteRequest: responseModel = await $fetch(`${mainStore.base_url}api/item/${type}`, { method: 'POST', body: item.value[type as keyof itemState] })
+
+        console.log(deleteRequest)
+
+        // Put the item back to array of delete failed
+        if(deleteRequest.status !== 200){
+            item.value[type as keyof itemState].splice(index, 0, itemforDelete[0])
+        }
+    }
+
     return {
         item,
         type,
         getItemType,
-        getItemData
+        getItemData,
+        deleteItemData
     }
 })
