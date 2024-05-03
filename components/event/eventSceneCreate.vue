@@ -11,7 +11,7 @@
         :scrollable="true"
         title="Create new event"
       >
-        <v-form ref="formRef">
+        <v-form ref="formRef" class="pt-4 px-5">
             <v-container>
                 <!-- Background image file -->
                 <!-- <v-select label="Background image"
@@ -68,31 +68,10 @@
                     <v-btn @click="toggleDialog('dialogue-option-create')">Create option</v-btn>
                 </v-card-actions>
 
-                <!-- Conversation in battle phase -->
-                <template v-if="!configState">
-                  <v-expansion-panels v-for="(scene, index) in tileInfo.events[tileInfo.events.length - 1].scene" :key="index">
-                      <v-expansion-panel>
-                          <v-expansion-panel-title>{{ `SCENE ${index + 1}` }}</v-expansion-panel-title>
-                          <!-- Dialogue -->
-                          <v-list v-for="(dialogue, index) in scene.dialogue">
-                              {{ dialogue.content }}
-                          </v-list>
-                      </v-expansion-panel>
-                  </v-expansion-panels>                
-                </template>
-
-                <!-- Conversation before battle phase -->
-                <template v-else>
-                  <v-expansion-panels v-for="(scene, index) in eventBeforeBattle[eventBeforeBattle.length - 1].scene" :key="index">
-                      <v-expansion-panel>
-                          <v-expansion-panel-title>{{ `SCENE ${index + 1}` }}</v-expansion-panel-title>
-                          <!-- Dialogue -->
-                          <v-list v-for="(dialogue, index) in scene.dialogue">
-                              {{ dialogue.content }}
-                          </v-list>
-                      </v-expansion-panel>
-                  </v-expansion-panels>   
-                </template>
+                <!-- Dialogue -->
+                <v-list v-for="(dialogue, index) in newScene.dialogue">
+                    {{ dialogue.content }}
+                </v-list>
             </v-container>
         </v-form>
         <v-row>
@@ -122,7 +101,7 @@ import eventOptionCreate from './eventOptionCreate.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
-const { tileInfo, editEventIndex, audioAssets, assets, configState, levelData } = storeToRefs(useEditorStore())
+const { tileInfo, editEventIndex, audioAssets, assets, levelData } = storeToRefs(useEditorStore())
 const { selectRules, inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
 
