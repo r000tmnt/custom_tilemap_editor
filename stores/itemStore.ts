@@ -92,6 +92,19 @@ export const useItemStore = defineStore('item', () => {
         }
     }
 
+    const updateItemData = async(item: any, type: string, index:number) => {
+        const tempItemData = [...item.value[type as keyof itemState], {...item}]
+
+        const updateRequest: responseModel = await $fetch(`${mainStore.base_url}api/item/${type}`, { method: 'POST', body: tempItemData })
+
+        console.log(updateRequest)
+
+        // Push item to the array if update success
+        if(updateRequest.status == 200){
+            item.value[type as keyof itemState].push(item)
+        }
+    }
+
     const deleteItemData = async(type: string, index:number) => {
         const itemforDelete = item.value[type as keyof itemState].splice(index, 1)
 
@@ -110,6 +123,7 @@ export const useItemStore = defineStore('item', () => {
         type,
         getItemType,
         getItemData,
+        updateItemData,
         deleteItemData
     }
 })
