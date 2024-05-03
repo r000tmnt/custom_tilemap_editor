@@ -70,7 +70,11 @@
 
                 <!-- Dialogue -->
                 <v-list v-for="(dialogue, index) in newScene.dialogue">
-                    {{ dialogue.content }}
+                    {{ `${index + 1}. ${dialogue.content}` }}
+                    <v-icon class="ml-2" 
+                        color="secondary" 
+                        icon="mdi-note-edit-outline"
+                        @click="editDialogue(index)"></v-icon>
                 </v-list>  
             </v-container>
         </v-form>
@@ -88,6 +92,7 @@
 
     <event-scene-bg-gallery @set-scene-back-ground="setBackground" />
     <event-dialogue-create @create-dialogue="confirmDialogue" />
+    <event-dialogue-edit :dialogue="dialogueToEdit" @edit-dialogue="updateDialogue" />
     <event-option-create @create-option="confirmOption" />
 </template>
 
@@ -99,6 +104,7 @@ import type { eventSceneModel, dialogueOptionModel, eventDialogueModel } from '~
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
 import eventDialogueCreate from './eventDialogueCreate.vue';
 import eventOptionCreate from './eventOptionCreate.vue';
+import eventDialogueEdit from './eventDialogueEdit.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneEditDialog } = storeToRefs(useDialogStore())
@@ -124,6 +130,15 @@ const formRef = ref()
 
 const newScene = ref<eventSceneModel>(JSON.parse(JSON.stringify(props.scene)))
 
+const dialogueToEdit = ref<eventDialogueModel>()
+const editIndex = ref<number>(-1)
+
+const editDialogue = (index: number) => {
+    editIndex.value = index
+    dialogueToEdit.value = newScene.value.dialogue[index]
+    toggleDialog("scene-dialogue-edit")
+}
+
 const updatePeopleInScene = (e: any) => {
   if(Number(e.target.value) <= 0){
     newScene.value.people = 1
@@ -139,6 +154,11 @@ const setBackground = (path: string) => {
 const confirmDialogue = (v: eventDialogueModel) => {
   console.log("comfirmDialogue :>>>", v)
   newScene.value.dialogue.push(v)
+}
+
+const updateDialogue = (v: eventDialogueModel) => {
+    console.log("updateDialogue :>>>", v)
+    newScene.value.dialogue[editIndex.value] = v
 }
 
 const confirmOption = (v: dialogueOptionModel) => {
