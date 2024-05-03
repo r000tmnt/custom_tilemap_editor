@@ -1,9 +1,27 @@
 <template>
     <section id="wrapper">
-        <h3>ITEM</h3>
-        <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('item-create')">
-            CREATE
-        </v-btn>
+        <div class="d-flex">
+            <div class="mr-auto">
+                <h3>ITEM</h3>
+                <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('item-create')">
+                    CREATE
+                </v-btn>
+            </div>
+
+            <div>
+                <p>FILTER</p>
+                <div class="d-flex flex-column">
+                    <v-btn-toggle
+                    v-model="itemFilter"
+                    variant="outlined"
+                    divided
+                    >
+                        <v-btn v-for="t in type" :key="t.type" >{{ t.category }}</v-btn>
+                    </v-btn-toggle>
+                </div>
+            </div>
+        </div>
+
         <v-table id="dataTable">
             <thead>
             <tr>
@@ -61,10 +79,10 @@ import { storeToRefs } from 'pinia'
 
 const { base_url } = storeToRefs(useMainStore())
 const { toggleDialog } = useDialogStore()
-const { item } = storeToRefs(useItemStore())
+const { item, type } = storeToRefs(useItemStore())
 const { getItemType, getItemData } = useItemStore()
 
-console.log(base_url)
+const itemFilter = ref<string>("")
 
 onBeforeMount(async() => {
     await getItemType()
