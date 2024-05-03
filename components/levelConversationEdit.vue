@@ -16,8 +16,10 @@
                 <v-btn color="secondary" @click="toggleDialog('scene-create')">Add Scene</v-btn>
                 <v-list-item 
                     v-for="(item, index) in levelData.event.filter((e: levelEventModel) => Object.entries(e.position).length === 0)"
-                    :key="index">
-                    {{ `${index + 1}. Scene: ${item}` }}
+                    :key="index"
+                    @click="editScene">
+                    {{ `${index + 1}. Scene: ${item.scene.length}` }}
+                    <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline"></v-icon>
                 </v-list-item> 
         </v-form>
 
@@ -28,29 +30,42 @@
      </v-card>
     </v-dialog>
 
-    <event-scene-create @create-scene="createConversationScene" />
+    <event-scene-create v-if="eventSceneCreateDialog" 
+      @create-scene="createConversationScene" />
+    <event-scene-edit v-if="eventSceneEditDialog" 
+      :scene="sceneToEdit" />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
-import type { levelEventModel } from '~/types/level';
+import type { levelEventModel, eventSceneModel } from '~/types/level';
 
 import eventSceneCreate from './event/eventSceneCreate.vue';
+import eventSceneEdit from './event/eventSceneEdit.vue';
 
 const { levelData } = storeToRefs(useEditorStore())
-const { levelConversationEdit } = storeToRefs(useDialogStore())
+const { levelConversationEdit, eventSceneEditDialog, eventSceneCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
 
 // const newName = ref<string>(`${levelData.value.name}`)
 const formRef = ref()
 
+const sceneToEdit = ref<eventSceneModel[]>()
+
 const createConversationScene = (v: any) => {
     console.log(v)
     const battlePhaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
     // Insert the event before battlephase
     levelData.value.event[battlePhaseIndex - 1].scene = v
+}
+
+const editScene = () => {
+  const battlephaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
+  
+  sceneToEdit.value = levelData.value.event[battlephaseIndex - 1].scene
+  toggleDialog("scene-edit")
 }
 
 const cancelEvent = () => {
