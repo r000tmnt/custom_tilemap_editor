@@ -22,7 +22,7 @@
         </v-form>
 
         <div  class="d-flex justify-end">
-            <v-btn color="gray" class="mr-2" @click="toggleDialog('level-conversation-edit')">CANCEL</v-btn>
+            <v-btn color="gray" class="mr-2" @click="cancelEvent">CANCEL</v-btn>
             <v-btn color="primary" @click="createEvent">CONFIRM</v-btn>
         </div>
      </v-card>
@@ -50,10 +50,18 @@ const createConversationScene = (v: any) => {
     console.log(v)
     const battlePhaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
     // Insert the event before battlephase
-    levelData.value.event.splice(battlePhaseIndex, 0, v)
+    levelData.value.event[battlePhaseIndex - 1].scene = v
+}
+
+const cancelEvent = () => {
+    const battlePhaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
+
+    levelData.value.event.splice(battlePhaseIndex - 1, 1)
+    toggleDialog('level-conversation-edit')
 }
 
 const createEvent = () => {
     saveLevelData()
+    toggleDialog('level-conversation-edit')
 }
 </script>
