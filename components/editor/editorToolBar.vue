@@ -39,7 +39,9 @@
         <template v-slot:append>
             <v-btn icon="mdi-export"></v-btn>
             <!-- <v-btn icon="mdi-cog"></v-btn> -->
-            <v-menu :close-on-content-click="false" width="200">
+            <v-menu :close-on-content-click="false" 
+                width="200"
+                @update:model-value="setConfigState">
                     <template v-slot:activator="{ props }">
                         <v-btn icon="mdi-cog" v-bind="props"></v-btn>
                     </template>
@@ -75,8 +77,9 @@
 import { storeToRefs } from 'pinia'
 import levelInfoEdit from '../levelInfoEdit.vue';
 import levelConversationEdit from '../levelConversationEdit.vue';
+import type { eventPositionModel, levelEventModel } from '~/types/level'
 
-const { levelData, mode, editorTheme } = storeToRefs(useEditorStore())
+const { levelData, mode, editorTheme, configState } = storeToRefs(useEditorStore())
 const { layers, configOptions } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 
@@ -89,6 +92,16 @@ const toggleOptions = (option: string) => {
             toggleDialog("level-name-edit")
         break;
         case "Edit conversation phase":
+            // Insert an empty event in to the array
+            const battlePhaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
+            const newEvent = {
+                position: {} as eventPositionModel,
+                item: [],
+                scene: [],
+                trigger: "auto"
+            }
+            // Insert the event before battlephase
+            levelData.value.event.splice(battlePhaseIndex, 0, newEvent) 
             toggleDialog("level-conversation-edit")
         break;
         case "Edit battle phase BGM":
@@ -115,5 +128,9 @@ const switchTheme = (v: any) => {
     }else{
         editorTheme.value = 'light'
     }
+}
+
+const setConfigState = (v:any) => {
+    configState.value = v
 }
 </script>
