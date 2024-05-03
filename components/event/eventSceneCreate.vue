@@ -67,15 +67,32 @@
 
                     <v-btn @click="toggleDialog('dialogue-option-create')">Create option</v-btn>
                 </v-card-actions>
-                <v-expansion-panels v-for="(scene, index) in tileInfo.events[tileInfo.events.length - 1].scene" :key="index">
-                    <v-expansion-panel>
-                        <v-expansion-panel-title>{{ `SCENE ${index + 1}` }}</v-expansion-panel-title>
-                        <!-- Dialogue -->
-                        <v-list v-for="(dialogue, index) in scene.dialogue">
-                            {{ dialogue.content }}
-                        </v-list>
-                    </v-expansion-panel>
-                </v-expansion-panels>
+
+                <!-- Conversation in battle phase -->
+                <template v-if="!configState">
+                  <v-expansion-panels v-for="(scene, index) in tileInfo.events[tileInfo.events.length - 1].scene" :key="index">
+                      <v-expansion-panel>
+                          <v-expansion-panel-title>{{ `SCENE ${index + 1}` }}</v-expansion-panel-title>
+                          <!-- Dialogue -->
+                          <v-list v-for="(dialogue, index) in scene.dialogue">
+                              {{ dialogue.content }}
+                          </v-list>
+                      </v-expansion-panel>
+                  </v-expansion-panels>                
+                </template>
+
+                <!-- Conversation before battle phase -->
+                <template v-else>
+                  <v-expansion-panels v-for="(scene, index) in eventBeforeBattle[eventBeforeBattle.length - 1].scene" :key="index">
+                      <v-expansion-panel>
+                          <v-expansion-panel-title>{{ `SCENE ${index + 1}` }}</v-expansion-panel-title>
+                          <!-- Dialogue -->
+                          <v-list v-for="(dialogue, index) in scene.dialogue">
+                              {{ dialogue.content }}
+                          </v-list>
+                      </v-expansion-panel>
+                  </v-expansion-panels>   
+                </template>
             </v-container>
         </v-form>
         <v-row>
@@ -96,7 +113,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed} from 'vue'
 import type { eventSceneModel, dialogueOptionModel, eventDialogueModel } from '~/types/level'
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
@@ -105,7 +122,7 @@ import eventOptionCreate from './eventOptionCreate.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
-const { tileInfo, editEventIndex, audioAssets, assets } = storeToRefs(useEditorStore())
+const { tileInfo, editEventIndex, audioAssets, assets, configState, levelData } = storeToRefs(useEditorStore())
 const { selectRules, inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
 
@@ -119,6 +136,8 @@ const newScene = ref<eventSceneModel>({
   people: 1,
   dialogue: []
 })
+
+const eventBeforeBattle = computed(() => levelData.value.event.filter(e => !Object.entries(e.position).length))
 
 const updatePeopleInScene = (e: any) => {
   if(Number(e.target.value) <= 0){
