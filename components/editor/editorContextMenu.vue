@@ -5,7 +5,8 @@
         border="md"
         rounded
         elevation="12"
-        :style="`${contextMenu? 'z-index: 10' : 'z-index:-1'}`">
+        v-if="contextMenu"
+        style="z-index: 10">
         <v-list-group value="Set starting point"
             @click.stop>
             <template v-slot:activator="{ props }">
