@@ -16,7 +16,11 @@
                     variant="outlined"
                     divided
                     >
-                        <v-btn v-for="t in type" :key="t.type" >{{ t.category }}</v-btn>
+                        <v-btn v-for="t in type" 
+                            :key="t.type"
+                            @click="filterOutItems" >
+                            {{ t.category }}
+                        </v-btn>
                     </v-btn-toggle>
                 </div>
             </div>
@@ -41,7 +45,7 @@
             </thead>
             <tbody>
                 <template
-                    v-for="(value, name, index) in item"
+                    v-for="(value, name, index) in itemToDispaly"
                     :key="name"
                 >
                     <tr
@@ -74,15 +78,39 @@ definePageMeta({
     layout: 'base'
 })
 
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia' 
+import type { itemState } from '~/types/item';
 
 const { base_url } = storeToRefs(useMainStore())
 const { toggleDialog } = useDialogStore()
 const { item, type } = storeToRefs(useItemStore())
 const { getItemType, getItemData } = useItemStore()
 
-const itemFilter = ref<string>("")
+const itemToDispaly = ref()
+
+const itemFilter = ref<number>()
+
+watch(() => item, (newItem) => {
+    if(newItem){
+        itemToDispaly.value = JSON.parse(JSON.stringify(item.value))
+    }
+}, { deep: true })
+
+const filterOutItems = () => {
+    if(itemFilter.value !== undefined){
+        const index = itemFilter.value
+
+        const itemHolder: any = {}
+    
+        itemHolder[`${type.value[index].category}`] = item.value[type.value[index].category as keyof itemState]
+
+        itemToDispaly.value = itemHolder
+        console.log(itemToDispaly.value) 
+    }else{
+        itemToDispaly.value = JSON.parse(JSON.stringify(item.value))
+    }
+}
 
 onBeforeMount(async() => {
     await getItemType()
