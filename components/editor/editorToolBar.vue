@@ -92,16 +92,6 @@ const toggleOptions = (option: string) => {
             toggleDialog("level-name-edit")
         break;
         case "Edit conversation phase":
-            // Insert an empty event in to the array
-            const battlePhaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
-            const newEvent = {
-                position: {} as eventPositionModel,
-                item: [],
-                scene: [],
-                trigger: "auto"
-            }
-            // Insert the event before battlephase
-            levelData.value.event.splice(battlePhaseIndex, 0, newEvent) 
             toggleDialog("level-conversation-edit")
         break;
         case "Edit battle phase BGM":
