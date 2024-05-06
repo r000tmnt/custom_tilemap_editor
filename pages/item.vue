@@ -56,7 +56,10 @@
                         <td>{{ val.name }}</td>
                         <td>{{ val?.effect?.desc }}</td>    
                         <td class="d-flex justify-end" >
-                            <v-btn class="mx-2 mt-2" prepend-icon="mdi-file-edit" color="secondary">
+                            <v-btn class="mx-2 mt-2" 
+                                prepend-icon="mdi-file-edit" 
+                                color="secondary"
+                                @click="editItem(val.id, val.type)">
                                 EDIT
                             </v-btn>   
 
@@ -71,6 +74,9 @@
     </section>
 
     <item-create v-if="itemCreateDialog" />
+    <item-edit v-if="itemEditDialog"
+        :item="itemToEdit"
+        :index="editIndex" />
 </template>
 
 <script setup lang="ts">
@@ -83,8 +89,9 @@ import { storeToRefs } from 'pinia'
 import type { itemState } from '~/types/item';
 
 import itemCreate from '~/components/item/itemCreate.vue';
+import itemEdit from '~/components/item/itemEdit.vue';
 
-const { itemCreateDialog } = storeToRefs(useDialogStore())
+const { itemCreateDialog, itemEditDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { item, type } = storeToRefs(useItemStore())
 const { getItemType, getItemData } = useItemStore()
@@ -93,11 +100,50 @@ const itemToDispaly = ref()
 
 const itemFilter = ref<number>()
 
+const itemToEdit = ref<any>()
+const editIndex = ref<number>(0)
+
 watch(() => item, (newItem) => {
     if(newItem){
         itemToDispaly.value = JSON.parse(JSON.stringify(item.value))
     }
 }, { deep: true })
+
+const editItem = (id: string, type: number) => {
+    switch(type){
+        case 0:
+            editIndex.value = item.value.potion.findIndex(p => p.id === id)
+            itemToEdit.value = item.value.potion[editIndex.value]
+        break;
+        case 1:
+            editIndex.value = item.value.other.findIndex(p => p.id === id)
+            itemToEdit.value = item.value.other[editIndex.value]
+        break;
+        case 2:
+            editIndex.value = item.value.material.findIndex(p => p.id === id)
+            itemToEdit.value = item.value.material[editIndex.value]
+        break;
+        case 3:
+            editIndex.value = item.value.weapon.findIndex(p => p.id === id)
+            itemToEdit.value = item.value.weapon[editIndex.value]
+        break;
+        case 4:
+            editIndex.value = item.value.armor.findIndex(p => p.id === id)
+            itemToEdit.value = item.value.armor[editIndex.value]
+        break;
+        case 5:
+            editIndex.value = item.value.accessory.findIndex(p => p.id === id)
+            itemToEdit.value = item.value.accessory[editIndex.value]
+        break;
+        case 6:
+            editIndex.value = item.value.key.findIndex(p => p.id === id)
+            itemToEdit.value = item.value.key[editIndex.value]
+        break;
+    }
+    console.log(itemToEdit.value)
+    console.log(editIndex.value)
+    toggleDialog("item-edit")
+}
 
 const filterOutItems = () => {
     if(itemFilter.value !== undefined){
