@@ -57,8 +57,8 @@
                         <td>{{ val?.effect?.desc }}</td>    
                         <td class="d-flex justify-end" >
                             <v-btn class="mx-2 mt-2" prepend-icon="mdi-file-edit" color="secondary">
-                                    EDIT
-                                </v-btn>   
+                                EDIT
+                            </v-btn>   
 
                             <v-btn class="mx-2 mt-2" prepend-icon="mdi-delete" color="danger" >
                                 DELETE
@@ -70,7 +70,7 @@
         </v-table>        
     </section>
 
-    <!-- <level-create-dialog @trigger-reload="getLevels" /> -->
+    <item-create v-if="itemCreateDialog" />
 </template>
 
 <script setup lang="ts">
@@ -82,7 +82,9 @@ import { onBeforeMount, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia' 
 import type { itemState } from '~/types/item';
 
-const { base_url } = storeToRefs(useMainStore())
+import itemCreate from '~/components/item/itemCreate.vue';
+
+const { itemCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { item, type } = storeToRefs(useItemStore())
 const { getItemType, getItemData } = useItemStore()
