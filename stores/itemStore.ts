@@ -29,7 +29,11 @@ export const useItemStore = defineStore('item', () => {
     ])
 
     const itemEffectType = ref<string[]>([
-        "Solid", "Percentage"
+        "Solid", "Percentage", "offence", "defence"
+    ])
+
+    const itemEquipPosition = ref<string[]>([
+        "head", "body", "hand", "leg", "feet", "accessory"
     ])
 
     const getItemType = async() => {
@@ -141,6 +145,7 @@ export const useItemStore = defineStore('item', () => {
         conditionList,
         itemRarity,
         itemEffectType,
+        itemEquipPosition,
         getItemType,
         getItemData,
         updateItemData,
