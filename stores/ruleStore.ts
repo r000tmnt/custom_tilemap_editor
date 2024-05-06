@@ -9,6 +9,14 @@ export const useRuleStore = defineStore('rule', () => {
             return 'You must make a choice'
         }
     ]
+
+    const selectMultipleRules = [
+        (value: any) => {
+            if(value.length) return true
+    
+            return 'You must make a choice'
+        }
+    ]
     
     const inputRules = [
         (value: any) => {
@@ -36,6 +44,7 @@ export const useRuleStore = defineStore('rule', () => {
 
     return {
         selectRules,
+        selectMultipleRules,
         inputRules,
         numberRules,
         fileRules
