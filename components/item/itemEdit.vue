@@ -7,7 +7,9 @@
             class="pa-2"
             width="500"
             title="Edit item">
-            <v-form ref="formRef" class="pt-4 px-5">
+            <v-form v-if="Object.entries(newItem).length" 
+                ref="formRef" 
+                class="pt-4 px-5">
 
                 <v-stepper :items="['Define type', 'Basic info', 'Define effect']">
                     <template v-slot:item.1>
@@ -158,7 +160,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, onMounted, watch } from 'vue'
+import { ref, onBeforeMount, onMounted } from 'vue'
 import { storeToRefs } from 'pinia';
 // import type { itemTypeModel } from '~/types/item';
 
@@ -185,12 +187,6 @@ const formRef = ref()
 const compateTarget = ref<string[]>([])
 
 const newItem = ref<any>({})
-
-watch(() => props.item, (newVal) => {
-    if(Object.entries(newVal).length){
-        newItem.value = JSON.parse(JSON.stringify(newVal))
-    }
-}, {deep: true})
 
 const switchItemType = (v: any) => {
     console.log(v)
@@ -311,7 +307,10 @@ onMounted(() => {
     compateTarget.value.push("status")
     compateTarget.value.push("all")
 
-    switchItemType(type.value[newItem.value.type].category)
+    console.log("onMounted :>>>", props.item)
+
+    newItem.value = JSON.parse(JSON.stringify(props.item))
+        switchItemType(type.value[newItem.value.type].category)
 })
 
 onBeforeMount(async() => {
