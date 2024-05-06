@@ -46,6 +46,7 @@
                             <template v-if="newItem.type === 4">
                                 <v-select label="Equip position"
                                     :items="itemEquipPosition"
+                                    v-model="newItem.position"
                                     :rules="selectRules"></v-select>
                             </template>
                             <!-- <v-select label="Position"></v-select> -->
@@ -64,6 +65,7 @@
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect range"
                                     type="number"
+                                    v-model="newItem.effect.range"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Effect target"
                                     :items="compateTarget"
@@ -107,6 +109,7 @@
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect range"
                                     type="number"
+                                    v-model="newItem.effect.range"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Effect target"
                                     :items="compateTarget"
@@ -200,7 +203,7 @@ const switchItemType = (v: any) => {
             newItem.value.effect = {
                 rare: "",
                 type: 0,
-                Range: 1,
+                range: 1,
                 target: "",
                 amount: 0,
                 desc: newItem.value.effect.desc
@@ -219,7 +222,7 @@ const switchItemType = (v: any) => {
             newItem.value.effect = {
                 rare: "",
                 type: 0,
-                Range: 1,
+                range: 1,
                 target: "",
                 amount: 0,
                 desc: newItem.value.effect.desc
