@@ -296,8 +296,8 @@ const updateEffectType = (v: any) => {
 }
 
 const createItem = () => {
-    formRef.value?.vailadate().then((response: any) => {
-        if(response.vaild){
+    formRef.value?.validate().then((response: any) => {
+        if(response.valid){
             // Action
             updateItemData(newItem.value, type.value[newItem.value.type].category, -1)
             toggleDialog('item-create')

@@ -309,8 +309,8 @@ const updateEffectType = (v: any) => {
 }
 
 const editItem = () => {
-    formRef.value?.vailadate().then((response: any) => {
-        if(response.vaild){
+    formRef.value?.validate().then((response: any) => {
+        if(response.valid){
             // Action
             updateItemData(newItem.value, type.value[newItem.value.type].category, props.index)
             toggleDialog('item-edit')
