@@ -6,13 +6,11 @@ interface itemTypeModel {
 }
 
 interface effectDataModel {
-    lv: number
     rare: string
     desc: string
 }
 
 interface materialEffectModel {
-    lv: number
     type: number
     target: string
     amount: number
@@ -69,6 +67,15 @@ interface otherEffectModel {
     desc: string
 }
 
+interface accessoryEffectModel {
+    rare: string
+    type: number
+    target: string
+    amount: number
+    base_attribute: baseAttributeModel,
+    desc: string
+}
+
 interface effectTypeModel extends effectDataModel{
     type: number
     target: string
@@ -122,6 +129,10 @@ interface weaponDataModel extends itemDataModel {
     effect: weaponEffectModel
 }
 
+interface accessoryDataModel extends itemDataModel{
+    effect: accessoryEffectModel
+}
+
 interface potionDataModel extends itemDataModel {
     effect: potionEffectModel
     useCondition: useConditionModel
@@ -157,7 +168,7 @@ interface materialResponseModel extends responseModel {
 
 interface itemState {
     armor: armorDataModel[]
-    accessory: []
+    accessory: accessoryDataModel[]
     key: keyDataModel[]
     material: materialDataModel[]
     other: otherDataModel[]
@@ -182,4 +193,6 @@ export{
     materialResponseModel,
     itemState,
     baseAttributeModel,
+    accessoryEffectModel,
+    accessoryDataModel
 }
