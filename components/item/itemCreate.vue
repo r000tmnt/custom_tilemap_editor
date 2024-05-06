@@ -6,7 +6,7 @@
         <v-card
             class="pa-2"
             width="500"
-            title="Create new level">
+            title="Create new item">
             <v-form ref="formRef" class="pt-4 px-5">
 
                 <v-stepper :items="['Define type', 'Basic info', 'Define effect']">
@@ -290,8 +290,7 @@ const createItem = () => {
     formRef.value?.vailadate().then((response: any) => {
         if(response.vaild){
             // Action
-            const typeIndex = newItem.value.type
-            updateItemData(newItem.value, type.value[typeIndex].category, -1)
+            updateItemData(newItem.value, type.value[newItem.value.type].category, -1)
             toggleDialog('item-create')
         }
     })
@@ -304,6 +303,8 @@ onMounted(() => {
     compateTarget.value = compateTarget.value.concat(statusList.value)
     compateTarget.value.push("status")
     compateTarget.value.push("all")
+
+    switchItemType(type.value[newItem.value.type].category)
 })
 
 onBeforeMount(async() => {
