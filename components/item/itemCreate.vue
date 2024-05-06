@@ -29,7 +29,7 @@
                                 type="number"
                                 v-model=newItem.stackLimit></v-text-field>
 
-                            <template v-if="newItem.type === 'potion'">
+                            <template v-if="newItem.type === 0">
                                 <v-select label="Compare"
                                     :items="conditionList"
                                     v-model="newItem.useCondition.compare"></v-select>
@@ -38,7 +38,7 @@
                                     v-model="newItem.useCondition.target"></v-select>
                             </template>
 
-                            <template v-if="newItem.type === 'armor'">
+                            <template v-if="newItem.type === 4">
                                 <v-select label="Equip position"
                                     :items="itemEquipPosition"></v-select>
                             </template>
@@ -48,7 +48,7 @@
 
                     <template v-slot:item.3>
                         <v-card title="Define effect" flat>
-                            <template v-if="newItem.type === 'potion' || newItem.type === 'material'">
+                            <template v-if="newItem.type === 0 || newItem.type === 2">
                                 <v-select label="Rarity"
                                     :items="itemRarity"></v-select>
                                 <v-select label="Effect type"
@@ -63,6 +63,56 @@
                                 <v-text-field v-if="newItem.effect.type === 3"
                                     label="Effect rate"
                                     type="number"></v-text-field>
+                            </template>
+
+                            <template v-if="newItem.type === 3 || newItem.type === 4">
+                                <v-text-field v-if="newItem.type === 3"
+                                    label="Min damage"
+                                    type="number"></v-text-field>
+                                <v-text-field v-if="newItem.type === 3"
+                                    label="Max damage"
+                                    type="number"></v-text-field>
+                                <v-select label="Base attribute"
+                                    multiple
+                                    v-model="newItem.effect.base_attribute"
+                                    :items="Object.entries(attributes).map(a => a[0])"
+                                    @update:model-value=""></v-select>
+                                <v-text-field v-for="(attribute, index) in newItem.effect.base_attribute"
+                                    :label="attribute"
+                                    v-model="newItem.effect.base_attribute_value[index]"
+                                    type="number"></v-text-field>
+                            </template>
+
+                            <template v-if="newItem.type === 5">
+                                <v-select label="Rarity"
+                                    :items="itemRarity"></v-select>
+                                <v-select label="Effect type"
+                                    :items="itemEffectType"
+                                    @update:model-value="updateEffectType"></v-select>
+                                <v-text-field label="Effect range"
+                                    type="number"></v-text-field>
+                                <v-select label="Effect target"
+                                    :items="compateTarget"></v-select>
+                                <v-text-field label="Effect amount"
+                                    type="number"></v-text-field>
+                                <v-select label="Base attribute"
+                                    multiple
+                                    v-model="newItem.effect.base_attribute"
+                                    :items="Object.entries(attributes).map(a => a[0])"></v-select>
+                                <v-text-field v-for="(attribute, index) in newItem.effect.base_attribute"
+                                    :label="attribute"
+                                    v-model="newItem.effect.base_attribute_value[index]"
+                                    type="number"></v-text-field>
+                            </template>
+
+                            <template v-if="newItem.type === 6">
+                                <v-select label="Rarity"
+                                    :items="itemRarity"></v-select>
+                                <v-text-field label="Enemy number"
+                                    type="number"></v-text-field>
+                                <v-text-field label="Elite rate"
+                                    type="number"></v-text-field>
+                                <v-select label="Item drop modify"></v-select>
                             </template>
 
                             <v-text-field label="desc"
@@ -157,7 +207,8 @@ const switchItemType = (v: any) => {
                     min: 0,
                     max: 0
                 },
-                base_attribute: {},
+                base_attribute: [],
+                base_attribute_value: [],
                 desc: newItem.value.effect.desc
             }
         break;
@@ -167,7 +218,8 @@ const switchItemType = (v: any) => {
             newItem.value.position = ""
 
             newItem.value.effect = {
-                base_attribute: {},
+                base_attribute: [],
+                base_attribute_value: [],
                 desc: newItem.value.effect.desc
             }
         break;
@@ -179,6 +231,8 @@ const switchItemType = (v: any) => {
                 type: 0,
                 target: "",
                 amount: 0,
+                base_attribute: [],
+                base_attribute_value: [],
                 desc: newItem.value.effect.desc
             }
         break;
