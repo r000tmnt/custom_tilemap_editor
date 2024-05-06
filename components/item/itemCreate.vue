@@ -15,7 +15,8 @@
                             <v-select label="Type"
                                 :items="type.map(t => t.category)"
                                 :value="type[newItem.type].category"
-                                @update:model-value="switchItemType">
+                                @update:model-value="switchItemType"
+                                :rules="selectRules">
                             </v-select>
                         </v-card>
                     </template>
@@ -23,24 +24,29 @@
                     <template v-slot:item.2>
                         <v-card title="Basic info" flat>
                             <v-text-field label="Name"
-                                v-model="newItem.name"></v-text-field>
+                                v-model="newItem.name"
+                                :rules="inputRules"></v-text-field>
                             
                             <v-text-field label="Stack limit" 
                                 type="number"
-                                v-model=newItem.stackLimit></v-text-field>
+                                v-model=newItem.stackLimit
+                                :rules="numberRules"></v-text-field>
 
                             <template v-if="newItem.type === 0">
                                 <v-select label="Compare"
                                     :items="conditionList"
-                                    v-model="newItem.useCondition.compare"></v-select>
+                                    v-model="newItem.useCondition.compare"
+                                    :rules="selectRules"></v-select>
                                 <v-select label="Target"
                                     :items="compateTarget"
-                                    v-model="newItem.useCondition.target"></v-select>
+                                    v-model="newItem.useCondition.target"
+                                    :rules="selectRules"></v-select>
                             </template>
 
                             <template v-if="newItem.type === 4">
                                 <v-select label="Equip position"
-                                    :items="itemEquipPosition"></v-select>
+                                    :items="itemEquipPosition"
+                                    :rules="selectRules"></v-select>
                             </template>
                             <!-- <v-select label="Position"></v-select> -->
                         </v-card>
@@ -50,37 +56,46 @@
                         <v-card title="Define effect" flat>
                             <template v-if="newItem.type === 0 || newItem.type === 2">
                                 <v-select label="Rarity"
-                                    :items="itemRarity"></v-select>
+                                    :items="itemRarity"
+                                    :rules="selectRules"></v-select>
                                 <v-select label="Effect type"
                                     :items="itemEffectType"
-                                    @update:model-value="updateEffectType"></v-select>
+                                    @update:model-value="updateEffectType"
+                                    :rules="selectRules"></v-select>
                                 <v-text-field label="Effect range"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                                 <v-select label="Effect target"
-                                    :items="compateTarget"></v-select>
+                                    :items="compateTarget"
+                                    :rules=selectRules></v-select>
                                 <v-text-field label="Effect amount"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                                 <v-text-field v-if="newItem.effect.type === 3"
                                     label="Effect rate"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                             </template>
 
                             <template v-if="newItem.type === 3 || newItem.type === 4">
                                 <v-text-field v-if="newItem.type === 3"
                                     label="Min damage"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                                 <v-text-field v-if="newItem.type === 3"
                                     label="Max damage"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                                 <v-select label="Base attribute"
                                     multiple
                                     v-model="newItem.effect.base_attribute"
                                     :items="Object.entries(attributes).map(a => a[0])"
-                                    @update:model-value=""></v-select>
+                                    :rules="selectMultipleRules"></v-select>
                                 <v-text-field v-for="(attribute, index) in newItem.effect.base_attribute"
                                     :label="attribute"
                                     v-model="newItem.effect.base_attribute_value[index]"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                             </template>
 
                             <template v-if="newItem.type === 5">
@@ -88,35 +103,47 @@
                                     :items="itemRarity"></v-select>
                                 <v-select label="Effect type"
                                     :items="itemEffectType"
-                                    @update:model-value="updateEffectType"></v-select>
+                                    @update:model-value="updateEffectType"
+                                    :rules="selectRules"></v-select>
                                 <v-text-field label="Effect range"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                                 <v-select label="Effect target"
-                                    :items="compateTarget"></v-select>
+                                    :items="compateTarget"
+                                    :rules="selectRules"></v-select>
                                 <v-text-field label="Effect amount"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                                 <v-select label="Base attribute"
                                     multiple
                                     v-model="newItem.effect.base_attribute"
-                                    :items="Object.entries(attributes).map(a => a[0])"></v-select>
+                                    :items="Object.entries(attributes).map(a => a[0])"
+                                    :rules="selectMultipleRules"></v-select>
                                 <v-text-field v-for="(attribute, index) in newItem.effect.base_attribute"
                                     :label="attribute"
                                     v-model="newItem.effect.base_attribute_value[index]"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                             </template>
 
                             <template v-if="newItem.type === 6">
                                 <v-select label="Rarity"
-                                    :items="itemRarity"></v-select>
+                                    :items="itemRarity"
+                                    :rules="selectRules"></v-select>
                                 <v-text-field label="Enemy number"
-                                    type="number"></v-text-field>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
                                 <v-text-field label="Elite rate"
-                                    type="number"></v-text-field>
-                                <v-select label="Item drop modify"></v-select>
+                                    type="number"
+                                    :rules="numberRules"></v-text-field>
+                                <v-select label="Item drop modify"
+                                    multiple
+                                    :rules="selectMultipleRules"></v-select>
                             </template>
 
                             <v-text-field label="desc"
-                                v-model="newItem.effect.desc"></v-text-field>
+                                v-model="newItem.effect.desc"
+                                :rules="inputRules"></v-text-field>
                         </v-card>
                     </template>
                 </v-stepper>
@@ -137,9 +164,10 @@ import { storeToRefs } from 'pinia';
 
 const { itemCreateDialog } = storeToRefs(useDialogStore())
 const { type, conditionList, itemRarity, itemEffectType, itemEquipPosition } = storeToRefs(useItemStore())
+const { attributes, statusList } = storeToRefs(useCharacterStore())
 const { toggleDialog } = useDialogStore()
 const { updateItemData, getItemType } = useItemStore()
-const { attributes, statusList } = storeToRefs(useCharacterStore())
+const { inputRules, numberRules, selectRules, selectMultipleRules } = useRuleStore()
 
 const formRef = ref()
 
