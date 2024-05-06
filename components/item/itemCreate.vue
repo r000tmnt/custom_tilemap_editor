@@ -14,7 +14,7 @@
                         <v-card title="Define type" flat>
                             <v-select label="Type"
                                 :items="type.map(t => t.category)"
-                                v-model="newItem.type"
+                                :value="type[newItem.type].category"
                                 @update:model-value="switchItemType">
                             </v-select>
                         </v-card>
@@ -37,22 +37,31 @@
                                     :items="compateTarget"
                                     v-model="newItem.useCondition.target"></v-select>
                             </template>
+
+                            <template v-if="newItem.type === 'armor'">
+                                <v-select label="Equip position"
+                                    :items="itemEquipPosition"></v-select>
+                            </template>
                             <!-- <v-select label="Position"></v-select> -->
                         </v-card>
                     </template>
 
                     <template v-slot:item.3>
                         <v-card title="Define effect" flat>
-                            <template v-if="newItem.type === 'potion'">
+                            <template v-if="newItem.type === 'potion' || newItem.type === 'material'">
                                 <v-select label="Rarity"
                                     :items="itemRarity"></v-select>
                                 <v-select label="Effect type"
-                                    :items="itemEffectType"></v-select>
+                                    :items="itemEffectType"
+                                    @update:model-value="updateEffectType"></v-select>
                                 <v-text-field label="Effect range"
                                     type="number"></v-text-field>
                                 <v-select label="Effect target"
-                                    :item="compateTarget"></v-select>
+                                    :items="compateTarget"></v-select>
                                 <v-text-field label="Effect amount"
+                                    type="number"></v-text-field>
+                                <v-text-field v-if="newItem.effect.type === 3"
+                                    label="Effect rate"
                                     type="number"></v-text-field>
                             </template>
 
@@ -77,7 +86,7 @@ import { storeToRefs } from 'pinia';
 // import type { itemTypeModel } from '~/types/item';
 
 const { itemCreateDialog } = storeToRefs(useDialogStore())
-const { type, conditionList, itemRarity, itemEffectType } = storeToRefs(useItemStore())
+const { type, conditionList, itemRarity, itemEffectType, itemEquipPosition } = storeToRefs(useItemStore())
 const { toggleDialog } = useDialogStore()
 const { updateItemData, getItemType } = useItemStore()
 const { attributes, statusList } = storeToRefs(useCharacterStore())
@@ -89,7 +98,7 @@ const compateTarget = ref<string[]>([])
 const newItem = ref<any>({
     id: "",
     name: "",
-    type: "",
+    type: 0,
     stackLimit: 1,
     effect: {
         desc: ""
@@ -103,6 +112,8 @@ const switchItemType = (v: any) => {
 
     switch(v){
         case 'potion':
+            newItem.value.type = 0
+
             newItem.value["useCondition"] = {
                 compare: "",
                 target: ""
@@ -117,6 +128,79 @@ const switchItemType = (v: any) => {
                 desc: newItem.value.effect.desc
             }
         break;
+        case 'other':
+            newItem.value.type = 1
+
+            newItem.value.effect = {
+                desc: newItem.value.effect.desc
+            }
+        break;
+        case 'material':
+            newItem.value.type = 2
+
+            newItem.value.effect = {
+                rare: "",
+                type: 0,
+                Range: 1,
+                target: "",
+                amount: 0,
+                desc: newItem.value.effect.desc
+            }
+        break;
+        case 'weapon':
+            newItem.value.type = 3
+
+            newItem.value.position = "hand"
+
+            newItem.value.effect = {
+                base_damage: {
+                    min: 0,
+                    max: 0
+                },
+                base_attribute: {},
+                desc: newItem.value.effect.desc
+            }
+        break;
+        case 'armor':
+            newItem.value.type = 4
+
+            newItem.value.position = ""
+
+            newItem.value.effect = {
+                base_attribute: {},
+                desc: newItem.value.effect.desc
+            }
+        break;
+        case 'accessory':
+            newItem.value.type = 5
+
+            newItem.value.effect = {
+                rare: "",
+                type: 0,
+                target: "",
+                amount: 0,
+                desc: newItem.value.effect.desc
+            }
+        break;
+        case 'key':
+            newItem.value.type = 6
+
+            newItem.value.effect = {
+                rare: "",
+                enemy_number: 3,
+                elite_rate: 30,
+                item_drop_modify: "",
+                desc: newItem.value.effect.desc
+            }
+        break;
+    }
+}
+
+const updateEffectType = (v: any) => {
+    const typeIndedx = itemEffectType.value.findIndex(i => i === v)
+
+    if(typeIndedx >= 0){
+        newItem.value.effect.type = typeIndedx
     }
 }
 
@@ -124,7 +208,8 @@ const createItem = () => {
     formRef.value?.vailadate().then((response: any) => {
         if(response.vaild){
             // Action
-            updateItemData(newItem.value, newItem.value.type, -1)
+            const typeIndex = newItem.value.type
+            updateItemData(newItem.value, type.value[typeIndex].category, -1)
             toggleDialog('item-create')
         }
     })
@@ -134,10 +219,9 @@ onMounted(() => {
     for(let [key, value] of Object.entries(attributes.value)){
         compateTarget.value.push(key)
     }
-
-    compateTarget.value.push("status")
-
     compateTarget.value = compateTarget.value.concat(statusList.value)
+    compateTarget.value.push("status")
+    compateTarget.value.push("all")
 })
 
 onBeforeMount(async() => {
