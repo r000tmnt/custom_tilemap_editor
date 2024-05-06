@@ -83,10 +83,12 @@
                                 <v-text-field v-if="newItem.type === 3"
                                     label="Min damage"
                                     type="number"
+                                    v-model="newItem.effect.base_damage.min"
                                     :rules="numberRules"></v-text-field>
                                 <v-text-field v-if="newItem.type === 3"
                                     label="Max damage"
                                     type="number"
+                                    v-model="newItem.effect.base_damage.max"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Base attribute"
                                     multiple
@@ -102,9 +104,11 @@
 
                             <template v-if="newItem.type === 5">
                                 <v-select label="Rarity"
+                                    v-model="newItem.effect.rare"
                                     :items="itemRarity"></v-select>
                                 <v-select label="Effect type"
                                     :items="itemEffectType"
+                                    :value="itemEffectType[newItem.effect.type]"
                                     @update:model-value="updateEffectType"
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect range"
@@ -113,9 +117,11 @@
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Effect target"
                                     :items="compateTarget"
+                                    v-model="newItem.effect.target"
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect amount"
                                     type="number"
+                                    v-model="newItem.effect.amount"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Base attribute"
                                     multiple
