@@ -48,6 +48,7 @@
                             <template v-if="newItem.type === 4">
                                 <v-select label="Equip position"
                                     :items="itemEquipPosition"
+                                    v-model="newItem.position"
                                     :rules="selectRules"></v-select>
                             </template>
                             <!-- <v-select label="Position"></v-select> -->
@@ -66,10 +67,11 @@
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect range"
                                     type="number"
+                                    v-model="newItem.effect.range"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Effect target"
                                     :items="compateTarget"
-                                    :rules=selectRules></v-select>
+                                    :rules="selectRules"></v-select>
                                 <v-text-field label="Effect amount"
                                     type="number"
                                     :rules="numberRules"></v-text-field>
@@ -83,10 +85,12 @@
                                 <v-text-field v-if="newItem.type === 3"
                                     label="Min damage"
                                     type="number"
+                                    v-model="newItem.effect.base_damage.min"
                                     :rules="numberRules"></v-text-field>
                                 <v-text-field v-if="newItem.type === 3"
                                     label="Max damage"
                                     type="number"
+                                    v-model="newItem.effect.base_damage.max"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Base attribute"
                                     multiple
@@ -102,19 +106,24 @@
 
                             <template v-if="newItem.type === 5">
                                 <v-select label="Rarity"
+                                    v-model="newItem.effect.rare"
                                     :items="itemRarity"></v-select>
                                 <v-select label="Effect type"
                                     :items="itemEffectType"
+                                    :value="itemEffectType[newItem.effect.type]"
                                     @update:model-value="updateEffectType"
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect range"
                                     type="number"
+                                    v-model="newItem.effect.range"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Effect target"
                                     :items="compateTarget"
+                                    v-model="newItem.effect.target"
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect amount"
                                     type="number"
+                                    v-model="newItem.effect.amount"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Base attribute"
                                     multiple
@@ -130,16 +139,20 @@
 
                             <template v-if="newItem.type === 6">
                                 <v-select label="Rarity"
+                                    v-model="newItem.effect.rare"
                                     :items="itemRarity"
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Enemy number"
                                     type="number"
+                                    v-model="newItem.effect.enemy_number"
                                     :rules="numberRules"></v-text-field>
                                 <v-text-field label="Elite rate"
                                     type="number"
+                                    v-model="newItem.effect.elite_rate"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Item drop modify"
                                     multiple
+                                    v-model="newItem.effect.item_drop_modify"
                                     :rules="selectMultipleRules"></v-select>
                             </template>
 
@@ -195,17 +208,17 @@ const switchItemType = (v: any) => {
         case 'potion':
             newItem.value.type = 0
 
-            newItem.value["useCondition"] = {
+            newItem.value["useCondition"] = newItem.value.useCondition? newItem.value.useCondition : {
                 compare: "",
                 target: ""
             }
 
             newItem.value.effect = {
-                rare: "",
-                type: 0,
-                Range: 1,
-                target: "",
-                amount: 0,
+                rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
+                type: newItem.value.effect.type? newItem.value.effect.type : 0,
+                range: newItem.value.effect.range? newItem.value.effect.range : 1,
+                target: newItem.value.effect.target? newItem.value.effect.target : "",
+                amount: newItem.value.effect.amount? newItem.value.effect.amount : 0,
                 desc: newItem.value.effect.desc
             }
         break;
@@ -220,11 +233,11 @@ const switchItemType = (v: any) => {
             newItem.value.type = 2
 
             newItem.value.effect = {
-                rare: "",
-                type: 0,
-                Range: 1,
-                target: "",
-                amount: 0,
+                rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
+                type: newItem.value.effect.type? newItem.value.effect.type : 0,
+                range: newItem.value.effect.range? newItem.value.effect.range : 1,
+                target: newItem.value.effect.target? newItem.value.effect.target : "",
+                amount: newItem.value.effect.amount? newItem.value.effect.amount : 0,
                 desc: newItem.value.effect.desc
             }
         break;
@@ -234,23 +247,27 @@ const switchItemType = (v: any) => {
             newItem.value.position = "hand"
 
             newItem.value.effect = {
-                base_damage: {
+                base_damage: newItem.value.effect.base_damage? newItem.value.effect.base_damage : {
                     min: 0,
                     max: 0
                 },
-                base_attribute: [],
-                base_attribute_value: [],
+                base_attribute: newItem.value.effect.base_attribute? 
+                    Object.entries(newItem.value.effect.base_attribute).map(e => e[0]) : [],
+                base_attribute_value: newItem.value.effect.base_attribute? 
+                    Object.entries(newItem.value.effect.base_attribute).map(e => e[1]) : [],
                 desc: newItem.value.effect.desc
             }
         break;
         case 'armor':
             newItem.value.type = 4
 
-            newItem.value.position = ""
+            newItem.value.position = newItem.value.position? newItem.value.position : ""
 
             newItem.value.effect = {
-                base_attribute: [],
-                base_attribute_value: [],
+                base_attribute: newItem.value.effect.base_attribute? 
+                    Object.entries(newItem.value.effect.base_attribute).map(e => e[0]) : [],
+                base_attribute_value: newItem.value.effect.base_attribute? 
+                    Object.entries(newItem.value.effect.base_attribute).map(e => e[1]) : [],
                 desc: newItem.value.effect.desc
             }
         break;
@@ -258,12 +275,14 @@ const switchItemType = (v: any) => {
             newItem.value.type = 5
 
             newItem.value.effect = {
-                rare: "",
-                type: 0,
-                target: "",
-                amount: 0,
-                base_attribute: [],
-                base_attribute_value: [],
+                rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
+                type: newItem.value.effect.type? newItem.value.effect.type : 0,
+                target: newItem.value.effect.target? newItem.value.effect.target : "",
+                amount: newItem.value.effect.amount? newItem.value.effect.amount : 0,
+                base_attribute: newItem.value.effect.base_attribute? 
+                    Object.entries(newItem.value.effect.base_attribute).map(e => e[0]) : [],
+                base_attribute_value: newItem.value.effect.base_attribute? 
+                    Object.entries(newItem.value.effect.base_attribute).map(e => e[1]) : [],
                 desc: newItem.value.effect.desc
             }
         break;
@@ -271,10 +290,10 @@ const switchItemType = (v: any) => {
             newItem.value.type = 6
 
             newItem.value.effect = {
-                rare: "",
-                enemy_number: 3,
-                elite_rate: 30,
-                item_drop_modify: "",
+                rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
+                enemy_number: newItem.value.effect.enemy_number? newItem.value.effect.enemy_number : 3,
+                elite_rate:  newItem.value.effect.elite_rate? newItem.value.effect.elite_rate : 30,
+                item_drop_modify:  newItem.value.effect.item_drop_modify? newItem.value.effect.item_drop_modify : "",
                 desc: newItem.value.effect.desc
             }
         break;
