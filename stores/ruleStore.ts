@@ -12,7 +12,7 @@ export const useRuleStore = defineStore('rule', () => {
 
     const selectMultipleRules = [
         (value: any) => {
-            if(value.length) return true
+            if(value || value.length) return true
     
             return 'You must make a choice'
         }
