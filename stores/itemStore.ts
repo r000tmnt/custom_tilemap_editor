@@ -20,6 +20,18 @@ export const useItemStore = defineStore('item', () => {
 
     const type = ref<itemTypeModel[]>([])
 
+    const conditionList = ref<string[]>([
+        "lower", "equal", "greater"
+    ])
+
+    const itemRarity = ref<string[]>([
+        "N", "R", "SR", "SSR", "USSR"
+    ])
+
+    const itemEffectType = ref<string[]>([
+        "Solid", "Percentage"
+    ])
+
     const getItemType = async() => {
         const { data } = await $api(`${mainStore.base_url}api/item/type`)
 
@@ -99,9 +111,14 @@ export const useItemStore = defineStore('item', () => {
 
         console.log(updateRequest)
 
-        // Push item to the array if update success
         if(updateRequest.status == 200){
-            item.value[type as keyof itemState].push(item)
+            // If edit the existing item
+            if(index >= 0){
+                item.value[type as keyof itemState][index] = item
+            }else{
+                // Push item to the array if update success
+                item.value[type as keyof itemState].push(item)
+            }
         }
     }
 
@@ -121,6 +138,9 @@ export const useItemStore = defineStore('item', () => {
     return {
         item,
         type,
+        conditionList,
+        itemRarity,
+        itemEffectType,
         getItemType,
         getItemData,
         updateItemData,
