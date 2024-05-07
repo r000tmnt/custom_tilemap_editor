@@ -108,31 +108,31 @@ export const useItemStore = defineStore('item', () => {
         }
     }
 
-    const updateItemData = async(item: any, type: string, index:number) => {
-        const tempItemData = [...item.value[type as keyof itemState], {...item}]
+    const updateItemData = async(itemToEdit: any, type: string, index:number) => {
+        const tempItemData = [...item.value[type as keyof itemState], {...itemToEdit}]
 
         //Reconstruct the itemData
-        if(item?.effect?.based_attribute){
+        if(itemToEdit?.effect?.based_attribute){
             const base_attribute: any = {}
 
-            for(let i=0, attribute = item.effect.base_attribute; i < attribute.length; i++){
-                base_attribute[`${attribute[i]}`] = item.effect.base_attribute_value[i]
+            for(let i=0, attribute = itemToEdit.effect.base_attribute; i < attribute.length; i++){
+                base_attribute[`${attribute[i]}`] = itemToEdit.effect.base_attribute_value[i]
             }
 
-            item.effect.base_attribute = base_attribute
-            delete item.effect.base_attribute_value
+            itemToEdit.effect.base_attribute = base_attribute
+            delete itemToEdit.effect.base_attribute_value
         }
 
         //Check if id exist
-        if(!item.id.length){
-            const itemsofTheType = item.value[type as keyof itemState]
+        if(!itemToEdit.id.length){
+            const itemsofTheType : any = item.value[type as keyof itemState]
             let itemTarget = ""
-            let targetAmount = []
+            let targetAmount : any = []
             // TODO - Define item id by item type and the type of effect and the amount of the item of the same type
             switch(type){
                 case 'potion':
-                    if(item.effect.type === 2){
-                        switch(item.effect.target){
+                    if(itemToEdit.effect.type === 2){
+                        switch(itemToEdit.effect.target){
                             case "hp": case "mp":
                                 itemTarget = 'damage'
                                 targetAmount = itemsofTheType.filter((p: potionDataModel) => p.id.includes(itemTarget))
@@ -143,7 +143,7 @@ export const useItemStore = defineStore('item', () => {
                             break;
                         }
                     }else{
-                        switch(item.effect.target){
+                        switch(itemToEdit.effect.target){
                             case "hp":
                                 itemTarget = 'health'
                                 targetAmount = itemsofTheType.filter((p: potionDataModel) => p.id.includes(itemTarget))
@@ -164,16 +164,16 @@ export const useItemStore = defineStore('item', () => {
                     }
                 break;
                 case 'other':
-                    if(item.name.inculds("coin")){
+                    if(itemToEdit.name.inculds("coin")){
                         itemTarget = "currency"
                         targetAmount = itemsofTheType.filter((p: otherDataModel) => p.id.includes(itemTarget))
                     }else{
-                        itemTarget = item.name.split(" ")[0]
+                        itemTarget = itemToEdit.name.split(" ")[0]
                         targetAmount = itemsofTheType.filter((p: otherDataModel) => p.id.includes(itemTarget))
                     }
                 break;
                 case 'material':
-                    itemTarget = item.name.split(" ")[1]
+                    itemTarget = itemToEdit.name.split(" ")[1]
                     switch(itemTarget){
                         case "meat":
                             targetAmount = itemsofTheType.filter((p: materialDataModel) => p.id.includes(itemTarget))
@@ -185,23 +185,23 @@ export const useItemStore = defineStore('item', () => {
                     }
                 break;
                 case 'weapon':
-                    itemTarget = item.name.split(" ")[1]
+                    itemTarget = itemToEdit.name.split(" ")[1]
                     targetAmount = itemsofTheType.filter((p: weaponDataModel) => p.id.includes(itemTarget))
                 break;
                 case 'armor':
-                    itemTarget = item.name.split(" ")[1]
+                    itemTarget = itemToEdit.name.split(" ")[1]
                     targetAmount = itemsofTheType.filter((p: armorDataModel) => p.id.includes(itemTarget))
                 break;
                 case 'accessory':
-                    itemTarget = item.name.split(" ")[1]
+                    itemTarget = itemToEdit.name.split(" ")[1]
                     targetAmount = itemsofTheType.filter((p: accessoryDataModel) => p.id.includes(itemTarget))
                 break;
                 case 'key':
-                    itemTarget = item.name.split(" ")[2]
+                    itemTarget = itemToEdit.name.split(" ")[2]
                     targetAmount = itemsofTheType.filter((p: keyDataModel) => p.id.includes(itemTarget))
                 break;
             }            
-            item.id = `${type}_${itemTarget}_${targetAmount.length + 1}`
+            itemToEdit.id = `${type}_${itemTarget}_${targetAmount.length + 1}`
         }
 
         const updateRequest: responseModel = await $fetch(`${mainStore.base_url}api/item/${type}`, { method: 'POST', body: tempItemData })
@@ -211,10 +211,10 @@ export const useItemStore = defineStore('item', () => {
         if(updateRequest.status == 200){
             // If edit the existing item
             if(index >= 0){
-                item.value[type as keyof itemState][index] = item
+                item.value[type as keyof itemState][index] = itemToEdit
             }else{
                 // Push item to the array if update success
-                item.value[type as keyof itemState].push(item)
+                item.value[type as keyof itemState].push(itemToEdit)
             }
         }
     }
