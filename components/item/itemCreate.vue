@@ -14,7 +14,7 @@
                         <v-card title="Define type" flat>
                             <v-select label="Type"
                                 :items="type.map(t => t.category)"
-                                :value="type[newItem.type].category"
+                                v-model="defaultSelect"
                                 @update:model-value="switchItemType"
                                 :rules="selectRules">
                             </v-select>
@@ -58,6 +58,7 @@
                             <template v-if="newItem.type === 0 || newItem.type === 2">
                                 <v-select label="Rarity"
                                     :items="itemRarity"
+                                    v-model="newItem.effect.rare"
                                     :rules="selectRules"></v-select>
                                 <v-select label="Effect type"
                                     :items="itemEffectType"
@@ -69,13 +70,16 @@
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Effect target"
                                     :items="compateTarget"
+                                    v-model="newItem.effect.target"
                                     :rules=selectRules></v-select>
                                 <v-text-field label="Effect amount"
                                     type="number"
+                                    v-model="newItem.effect.amount"
                                     :rules="numberRules"></v-text-field>
                                 <v-text-field v-if="newItem.effect.type === 3"
                                     label="Effect rate"
                                     type="number"
+                                    v-model="newItem.effect.rate"
                                     :rules="numberRules"></v-text-field>
                             </template>
 
@@ -138,15 +142,19 @@
                             <template v-if="newItem.type === 6">
                                 <v-select label="Rarity"
                                     :items="itemRarity"
+                                    v-model="newItem.effect.rare"
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Enemy number"
                                     type="number"
+                                    v-model="newItem.effect.enemy_number"
                                     :rules="numberRules"></v-text-field>
                                 <v-text-field label="Elite rate"
                                     type="number"
+                                    v-model="newItem.effect.elite_rate"
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Item drop modify"
                                     multiple
+                                    v-model="newItem.effect.item_drop_modify"
                                     :rules="selectMultipleRules"></v-select>
                             </template>
 
@@ -182,6 +190,8 @@ const formRef = ref()
 
 const compateTarget = ref<string[]>([])
 
+const defaultSelect = ref<string>("potion")
+
 const newItem = ref<any>({
     id: "",
     name: "",
@@ -199,89 +209,128 @@ const switchItemType = (v: any) => {
 
     switch(v){
         case 'potion':
-            newItem.value.type = 0
-
-            newItem.value["useCondition"] = {
-                compare: "",
-                target: ""
-            }
-
-            newItem.value.effect = {
-                rare: "",
+            newItem.value = {
+                id: "",
+                name: "",
                 type: 0,
-                range: 1,
-                target: "",
-                amount: 0,
-                desc: newItem.value.effect.desc
+                stackLimit: 0,
+                effect: {
+                    rare: "",
+                    type: 0,
+                    range: 1,
+                    target: "",
+                    amount: 1,
+                    desc: ""
+                },
+                useCondition: {
+                    compare: "",
+                    target: ""
+                },
+                prefix: [],
+                suffix: []
             }
         break;
         case 'other':
-            newItem.value.type = 1
-
-            newItem.value.effect = {
-                desc: newItem.value.effect.desc
+        newItem.value = {
+                id: "",
+                name: "",
+                type: 1,
+                stackLimit: 0,
+                effect: {
+                    desc: ""
+                },
+                prefix: [],
+                suffix: []
             }
         break;
         case 'material':
-            newItem.value.type = 2
-
-            newItem.value.effect = {
-                rare: "",
-                type: 0,
-                range: 1,
-                target: "",
-                amount: 0,
-                desc: newItem.value.effect.desc
+            newItem.value = {
+                id: "",
+                name: "",
+                type: 2,
+                stackLimit: 0,
+                effect: {
+                    rare: "",
+                    type: 0,
+                    range: 1,
+                    target: "",
+                    amount: 1,
+                    desc: ""
+                },
+                prefix: [],
+                suffix: []
             }
         break;
         case 'weapon':
-            newItem.value.type = 3
-
-            newItem.value.position = "hand"
-
-            newItem.value.effect = {
-                base_damage: {
-                    min: 0,
-                    max: 0
+            newItem.value = {
+                id: "",
+                name: "",
+                type: 3,
+                stackLimit: 0,
+                effect: {
+                    base_damage: {
+                        min: 0,
+                        max: 0
+                    },
+                    base_attribute: [],
+                    base_attribute_value: [],
+                    desc: ""
                 },
-                base_attribute: [],
-                base_attribute_value: [],
-                desc: newItem.value.effect.desc
+                position: "hand",
+                prefix: [],
+                suffix: []
             }
         break;
         case 'armor':
-            newItem.value.type = 4
-
-            newItem.value.position = ""
-
-            newItem.value.effect = {
-                base_attribute: [],
-                base_attribute_value: [],
-                desc: newItem.value.effect.desc
+            newItem.value = {
+                id: "",
+                name: "",
+                type: 4,
+                stackLimit: 0,
+                effect: {
+                    base_attribute: [],
+                    base_attribute_value: [],
+                    desc: ""
+                },
+                position: "",
+                prefix: [],
+                suffix: []
             }
         break;
         case 'accessory':
-            newItem.value.type = 5
-
-            newItem.value.effect = {
-                rare: "",
-                type: 0,
-                target: "",
-                amount: 0,
-                base_attribute: [],
-                base_attribute_value: [],
-                desc: newItem.value.effect.desc
+            newItem.value = {
+                id: "",
+                name: "",
+                type: 5,
+                stackLimit: 0,
+                effect: {
+                    rare: "",
+                    type: 0,
+                    target: "",
+                    amount: 0,
+                    base_attribute: [],
+                    base_attribute_value: [],
+                    desc: ""
+                },
+                prefix: [],
+                suffix: []
             }
         break;
         case 'key':
-            newItem.value.type = 6
-
-            newItem.value.effect = {
-                rare: "",
-                enemy_number: 3,
-                elite_rate: 30,
-                item_drop_modify: "",
-                desc: newItem.value.effect.desc
+            newItem.value = {
+                id: "",
+                name: "",
+                type: 6,
+                stackLimit: 0,
+                effect: {
+                    rare: "",
+                    enemy_number: 3,
+                    elite_rate: 30,
+                    item_drop_modify: [],
+                    desc: ""
+                },
+                prefix: [],
+                suffix: []
             }
         break;
     }
@@ -313,7 +362,7 @@ onMounted(() => {
     compateTarget.value.push("status")
     compateTarget.value.push("all")
 
-    switchItemType(type.value[newItem.value.type].category)
+    switchItemType(defaultSelect.value)
 })
 
 onBeforeMount(async() => {

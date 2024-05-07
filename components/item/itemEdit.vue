@@ -16,7 +16,7 @@
                         <v-card title="Define type" flat>
                             <v-select label="Type"
                                 :items="type.map(t => t.category)"
-                                :value="type[newItem.type].category"
+                                v-model="defaultSelect"
                                 @update:model-value="switchItemType"
                                 :rules="selectRules">
                             </v-select>
@@ -195,6 +195,8 @@ const props = defineProps({
     }
 })
 
+const defaultSelect = ref<string>("potion")
+
 const formRef = ref()
 
 const compateTarget = ref<string[]>([])
@@ -206,95 +208,134 @@ const switchItemType = (v: any) => {
 
     switch(v){
         case 'potion':
-            newItem.value.type = 0
-
-            newItem.value["useCondition"] = newItem.value.useCondition? newItem.value.useCondition : {
-                compare: "",
-                target: ""
-            }
-
-            newItem.value.effect = {
-                rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
-                type: newItem.value.effect.type? newItem.value.effect.type : 0,
-                range: newItem.value.effect.range? newItem.value.effect.range : 1,
-                target: newItem.value.effect.target? newItem.value.effect.target : "",
-                amount: newItem.value.effect.amount? newItem.value.effect.amount : 0,
-                desc: newItem.value.effect.desc
+            newItem.value = {
+                id: newItem.value.id,
+                name: newItem.value.name,
+                type: 0,
+                stackLimit: newItem.value.stackLimit,
+                effect: {
+                    rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
+                    type: newItem.value.effect.type? newItem.value.effect.type : 0,
+                    range: newItem.value.effect.range? newItem.value.effect.range : 1,
+                    target: newItem.value.effect.target? newItem.value.effect.target : "",
+                    amount: newItem.value.effect.amount? newItem.value.effect.amount : 0,
+                    desc: newItem.value.effect.desc
+                },
+                useCondition: newItem.value.useCondition? newItem.value.useCondition : {
+                    compare: "",
+                    target: "",
+                },
+                prefix: [],
+                suffix: []
             }
         break;
         case 'other':
-            newItem.value.type = 1
-
-            newItem.value.effect = {
-                desc: newItem.value.effect.desc
+        newItem.value = {
+                id: newItem.value.id,
+                name: newItem.value.name,
+                type: 1,
+                stackLimit: newItem.value.stackLimit,
+                effect: {
+                    desc: newItem.value.effect.desc
+                },
+                prefix: [],
+                suffix: []
             }
         break;
         case 'material':
-            newItem.value.type = 2
-
-            newItem.value.effect = {
-                rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
-                type: newItem.value.effect.type? newItem.value.effect.type : 0,
-                range: newItem.value.effect.range? newItem.value.effect.range : 1,
-                target: newItem.value.effect.target? newItem.value.effect.target : "",
-                amount: newItem.value.effect.amount? newItem.value.effect.amount : 0,
-                desc: newItem.value.effect.desc
+            newItem.value = {
+                id: newItem.value.id,
+                name: newItem.value.name,
+                type: 2,
+                stackLimit: newItem.value.stackLimit,
+                effect: {
+                    rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
+                    type: newItem.value.effect.type? newItem.value.effect.type : 0,
+                    range: newItem.value.effect.range? newItem.value.effect.range : 1,
+                    target: newItem.value.effect.target? newItem.value.effect.target : "",
+                    amount: newItem.value.effect.amount? newItem.value.effect.amount : 0,
+                    desc: newItem.value.effect.desc
+                },
+                prefix: [],
+                suffix: []
             }
         break;
         case 'weapon':
-            newItem.value.type = 3
-
-            newItem.value.position = "hand"
-
-            newItem.value.effect = {
-                base_damage: newItem.value.effect.base_damage? newItem.value.effect.base_damage : {
-                    min: 0,
-                    max: 0
+            newItem.value = {
+                id: newItem.value.id,
+                name: newItem.value.name,
+                type: 3,
+                stackLimit: newItem.value.stackLimit,
+                effect: {
+                    base_damage: newItem.value.effect.base_damage? newItem.value.effect.base_damage : {
+                        min: 0,
+                        max: 0
+                    },
+                    base_attribute: newItem.value.effect.base_attribute? 
+                        Object.entries(newItem.value.effect.base_attribute).map(e => e[0]) : [],
+                    base_attribute_value: newItem.value.effect.base_attribute? 
+                        Object.entries(newItem.value.effect.base_attribute).map(e => e[1]) : [],
+                    desc: newItem.value.effect.desc
                 },
-                base_attribute: newItem.value.effect.base_attribute? 
-                    Object.entries(newItem.value.effect.base_attribute).map(e => e[0]) : [],
-                base_attribute_value: newItem.value.effect.base_attribute? 
-                    Object.entries(newItem.value.effect.base_attribute).map(e => e[1]) : [],
-                desc: newItem.value.effect.desc
+                position: "hand",
+                prefix: [],
+                suffix: []
             }
         break;
         case 'armor':
-            newItem.value.type = 4
-
-            newItem.value.position = newItem.value.position? newItem.value.position : ""
-
-            newItem.value.effect = {
-                base_attribute: newItem.value.effect.base_attribute? 
-                    Object.entries(newItem.value.effect.base_attribute).map(e => e[0]) : [],
-                base_attribute_value: newItem.value.effect.base_attribute? 
-                    Object.entries(newItem.value.effect.base_attribute).map(e => e[1]) : [],
-                desc: newItem.value.effect.desc
+            newItem.value = {
+                id: newItem.value.id,
+                name: newItem.value.name,
+                type: 4,
+                stackLimit: newItem.value.stackLimit,
+                effect: {
+                    base_attribute: newItem.value.effect.base_attribute? 
+                        Object.entries(newItem.value.effect.base_attribute).map(e => e[0]) : [],
+                    base_attribute_value: newItem.value.effect.base_attribute? 
+                        Object.entries(newItem.value.effect.base_attribute).map(e => e[1]) : [],
+                    desc: newItem.value.effect.desc
+                },
+                position: newItem.value.position? newItem.value.position : "",
+                prefix: [],
+                suffix: []
             }
         break;
         case 'accessory':
-            newItem.value.type = 5
-
-            newItem.value.effect = {
-                rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
-                type: newItem.value.effect.type? newItem.value.effect.type : 0,
-                target: newItem.value.effect.target? newItem.value.effect.target : "",
-                amount: newItem.value.effect.amount? newItem.value.effect.amount : 0,
-                base_attribute: newItem.value.effect.base_attribute? 
-                    Object.entries(newItem.value.effect.base_attribute).map(e => e[0]) : [],
-                base_attribute_value: newItem.value.effect.base_attribute? 
-                    Object.entries(newItem.value.effect.base_attribute).map(e => e[1]) : [],
-                desc: newItem.value.effect.desc
+            newItem.value = {
+                id: newItem.value.id,
+                name: newItem.value.name,
+                type: 5,
+                stackLimit: newItem.value.stackLimit,
+                effect: {
+                    rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
+                    type: newItem.value.effect.type? newItem.value.effect.type : 0,
+                    target: newItem.value.effect.target? newItem.value.effect.target : "",
+                    amount: newItem.value.effect.amount? newItem.value.effect.amount : 0,
+                    base_attribute: newItem.value.effect.base_attribute? 
+                        Object.entries(newItem.value.effect.base_attribute).map(e => e[0]) : [],
+                    base_attribute_value: newItem.value.effect.base_attribute? 
+                        Object.entries(newItem.value.effect.base_attribute).map(e => e[1]) : [],
+                    desc: newItem.value.effect.desc
+                },
+                prefix: [],
+                suffix: []
             }
         break;
         case 'key':
-            newItem.value.type = 6
-
-            newItem.value.effect = {
-                rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
-                enemy_number: newItem.value.effect.enemy_number? newItem.value.effect.enemy_number : 3,
-                elite_rate:  newItem.value.effect.elite_rate? newItem.value.effect.elite_rate : 30,
-                item_drop_modify:  newItem.value.effect.item_drop_modify? newItem.value.effect.item_drop_modify : "",
-                desc: newItem.value.effect.desc
+            newItem.value = {
+                id: newItem.value.id,
+                name: newItem.value.name,
+                type: 6,
+                stackLimit: newItem.value.stackLimit,
+                effect: {
+                    rare: newItem.value.effect.rare? newItem.value.effect.rare : "",
+                    enemy_number: newItem.value.effect.enemy_number? newItem.value.effect.enemy_number : 3,
+                    elite_rate:  newItem.value.effect.elite_rate? newItem.value.effect.elite_rate : 30,
+                    item_drop_modify:  newItem.value.effect.item_drop_modify? newItem.value.effect.item_drop_modify : "",
+                    desc: newItem.value.effect.desc
+                },
+                prefix: [],
+                suffix: []
             }
         break;
     }
@@ -329,7 +370,8 @@ onMounted(() => {
     console.log("onMounted :>>>", props.item)
 
     newItem.value = JSON.parse(JSON.stringify(props.item))
-        switchItemType(type.value[newItem.value.type].category)
+    defaultSelect.value = type.value[newItem.value.type].category
+    switchItemType(defaultSelect.value)
 })
 
 onBeforeMount(async() => {
