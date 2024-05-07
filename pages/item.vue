@@ -109,23 +109,27 @@ const pageLimit = ref({
 })
 const totalPage = ref<number>(1)
 
+const setItemToDisplay = (copyItem: itemState) => {
+    itemToDispaly.value.splice(0)
+    let itemCount = 0
+    for(let [key, value] of Object.entries(copyItem)){
+        for(let i=0; i < copyItem[key as keyof itemState].length; i++){
+            itemToDispaly.value[itemCount] = copyItem[key as keyof itemState][i]
+            itemCount += 1
+        }
+    }
+
+    if(Math.floor(itemCount % 10) > 0){
+        totalPage.value = Math.floor(itemCount / 10) + 1
+    }else{
+        totalPage.value = Math.floor(itemCount / 10)
+    }
+}
+
+
 watch(() => item, (newItem) => {
     if(newItem){
-        const copyItem = JSON.parse(JSON.stringify(item.value))
-
-        let itemCount = 0
-        for(let [key, value] of Object.entries(copyItem)){
-            for(let i=0; i < copyItem[key].length; i++){
-                itemToDispaly.value[itemCount] = copyItem[key][i]
-                itemCount += 1
-            }
-        }
-
-        if(Math.floor(itemCount % 10) > 0){
-            totalPage.value = Math.floor(itemCount / 10) + 1
-        }else{
-            totalPage.value = Math.floor(itemCount / 10)
-        }
+        setItemToDisplay(JSON.parse(JSON.stringify(item.value)))
     }
 }, { deep: true })
 
@@ -187,10 +191,10 @@ const filterOutItems = () => {
     
         itemHolder[`${type.value[index].category}`] = item.value[type.value[index].category as keyof itemState]
 
-        itemToDispaly.value = itemHolder
+        setItemToDisplay(itemHolder)
         console.log(itemToDispaly.value) 
     }else{
-        itemToDispaly.value = JSON.parse(JSON.stringify(item.value))
+        setItemToDisplay(JSON.parse(JSON.stringify(item.value)))
     }
 }
 
