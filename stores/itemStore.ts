@@ -111,6 +111,18 @@ export const useItemStore = defineStore('item', () => {
     const updateItemData = async(item: any, type: string, index:number) => {
         const tempItemData = [...item.value[type as keyof itemState], {...item}]
 
+        //Reconstruct the itemData
+        if(item?.effect?.based_attribute){
+            const base_attribute: any = {}
+
+            for(let i=0, attribute = item.effect.base_attribute; i < attribute.length; i++){
+                base_attribute[`${attribute[i]}`] = item.effect.base_attribute_value[i]
+            }
+
+            item.effect.base_attribute = base_attribute
+            delete item.effect.base_attribute_value
+        }
+
         //Check if id exist
         if(!item.id.length){
             const itemsofTheType = item.value[type as keyof itemState]
