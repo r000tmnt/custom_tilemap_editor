@@ -60,9 +60,11 @@
                             <template v-if="newItem.type === 0 || newItem.type === 2">
                                 <v-select label="Rarity"
                                     :items="itemRarity"
+                                    v-model="newItem.effect.rare"
                                     :rules="selectRules"></v-select>
                                 <v-select label="Effect type"
                                     :items="itemEffectType"
+                                    v-model="defaultEffectType"
                                     @update:model-value="updateEffectType"
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect range"
@@ -71,13 +73,16 @@
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Effect target"
                                     :items="compateTarget"
+                                    v-model="newItem.effect.target"
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect amount"
                                     type="number"
+                                    v-model="newItem.effect.amount"
                                     :rules="numberRules"></v-text-field>
                                 <v-text-field v-if="newItem.effect.type === 3"
                                     label="Effect rate"
                                     type="number"
+                                    v-model="newItem.effect.rate"
                                     :rules="numberRules"></v-text-field>
                             </template>
 
@@ -110,7 +115,7 @@
                                     :items="itemRarity"></v-select>
                                 <v-select label="Effect type"
                                     :items="itemEffectType"
-                                    :value="itemEffectType[newItem.effect.type]"
+                                    v-model="defaultEffectType"
                                     @update:model-value="updateEffectType"
                                     :rules="selectRules"></v-select>
                                 <v-text-field label="Effect range"
@@ -196,6 +201,7 @@ const props = defineProps({
 })
 
 const defaultSelect = ref<string>("potion")
+const defaultEffectType = ref<string>("solid")
 
 const formRef = ref()
 
@@ -228,6 +234,8 @@ const switchItemType = (v: any) => {
                 prefix: [],
                 suffix: []
             }
+
+            defaultEffectType.value = itemEffectType.value[newItem.value.effect.type]
         break;
         case 'other':
         newItem.value = {
@@ -259,6 +267,8 @@ const switchItemType = (v: any) => {
                 prefix: [],
                 suffix: []
             }
+
+            defaultEffectType.value = itemEffectType.value[newItem.value.effect.type]
         break;
         case 'weapon':
             newItem.value = {
@@ -320,6 +330,8 @@ const switchItemType = (v: any) => {
                 prefix: [],
                 suffix: []
             }
+
+            defaultEffectType.value = itemEffectType.value[newItem.value.effect.type]
         break;
         case 'key':
             newItem.value = {
