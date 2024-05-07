@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { materialResponseModel, otherResponseModel, potionResponseModel, typeResponseModel, itemState, armorResponseModel, weaponResponseModel, keyResponseModel, itemTypeModel } from "~/types/item";
+import type { materialResponseModel, otherResponseModel, potionResponseModel, typeResponseModel, itemState, armorResponseModel, weaponResponseModel, keyResponseModel, itemTypeModel, potionDataModel, otherDataModel, materialDataModel, weaponDataModel, armorDataModel, accessoryDataModel, keyDataModel } from "~/types/item";
 import $api from "~/composables/useCustomFetch";
 import type responseModel from "~/types/serverResponse";
 
@@ -110,6 +110,87 @@ export const useItemStore = defineStore('item', () => {
 
     const updateItemData = async(item: any, type: string, index:number) => {
         const tempItemData = [...item.value[type as keyof itemState], {...item}]
+
+        //Check if id exist
+        if(!item.id.length){
+            const itemsofTheType = item.value[type as keyof itemState]
+            let itemTarget = ""
+            let targetAmount = []
+            // TODO - Define item id by item type and the type of effect and the amount of the item of the same type
+            switch(type){
+                case 'potion':
+                    if(item.effect.type === 2){
+                        switch(item.effect.target){
+                            case "hp": case "mp":
+                                itemTarget = 'damage'
+                                targetAmount = itemsofTheType.filter((p: potionDataModel) => p.id.includes(itemTarget))
+                            break;
+                            case "status":
+                                itemTarget = 'status'
+                                targetAmount = itemsofTheType.filter((p: potionDataModel) => p.id.includes(itemTarget))
+                            break;
+                        }
+                    }else{
+                        switch(item.effect.target){
+                            case "hp":
+                                itemTarget = 'health'
+                                targetAmount = itemsofTheType.filter((p: potionDataModel) => p.id.includes(itemTarget))
+                            break;
+                            case "mp":
+                                itemTarget = 'mana'
+                                targetAmount = itemsofTheType.filter((p: potionDataModel) => p.id.includes(itemTarget))
+                            break;
+                            case "status":
+                                itemTarget = 'status'
+                                targetAmount = itemsofTheType.filter((p: potionDataModel) => p.id.includes(itemTarget))
+                            break;
+                            case "all":
+                                itemTarget = 'revive'
+                                targetAmount = itemsofTheType.filter((p: potionDataModel) => p.id.includes(itemTarget))
+                            break;
+                        }
+                    }
+                break;
+                case 'other':
+                    if(item.name.inculds("coin")){
+                        itemTarget = "currency"
+                        targetAmount = itemsofTheType.filter((p: otherDataModel) => p.id.includes(itemTarget))
+                    }else{
+                        itemTarget = item.name.split(" ")[0]
+                        targetAmount = itemsofTheType.filter((p: otherDataModel) => p.id.includes(itemTarget))
+                    }
+                break;
+                case 'material':
+                    itemTarget = item.name.split(" ")[1]
+                    switch(itemTarget){
+                        case "meat":
+                            targetAmount = itemsofTheType.filter((p: materialDataModel) => p.id.includes(itemTarget))
+                        break;
+                        // case "status":
+                        //     itemTarget = 'status'
+                        //     targetAmount = itemsofTheType.filter((p: materialDataModel) => p.id.includes(itemTarget))
+                        // break;
+                    }
+                break;
+                case 'weapon':
+                    itemTarget = item.name.split(" ")[1]
+                    targetAmount = itemsofTheType.filter((p: weaponDataModel) => p.id.includes(itemTarget))
+                break;
+                case 'armor':
+                    itemTarget = item.name.split(" ")[1]
+                    targetAmount = itemsofTheType.filter((p: armorDataModel) => p.id.includes(itemTarget))
+                break;
+                case 'accessory':
+                    itemTarget = item.name.split(" ")[1]
+                    targetAmount = itemsofTheType.filter((p: accessoryDataModel) => p.id.includes(itemTarget))
+                break;
+                case 'key':
+                    itemTarget = item.name.split(" ")[2]
+                    targetAmount = itemsofTheType.filter((p: keyDataModel) => p.id.includes(itemTarget))
+                break;
+            }            
+            item.id = `${type}_${itemTarget}_${targetAmount.length + 1}`
+        }
 
         const updateRequest: responseModel = await $fetch(`${mainStore.base_url}api/item/${type}`, { method: 'POST', body: tempItemData })
 
