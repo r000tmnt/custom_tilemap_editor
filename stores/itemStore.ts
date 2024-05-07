@@ -109,8 +109,6 @@ export const useItemStore = defineStore('item', () => {
     }
 
     const updateItemData = async(itemToEdit: any, type: string, index:number) => {
-        const tempItemData = [...item.value[type as keyof itemState], {...itemToEdit}]
-
         //Reconstruct the itemData
         if(itemToEdit?.effect?.based_attribute){
             const base_attribute: any = {}
@@ -204,7 +202,9 @@ export const useItemStore = defineStore('item', () => {
             itemToEdit.id = `${type}_${itemTarget}_${targetAmount.length + 1}`
         }
 
-        const updateRequest: responseModel = await $fetch(`${mainStore.base_url}api/item/${type}`, { method: 'POST', body: tempItemData })
+        const tempItemData = [...item.value[type as keyof itemState], {...itemToEdit}]
+
+        const updateRequest: responseModel = await $fetch(`${mainStore.base_url}api/item/${type}`, { method: 'POST', body: { item: JSON.stringify(tempItemData), type } })
 
         console.log(updateRequest)
 
