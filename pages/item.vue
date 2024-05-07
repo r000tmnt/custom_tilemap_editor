@@ -44,33 +44,32 @@
             </tr>
             </thead>
             <tbody>
-                <template
-                    v-for="(value, name, index) in itemToDispaly"
-                    :key="name"
+                <tr
+                    v-for="(val, index) in itemToDispaly"
+                            :key="index"
+                            :style="`display:${index >= pageLimit.start && index <= pageLimit.end? 'blcok' : 'none'}`"
                 >
-                    <tr
-                        v-for="(val, pointer) in value"
-                                :key="pointer"
-                    >
-                        <td>{{ val.id }}</td>
-                        <td>{{ val.name }}</td>
-                        <td>{{ val?.effect?.desc }}</td>    
-                        <td class="d-flex justify-end" >
-                            <v-btn class="mx-2 mt-2" 
-                                prepend-icon="mdi-file-edit" 
-                                color="secondary"
-                                @click="editItem(val.id, val.type)">
-                                EDIT
-                            </v-btn>   
+                    <td>{{ val.id }}</td>
+                    <td>{{ val.name }}</td>
+                    <td>{{ val?.effect?.desc }}</td>    
+                    <td class="d-flex justify-end" >
+                        <v-btn class="mx-2 mt-2" 
+                            prepend-icon="mdi-file-edit" 
+                            color="secondary"
+                            @click="editItem(val.id, val.type)">
+                            EDIT
+                        </v-btn>   
 
-                            <v-btn class="mx-2 mt-2" prepend-icon="mdi-delete" color="danger" >
-                                DELETE
-                            </v-btn>
-                        </td>   
-                    </tr>
-                </template>
+                        <v-btn class="mx-2 mt-2" prepend-icon="mdi-delete" color="danger" >
+                            DELETE
+                        </v-btn>
+                    </td>   
+                </tr>
             </tbody>
-        </v-table>        
+        </v-table>      
+        
+        <v-pagination :length="totalPage"
+            v-model="currentPage"></v-pagination>
     </section>
 
     <item-create v-if="itemCreateDialog" />
@@ -96,18 +95,53 @@ const { toggleDialog } = useDialogStore()
 const { item, type } = storeToRefs(useItemStore())
 const { getItemType, getItemData } = useItemStore()
 
-const itemToDispaly = ref()
+const itemToDispaly = ref<any>([])
 
 const itemFilter = ref<number>()
 
 const itemToEdit = ref<any>()
 const editIndex = ref<number>(0)
 
+const currentPage = ref<number>(1)
+const pageLimit = ref({
+    start: 0,
+    end: 9
+})
+const totalPage = ref<number>(1)
+
 watch(() => item, (newItem) => {
     if(newItem){
-        itemToDispaly.value = JSON.parse(JSON.stringify(item.value))
+        const copyItem = JSON.parse(JSON.stringify(item.value))
+
+        let itemCount = 0
+        for(let [key, value] of Object.entries(copyItem)){
+            for(let i=0; i < copyItem[key].length; i++){
+                itemToDispaly.value[itemCount] = copyItem[key][i]
+                itemCount += 1
+            }
+        }
+
+        if(Math.floor(itemCount % 10) > 0){
+            totalPage.value = Math.floor(itemCount / 10) + 1
+        }else{
+            totalPage.value = Math.floor(itemCount / 10)
+        }
     }
 }, { deep: true })
+
+
+watch(() => currentPage.value, (newPage, oldPage) => {
+    console.log(newPage)
+    if(newPage > oldPage){
+        const distance = (10 * (newPage - oldPage))
+        pageLimit.value.start +=  distance
+        pageLimit.value.end += distance 
+    }else{
+        const distance = (10 * (oldPage - newPage))
+        pageLimit.value.start -=  distance
+        pageLimit.value.end -= distance 
+    }
+})
 
 const editItem = (id: string, type: number) => {
     switch(type){
