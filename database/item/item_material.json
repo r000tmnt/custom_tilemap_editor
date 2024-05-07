@@ -5,9 +5,9 @@
         "stackLimit": 10,
         "type": 2,
         "effect": {
-            "lv": 1,
             "type": 2,
             "target": "status",
+            "rare": "N",
             "status": "Poison",
             "amount": 5,
             "rate": 70,
