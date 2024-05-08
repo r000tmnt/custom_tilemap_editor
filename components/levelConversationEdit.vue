@@ -82,7 +82,7 @@ const createConversationScene = (v: any) => {
 }
 
 const editConversationScene = (v: any) => {
-  console.log(v)
+    console.log(v)
     const battlePhaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
     // Insert the event before battlephase
     levelData.value.event[battlePhaseIndex - 1].scene[editIndex.value] = v
