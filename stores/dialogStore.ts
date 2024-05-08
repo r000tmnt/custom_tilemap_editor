@@ -37,6 +37,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const itemCreateDialog = ref<boolean>(false)
     // On and off switch for item edit dialog
     const itemEditDialog = ref<boolean>(false)
+    // On and off switch for skill create dialog
+    const skillCreateDialog = ref<boolean>(false)
     
     const toggleDialog = (type: string) => {
         switch(type){
@@ -94,6 +96,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'item-edit':
                 itemEditDialog.value = !itemEditDialog.value
             break;
+            case 'skill-create':
+                skillCreateDialog.value = !skillCreateDialog.value
+            break;
             // and more...
         }
     }
@@ -117,6 +122,7 @@ export const useDialogStore = defineStore('dialog', () => {
         levelConversationEdit,
         itemCreateDialog,
         itemEditDialog,
+        skillCreateDialog,
         toggleDialog
     }
 })
