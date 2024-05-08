@@ -75,7 +75,7 @@
                                 <v-text-field label="Effect amount"
                                     type="number"
                                     v-model="newItem.effect.amount"
-                                    :rules="numberRules"></v-text-field>
+                                    :rules="itemEffectAmountRules"></v-text-field>
                                 <v-text-field v-if="newItem.effect.type === 3"
                                     label="Effect rate"
                                     type="number"
@@ -126,7 +126,7 @@
                                 <v-text-field label="Effect amount"
                                     type="number"
                                     v-model="newItem.effect.amount"
-                                    :rules="numberRules"></v-text-field>
+                                    :rules="itemEffectAmountRules"></v-text-field>
                                 <v-select label="Base attribute"
                                     multiple
                                     v-model="newItem.effect.base_attribute"
@@ -184,7 +184,7 @@ const { type, conditionList, itemRarity, itemEffectType, itemEquipPosition } = s
 const { attributes, statusList } = storeToRefs(useCharacterStore())
 const { toggleDialog } = useDialogStore()
 const { updateItemData, getItemType } = useItemStore()
-const { inputRules, numberRules, selectRules, selectMultipleRules } = useRuleStore()
+const { inputRules, numberRules, selectRules, selectMultipleRules, itemEffectAmountRules } = useRuleStore()
 
 const formRef = ref()
 
