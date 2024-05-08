@@ -17,7 +17,8 @@
                     divided
                     >
                         <v-btn v-for="t in skillTypes" 
-                            :key="t.type" >
+                            :key="t.type"
+                            @click="filterOutItems" >
                             {{ t.category }}
                         </v-btn>
                     </v-btn-toggle>
@@ -101,6 +102,20 @@ const pageLimit = ref({
     end: 9
 })
 const totalPage = ref<number>(1)
+
+const filterOutItems = () => {
+    if(skillFilter.value !== undefined){
+        const index = skillFilter.value
+
+        const itemHolder: any = {}
+    
+        itemHolder[`${skillTypes.value[index].category}`] = skills.value[skillTypes.value[index].category as keyof skillState]
+
+        setSkillToDisplay(itemHolder)
+    }else{
+        setSkillToDisplay(JSON.parse(JSON.stringify(skills.value)))
+    }
+}
 
 const setSkillToDisplay = (copy: skillState) => {
     skillsToDisplay.value.splice(0)
