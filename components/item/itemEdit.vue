@@ -157,8 +157,7 @@
                                     :rules="numberRules"></v-text-field>
                                 <v-select label="Item drop modify"
                                     multiple
-                                    v-model="newItem.effect.item_drop_modify"
-                                    :rules="selectMultipleRules"></v-select>
+                                    v-model="newItem.effect.item_drop_modify"></v-select>
                             </template>
 
                             <v-text-field label="desc"
