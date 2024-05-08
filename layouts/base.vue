@@ -11,7 +11,9 @@
                         <v-list-item link prepend-icon="mdi-treasure-chest-outline" title="ITEM"></v-list-item>
                     </Nuxt-link>
 
-                    <v-list-item link prepend-icon="mdi-magic-staff" title="SKILL"></v-list-item>
+                    <Nuxt-link to="/skill">
+                        <v-list-item link prepend-icon="mdi-magic-staff" title="SKILL"></v-list-item>                        
+                    </Nuxt-link>
                 </v-navigation-drawer>
 
                 <v-app-bar id="bar" :elevation="5">
