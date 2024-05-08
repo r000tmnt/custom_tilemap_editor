@@ -36,6 +36,8 @@ export const useItemStore = defineStore('item', () => {
         "head", "body", "hand", "leg", "feet", "accessory"
     ])
 
+    const itemDropModify = ref<string[]>([])
+
     const getItemType = async() => {
         const { data } = await $api(`${mainStore.base_url}api/item/type`)
 
