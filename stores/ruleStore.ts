@@ -28,9 +28,17 @@ export const useRuleStore = defineStore('rule', () => {
 
     const numberRules = [
         (value: any) => {
-            if(Number(value) >= 1) return true
+            if(Number(value) > 0) return true
     
             return 'The minimum number must be equal to 1'
+        }
+    ]
+
+    const itemEffectAmountRules = [
+        (value: any) => {
+            if(Number(value) >= 0) return true 
+
+            return 'Negative number is not allowed'
         }
     ]
 
@@ -47,6 +55,7 @@ export const useRuleStore = defineStore('rule', () => {
         selectMultipleRules,
         inputRules,
         numberRules,
-        fileRules
+        fileRules,
+        itemEffectAmountRules
     }
 })
