@@ -16,6 +16,7 @@ interface skillEffectModel {
 
 interface skillStatusEffectModel extends skillEffectModel {
     status: string
+    turn: number
 }
 
 interface skillDataModel {
