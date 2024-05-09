@@ -54,7 +54,8 @@
                     <td class="d-flex justify-end" >
                         <v-btn class="mx-2 mt-2" 
                             prepend-icon="mdi-file-edit" 
-                            color="secondary">
+                            color="secondary"
+                            @click="setEditSkill(val.id, val.type)">
                             EDIT
                         </v-btn>   
 
@@ -71,6 +72,9 @@
     </section>
 
     <skill-create v-if="skillCreateDialog" />
+    <skill-edit v-if="skillEditDialog"
+        :skill="skillToEdit"
+        :index="editIndex" />
 </template>
 
 <script setup lang="ts">
@@ -83,9 +87,10 @@ import { storeToRefs } from 'pinia'
 import type { skillState, skillDataModel } from '~/types/skill'
 
 import skillCreate from '~/components/skill/skillCreate.vue';
+import skillEdit from '~/components/skill/skillEdit.vue';
 
 const { base_url } = storeToRefs(useMainStore())
-const { skillCreateDialog } = storeToRefs(useDialogStore())
+const { skillCreateDialog, skillEditDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { skills, skillTypes } = storeToRefs(useSkillStore())
 const { getSkillTypes, getSkillData } = useSkillStore()
@@ -137,6 +142,53 @@ const setSkillToDisplay = (copy: skillState) => {
     }else{
         totalPage.value = Math.floor(skillCount / 10)
     }
+}
+
+const setEditSkill = (id: string, type: number) => {
+    console.log(id)
+    console.log(type)
+    
+    switch(type){
+        case 0:
+            editIndex.value = skills.value.none.findIndex(p => p.id === id)
+            skillToEdit.value = skills.value.none[editIndex.value]
+        break;
+        case 1:
+            editIndex.value = skills.value.sword.findIndex(p => p.id === id)
+            skillToEdit.value = skills.value.sword[editIndex.value]
+        break;
+        case 2:
+            editIndex.value = skills.value.kneif.findIndex(p => p.id === id)
+            skillToEdit.value = skills.value.kneif[editIndex.value]
+        break;
+        case 3:
+            editIndex.value = skills.value.wand.findIndex(p => p.id === id)
+            skillToEdit.value = skills.value.wand[editIndex.value]
+        break;
+        case 4:
+            editIndex.value = skills.value.staff.findIndex(p => p.id === id)
+            skillToEdit.value = skills.value.staff[editIndex.value]
+        break;
+        case 5:
+            editIndex.value = skills.value.axe.findIndex(p => p.id === id)
+            skillToEdit.value = skills.value.axe[editIndex.value]
+        break;
+        case 6:
+            editIndex.value = skills.value.bow.findIndex(p => p.id === id)
+            skillToEdit.value = skills.value.bow[editIndex.value]
+        break;
+        case 7:
+            editIndex.value = skills.value.gun.findIndex(p => p.id === id)
+            skillToEdit.value = skills.value.gun[editIndex.value]
+        break;
+        case 8:
+            editIndex.value = skills.value.status.findIndex(p => p.id === id)
+            skillToEdit.value = skills.value.status[editIndex.value]
+        break;
+    }
+    console.log(skillToEdit.value)
+    console.log(editIndex.value)
+    toggleDialog("skill-edit")
 }
 
 watch(() => skills.value, (newSkill) => {
