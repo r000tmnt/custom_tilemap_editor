@@ -11,11 +11,11 @@
         :scrollable="true"
         title="Create event option"
       >
-        <v-form ref="formRef">
+        <v-form ref="formRef" class="pt-4 px-5">
             <v-row>
                 <v-col>
                     <!-- Value -->
-                    <v-text-field label="Value" 
+                    <v-text-field label="Option value" 
                         v-model="newOption.value"
                         :rules="inputRules"></v-text-field>
                 </v-col>
@@ -23,7 +23,7 @@
             <v-row>
                 <v-col>
                     <!-- Content -->
-                    <v-textarea label="Response" 
+                    <v-textarea label="Option response" 
                         v-model="newOption.content"
                         :rules="inputRules"></v-textarea>
                 </v-col>
@@ -83,10 +83,10 @@ const confirmEffect = (v: optionEffectModel) => {
 }
 
 const createOption = () => {
-    formRef.value?.validate((result: any) => {
+    formRef.value?.validate().then((result: any) => {
         if(result.valid){
             emit("createOption", newOption.value)
-            toggleDialog("'dialogue-option-create'")
+            toggleDialog("dialogue-option-create")
         }
     })
 }
