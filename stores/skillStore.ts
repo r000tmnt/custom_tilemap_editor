@@ -10,13 +10,15 @@ const mainStore = useMainStore()
 
 export const useSkillStore = defineStore('skill', () => {
     const skills = ref<skillState>({
+        none: [],
         sword: [],
         kneif: [],
         wand: [],
         staff: [],
         axe: [],
         bow: [],
-        gun: []
+        gun: [],
+        status: []
     })
 
     const skillTypes = ref<itemTypeModel[]>([])
@@ -60,7 +62,7 @@ export const useSkillStore = defineStore('skill', () => {
         if(!SkillToEdit.id.length){
             const skillsofTheType : any = skills.value[type as keyof skillState]
 
-            SkillToEdit.id = `${type}_${SkillToEdit.name.split[0]}_${skillsofTheType.length + 1}`
+            SkillToEdit.id = `${type}_${SkillToEdit.name.split(" ")[0].toLowerCase()}_${skillsofTheType.length + 1}`
 
             tempSkillData = [...skills.value[type as keyof skillState], {...SkillToEdit}]
         }else{
