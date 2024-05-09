@@ -30,6 +30,7 @@ interface skillDataModel {
 }
 
 interface skillState {
+    none: skillDataModel[]
     sword: skillDataModel[]
     kneif: skillDataModel[]
     wand: skillDataModel[]
@@ -37,6 +38,7 @@ interface skillState {
     axe: skillDataModel[]
     bow: skillDataModel[]
     gun: skillDataModel[]
+    status: skillDataModel[]
 }
 
 interface skillResponseModel extends responseModel {
