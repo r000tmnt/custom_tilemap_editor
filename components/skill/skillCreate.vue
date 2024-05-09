@@ -58,7 +58,8 @@
                                 :items="skillEffectMultiply"
                                 v-model="newSkill.effect.multiplay_as"
                                 :rules="selectRules"></v-select>
-                            <v-select label="Skill effect status"
+                            <v-select v-if="newSkill.type === 8"
+                                label="Skill effect status"
                                 :items="statusList"
                                 v-model="newSkill.effect.status"
                                 :rule="selectRules"></v-select>
