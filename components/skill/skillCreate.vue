@@ -29,7 +29,8 @@
                             
                             <v-select label="Skill cost"
                                 v-model="newSkill.cost.attribute"
-                                :items="Object.entries(attributes).map(a => a[0])"></v-select>
+                                :items="Object.entries(attributes).map(a => a[0])"
+                                :rules="selectRules"></v-select>
 
                             <v-text-field 
                                 label="Cost value" 
@@ -46,12 +47,28 @@
                                 @update:model-value="updateEffectType"
                                 :rules="selectRules"></v-select>
                             <v-text-field label="Skill range"
-                                v-model="newSkill.effect.range"></v-text-field>
+                                v-model="newSkill.effect.range"
+                                :rules="numberRules"></v-text-field>
                             <v-select label="Skill based attribute"
                                 v-model="newSkill.effect.base_on_attribute"
-                                :items="Object.entries(attributes).map(a => a[0])"></v-select>
+                                :items="Object.entries(attributes).map(a => a[0])"
+                                :rules="selectRules"></v-select>
+                            <v-select v-if="newSkill.type === 8"
+                                label="Skill effect multiply"
+                                :items="skillEffectMultiply"
+                                v-model="newSkill.effect.multiplay_as"
+                                :rules="selectRules"></v-select>
+                            <v-select label="Skill effect status"
+                                :items="statusList"
+                                v-model="newSkill.effect.status"
+                                :rule="selectRules"></v-select>
+                            <v-text-field label="Skill effect base number"
+                                type="number"
+                                v-model="newSkill.effect.base_number"
+                                :rules="itemEffectAmountRules"></v-text-field>
                             <v-text-field label="Description"
-                                v-model="newSkill.effect.desc"></v-text-field>
+                                v-model="newSkill.effect.desc"
+                                :rules="inputRules"></v-text-field>
                         </v-card>
                     </template>
                 </v-stepper>
@@ -75,7 +92,7 @@ const { skillTypes, skillEffectType, skillEffectMultiply } = storeToRefs(useSkil
 const { attributes, statusList } = storeToRefs(useCharacterStore())
 const { toggleDialog } = useDialogStore()
 const { updateSkillData } = useSkillStore()
-const { inputRules, numberRules, selectRules, selectMultipleRules, itemEffectAmountRules } = useRuleStore()
+const { inputRules, numberRules, selectRules, itemEffectAmountRules } = useRuleStore()
 
 const formRef = ref()
 
