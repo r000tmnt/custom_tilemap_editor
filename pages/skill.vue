@@ -3,7 +3,7 @@
         <div class="d-flex">
             <div class="mr-auto">
                 <h3>SKILL</h3>
-                <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('item-create')">
+                <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('skill-create')">
                     CREATE
                 </v-btn>
             </div>
@@ -70,7 +70,7 @@
             v-model="currentPage"></v-pagination>
     </section>
 
-    <!-- <level-create-dialog @trigger-reload="getLevels" /> -->
+    <skill-create v-if="skillCreateDialog" />
 </template>
 
 <script setup lang="ts">
@@ -82,7 +82,10 @@ import { onBeforeMount, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia' 
 import type { skillState, skillDataModel } from '~/types/skill'
 
+import skillCreate from '~/components/skill/skillCreate.vue';
+
 const { base_url } = storeToRefs(useMainStore())
+const { skillCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { skills, skillTypes } = storeToRefs(useSkillStore())
 const { getSkillTypes, getSkillData } = useSkillStore()
