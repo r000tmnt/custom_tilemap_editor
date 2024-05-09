@@ -56,6 +56,11 @@
                                     v-for="(item, index) in editContentType"
                                     :key="index">
                                     {{ `${index + 1}. Dialogue: ${item.dialogue[0].content}` }}
+
+                                    <v-icon class="ml-2" 
+                                        color="secondary" 
+                                        icon="mdi-note-edit-outline"
+                                        @click="editScene(index)"></v-icon>
                                 </v-list-item>    
                             </template>
 
@@ -89,8 +94,9 @@
       </v-card>
     </v-dialog>
 
-    <event-item-list @event-item-update="updateEvent"/>
-    <event-scene-create @create-scene="updateEvent" />
+    <event-item-list v-if="eventItemDialog" @event-item-update="updateEvent"/>
+    <event-scene-create v-if="eventSceneCreateDialog" @create-scene="updateEvent" />
+    <event-scene-edit v-if="eventSceneEditDialog" :scene="sceneToEdit" @edit-scene="editEvent" />
 </template>
 
 <script setup lang="ts">
@@ -98,8 +104,9 @@ import { storeToRefs } from 'pinia'
 
 import eventItemList from './eventItemList.vue';
 import eventSceneCreate from './eventSceneCreate.vue';
+import eventSceneEdit from './eventSceneEdit.vue';
 
-const { editEventDialog } = storeToRefs(useDialogStore())
+const { editEventDialog, eventItemDialog, eventSceneCreateDialog, eventSceneEditDialog } = storeToRefs(useDialogStore())
 const { tileInfo, levelData, editEventIndex } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
@@ -117,6 +124,13 @@ const triggerType = ref<string[]>([
 
 const editContentType = ref()
 const selectedType = ref<string>("")
+const sceneToEdit = ref()
+const editIndex = ref<number>(0)
+
+const editScene = (index: number) => {
+    sceneToEdit.value = editContentType.value[index]
+    toggleDialog("scene-edit")
+}
 
 const selectType = (type:string) => {
     selectedType.value = type
@@ -144,6 +158,18 @@ const updateEvent = (v: any) => {
     }
 
     editContentType.value = editContentType.value.concat(v)
+}
+
+const editEvent = (v: any) => {
+    console.log(v)
+
+    if(selectedType.value === 'ITEM'){
+        tileInfo.value.events[editEventIndex.value].item = tileInfo.value.events[editEventIndex.value].item[editIndex.value] = v
+    }else{
+        tileInfo.value.events[editEventIndex.value].scene = tileInfo.value.events[editEventIndex.value].scene[editIndex.value] = v
+    }
+
+    editContentType.value = editContentType.value[editIndex.value] = v
 }
 
 // const emit = defineEmits(["triggerReload"])
