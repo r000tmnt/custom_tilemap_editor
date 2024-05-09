@@ -50,13 +50,15 @@
                             <v-select label="Skill based attribute"
                                 v-model="newSkill.effect.base_on_attribute"
                                 :items="Object.entries(attributes).map(a => a[0])"></v-select>
+                            <v-text-field label="Description"
+                                v-model="newSkill.effect.desc"></v-text-field>
                         </v-card>
                     </template>
                 </v-stepper>
             </v-form>
 
             <v-card-actions class="d-flex justify-end">
-                <v-btn color="gray" @click="toggleDialog('item-create')">CANCEL</v-btn>
+                <v-btn color="gray" @click="toggleDialog('skill-create')">CANCEL</v-btn>
                 <v-btn color="primary" @click="createSkill">SUBMIT</v-btn>
             </v-card-actions>
         </v-card>
@@ -107,7 +109,7 @@ const switchSkillType = (v: any) => {
             newSkill.value = {
                 id: "",
                 name: "",
-                type: 0,
+                type: 8,
                 cost: {
                     attribute: "",
                     value: 0
@@ -128,7 +130,7 @@ const switchSkillType = (v: any) => {
             newSkill.value = {
                 id: "",
                 name: "",
-                type: 0,
+                type: skillTypes.value.findIndex(s => s.category === v),
                 cost: {
                     attribute: "",
                     value: 0
