@@ -1,6 +1,5 @@
 <template>
-    <v-theme-provider :theme="editorTheme" with-background>
-        <v-container v-if="levelData.map.length === 0">
+    <v-container v-if="levelData.map.length === 0">
             <v-row>
                 <v-col cols="12" class="text-center">
                     Loading...
@@ -98,7 +97,6 @@
                     @clear-all="clearMap"
                     @expand-map="drawCanvas"/>
         </section>         
-    </v-theme-provider>
 
 </template>
 
