@@ -88,7 +88,7 @@ export const useEditorStore = defineStore('editor', () => {
         "Language", 
     ])
 
-    const editorTheme = ref<string>("light")
+    const editorTheme = ref<string>("dark")
 
     const configState = ref<boolean>(false)
 
