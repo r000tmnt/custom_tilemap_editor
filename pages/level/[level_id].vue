@@ -619,7 +619,7 @@ section{
     margin-top: 10px;
     margin-left: 6px;
     width: 100vw;
-    height: 100%;
+    /* height: 100%; */
 }
 
 /* #canvasContainer{
