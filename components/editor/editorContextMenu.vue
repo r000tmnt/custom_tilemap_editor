@@ -1,10 +1,10 @@
 <template>
     <v-list 
-        id="contextMenu" 
-        ref="contextRef"
+        id="contextMenu"
         border="md"
         rounded
         elevation="12"
+        :style="`top: ${props.y}px; left: ${props.x}px`"
         v-if="contextMenu"
         style="z-index: 10">
         <v-list-group value="Set starting point"
@@ -70,15 +70,9 @@ const emit = defineEmits([
     "expandMap"
 ])
 
-const contextRef = ref()
-
 watch(() => [ props.x, props.y ], (newPosition) => {
     // console.log(newPosition)
-    if(contextRef.value){
-        const contextMenuElement = contextRef.value.$el
-        contextMenuElement.style.top = newPosition[1] + 'px'
-        contextMenuElement.style.left = newPosition[0] + 'px'
-        console.log(contextMenuElement)
+    if(newPosition.length){
 
         levelData.value.player.find((p, index) => {
             const { x, y } = p.startingPoint
