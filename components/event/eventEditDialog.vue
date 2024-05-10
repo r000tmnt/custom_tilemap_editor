@@ -55,7 +55,7 @@
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
-                                    {{ `${index + 1}. Dialogue: ${item.dialogue[0].content}` }}
+                                    {{ `${index + 1}. Dialogue: ${item.dialogue[0].content.length? item.dialogue[0].content : item.dialogue[0].option[0].content}` }}
 
                                     <v-icon class="ml-2" 
                                         color="secondary" 
@@ -164,12 +164,12 @@ const editEvent = (v: any) => {
     console.log(v)
 
     if(selectedType.value === 'ITEM'){
-        tileInfo.value.events[editEventIndex.value].item = tileInfo.value.events[editEventIndex.value].item[editIndex.value] = v
+        tileInfo.value.events[editEventIndex.value].item[editIndex.value] = v
     }else{
-        tileInfo.value.events[editEventIndex.value].scene = tileInfo.value.events[editEventIndex.value].scene[editIndex.value] = v
+        tileInfo.value.events[editEventIndex.value].scene[editIndex.value] = v
     }
 
-    editContentType.value = editContentType.value[editIndex.value] = v
+    editContentType.value[editIndex.value] = v
 }
 
 // const emit = defineEmits(["triggerReload"])
