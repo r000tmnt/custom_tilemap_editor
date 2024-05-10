@@ -96,6 +96,7 @@
                     @remove-starting-point="clearPoint"
                     @clear-all="clearMap"
                     @expand-map="drawCanvas"/>
+                <event-delete-warning @event-delete-all="removeEventOnTile" />
         </section>         
 
 </template>
@@ -113,6 +114,7 @@ import editorTileInfo from '~/components/editor/editorTileInfo.vue'
 import editorContextMenu from '~/components/editor/editorContextMenu.vue';
 import eventCreateDialog from '~/components/event/eventCreateDialog.vue';
 import eventEditDialog from '~/components/event/eventEditDialog.vue';
+import eventDeleteWarning from '~/components/event/eventDeleteWarning.vue';
 
 const route = useRoute()
 const { levelData, steps, tiles, selectedTile, mode, tileInfo, layers, editorTheme } = storeToRefs(useEditorStore())
@@ -127,6 +129,10 @@ const canvasPosition = ref()
 const pointedSpot = ref({ x: 0, y: 0, row: 0, col: 0 })
 const column = ref<number[]>([3, 6, 3])
 const mouseTraker = ref<eventPositionModel[]>([])
+
+const removeEventOnTile = () => {
+    canvasRef.value?.click()
+}
 
 const canvasEvent = (e: any) => {
     console.log('canvas mousedown event:>>> ', e)
