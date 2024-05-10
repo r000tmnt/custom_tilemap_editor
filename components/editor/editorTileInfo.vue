@@ -1,8 +1,11 @@
 <template>
     <v-card class="info" subtitle="Tile info" :text="`Width:${props.width}\nHeight:${props.height}\nX:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
         <v-card-actions>
-            <v-btn color="primary" @click="createEvent(tileInfo.x, tileInfo.y)">Add event</v-btn>
-            <!-- <v-btn :color="(tileInfo.events.length)? 'secondary' : 'grey'" :disabled="tileInfo.events.length === 0">Manage events</v-btn> -->
+            <v-btn color="primary" 
+                @click="createEvent(tileInfo.x, tileInfo.y)">Add event</v-btn>
+            <v-btn :color="(tileInfo.events.length)? 'secondary' : 'grey'" 
+                :disabled="tileInfo.events.length === 0"
+                @click="toggleDialog('event-delete')">Remove events</v-btn>
         </v-card-actions>
 
         <v-list>
