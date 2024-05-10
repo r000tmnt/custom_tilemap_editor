@@ -1,16 +1,16 @@
 <template>
-    <v-app class="grey">
-        <slot />   
+    <v-theme-provider :theme="editorTheme" with-background>
+        <v-app>
+            <slot />   
 
-    </v-app>
-
+        </v-app>
+    </v-theme-provider>
 </template>
 
 <script setup lang="ts">
-// import { ref } from 'vue'
+import { storeToRefs } from 'pinia';
 
-// const hide = ref(false)
-
+const { editorTheme } = storeToRefs(useEditorStore())
 </script>
 
 <style scoped>
