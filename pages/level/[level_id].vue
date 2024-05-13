@@ -78,7 +78,9 @@
                     <!-- tile info -->
                     <v-col :cols="column[2]" 
                         class="col pa-2">
-                        <editor-tile-info :width="canvasRef?.width" :height="canvasRef?.height" />
+                        <editor-tile-info 
+                            :width="canvasRef?.width" 
+                            :height="canvasRef?.height"/>
                         <!-- <div class="draggable border" 
                         ref="draggableRefs"
                         @mousemove="highlightColumn(2)"></div> -->
@@ -130,8 +132,48 @@ const pointedSpot = ref({ x: 0, y: 0, row: 0, col: 0 })
 const column = ref<number[]>([3, 6, 3])
 const mouseTraker = ref<eventPositionModel[]>([])
 
+const redrawContentOnTile = (originalX: number, originalY: number, x: number, y: number) => {
+    const index = levelData.value.map[y][x]
+    const asset = levelData.value.assets[index]
+
+    context.value.fillStyle = "#000000"
+    context.value.clearRect(originalX - 1, originalY - 1, tileSize.value + 2, tileSize.value + 2)
+    context.value.fillRect(originalX, originalY, tileSize.value, tileSize.value)
+
+    if(asset.length){
+        const tile = tiles.value.find(t => t.src.includes(asset))
+
+        if(tile){
+            context.value.drawImage(tile, originalX, originalY, tileSize.value, tileSize.value)
+        }
+    }
+
+    const event = getEventsonTile(x, y)
+
+    if(event.length){
+        drawPoint({ x, y, type: 4 })
+    }
+
+    const player = levelData.value.player.find(p => p.startingPoint.x === y && p.startingPoint.y === x)
+    const enemy = levelData.value.enemy.find(p => p.startingPoint.x === y && p.startingPoint.y === x)
+
+    if(player){
+        drawPoint({ x, y, type: 2 })
+        drawCharacterIcon({ x: originalX, y: originalY, type: 2 })
+    }
+
+    if(enemy){
+        drawPoint({ x, y, type: 3 })
+        drawCharacterIcon({ x: originalX, y: originalY, type: 3 })
+    }
+
+    context.value.strokeStyle = "rgb(211, 211, 211)"
+    context.value.strokeRect(originalX, originalY, tileSize.value, tileSize.value)
+}
+
 const removeEventOnTile = () => {
-    canvasRef.value?.click()
+    const { x, y } = tileInfo.value
+    redrawContentOnTile(x * tileSize.value, y * tileSize.value, x, y)
 }
 
 const canvasEvent = (e: any) => {
@@ -221,42 +263,7 @@ const canvasEvent = (e: any) => {
         if(mouseTraker.value.length){
             const oldRow = Math.floor(mouseTraker.value[0].y / tileSize.value)
             const oldCol = Math.floor(mouseTraker.value[0].x / tileSize.value)
-            const index = levelData.value.map[oldRow][oldCol]
-            const asset = levelData.value.assets[index]
-
-            context.value.fillStyle = "#000000"
-            context.value.clearRect(mouseTraker.value[0].x - 1, mouseTraker.value[0].y - 1, tileSize.value + 2, tileSize.value + 2)
-            context.value.fillRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
-
-            if(asset.length){
-                const tile = tiles.value.find(t => t.src.includes(asset))
-
-                if(tile){
-                    context.value.drawImage(tile, mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
-                }
-            }
-
-            const event = getEventsonTile(oldCol, oldRow)
-
-            if(event.length){
-                drawPoint({ x: oldCol, y: oldRow, type: 4 })
-            }
-
-            const player = levelData.value.player.find(p => p.startingPoint.x === oldCol && p.startingPoint.y === oldRow)
-            const enemy = levelData.value.enemy.find(p => p.startingPoint.x === oldCol && p.startingPoint.y === oldRow)
-
-            if(player){
-                drawPoint({ x: oldCol, y: oldRow, type: 2 })
-                drawCharacterIcon({ x: mouseTraker.value[0].x, y: mouseTraker.value[0].y, type: 2 })
-            }
-
-            if(enemy){
-                drawPoint({ x: oldCol, y: oldRow, type: 3 })
-                drawCharacterIcon({ x: mouseTraker.value[0].x, y: mouseTraker.value[0].y, type: 3 })
-            }
-
-            context.value.strokeStyle = "rgb(211, 211, 211)"
-            context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
+            redrawContentOnTile(mouseTraker.value[0].x, mouseTraker.value[0].y, oldCol, oldRow)
             mouseTraker.value.splice(0)
         }
 
