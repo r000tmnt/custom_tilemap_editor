@@ -77,7 +77,7 @@
 
                 <v-row>
                     <v-col cols="6">
-                        <v-btn type="button" @click="resetFormState" block>Cancel</v-btn>
+                        <v-btn type="button" @click="cancelEventCreate" block>Cancel</v-btn>
                     </v-col>
                     <v-col cols="6">
                         <v-btn type="submit" color="primary" @click="createEvent" block>Submit</v-btn> 
@@ -154,10 +154,8 @@ const updateEvent = (v: any) => {
     editContentType.value = editContentType.value.concat(v)
 }
 
-// const emit = defineEmits(["triggerReload"])
-
-// 重設表單
-const resetFormState = () => {
+const cancelEventCreate = () => {
+    levelData.value.event.splice(levelData.value.event.length - 1, 1)
     toggleDialog("event-create")
 }
 
@@ -176,7 +174,7 @@ const createEvent = () => {
                 levelData.value.event[pointer[index]] = e
             })
             saveLevelData()
-            resetFormState()
+            toggleDialog("event-create")
         }catch(err){
             console.log(err)
         }         
