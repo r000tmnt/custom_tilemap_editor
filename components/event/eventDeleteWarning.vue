@@ -35,5 +35,6 @@ const deleteAllEvent = () => {
     levelData.value.event.splice(eventIndex, 1)
     saveLevelData()
     emit("eventDeleteAll")
+    toggleDialog("event-delete")
 }
 </script>
