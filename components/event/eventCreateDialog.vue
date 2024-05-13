@@ -51,11 +51,11 @@
 
                             <template v-if="selectedType === 'SCENE'">
                                 <!-- scene -->
-                                <v-btn color="secondary" @click="toggleDialog('scene-create')">Add Scene</v-btn>
+                                <v-btn color="secondary" @click="appendNewScene">Add Scene</v-btn>
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
-                                    {{ `${index + 1}. Dialogue: ${item.dialogue[0].content}` }}
+                                    {{ `${index + 1}. Dialogue: ${item.dialogue.length? item.dialogue[0].content : ''}` }}
                                 </v-list-item>    
                             </template>
 
@@ -90,7 +90,9 @@
     </v-dialog>
 
     <event-item-list @event-item-update="updateEvent"/>
-    <event-scene-create @create-scene="updateEvent" />
+    <event-scene-create v-if="eventSceneCreateDialog"
+        :latest-index="latestIndex"
+        :child-index="childIndex" />
 </template>
 
 <script setup lang="ts">
@@ -99,7 +101,7 @@ import { storeToRefs } from 'pinia'
 import eventItemList from './eventItemList.vue';
 import eventSceneCreate from './eventSceneCreate.vue';
 
-const { createEventDialog } = storeToRefs(useDialogStore())
+const { createEventDialog, eventSceneCreateDialog } = storeToRefs(useDialogStore())
 const { tileInfo, levelData } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
@@ -117,14 +119,23 @@ const triggerType = ref<string[]>([
 
 const editContentType = ref()
 const selectedType = ref<string>("")
+const latestIndex = ref<number>(levelData.value.event.length - 1)
+const childIndex = ref<number>(-1)
 
-const rules = [
-    (value: String | Number) => {
-        if (value) return true
+const appendNewScene = () => {
+    levelData.value.event[latestIndex.value].scene.push(
+        {
+            background: "",
+            audio: "",
+            people: 1,
+            dialogue: []
+        }
+    )
 
-        return 'You must type something.'
-    },
-]
+    childIndex.value = levelData.value.event[latestIndex.value].scene.length - 1
+
+    toggleDialog('scene-create')
+}
 
 const removeEventItem = (index: number) => {
     editContentType.value.splice(index, 1)
