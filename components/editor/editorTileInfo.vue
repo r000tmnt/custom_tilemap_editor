@@ -13,6 +13,7 @@
                 <v-card hover>
                     {{ `Item: ${event.item.length} Scene: ${event.scene.length} Trigger: ${event.trigger}` }}
                     <v-btn size="x-small" variant="outlined" color="secondary" class="ml-auto" @click="editEvent(index)">EDIT</v-btn>
+                    <v-btn size="x-small" variant="outlined" color="warning" class="ml-2" @click="deleteEvent(index)">DELETE</v-btn>
                 </v-card>
             </v-list-item>
         </v-list>
@@ -36,6 +37,7 @@ const props = defineProps(
 )
 
 const { tileInfo, levelData, editEventIndex } = storeToRefs(useEditorStore())
+const { saveLevelData } = useEditorStore()
 const { toggleDialog } = useDialogStore()
 
 const createEvent = (x: number, y: number) => {
@@ -54,5 +56,23 @@ const createEvent = (x: number, y: number) => {
 const editEvent = (index: number) => {
     editEventIndex.value = index
     toggleDialog("event-edit")
+}
+
+const deleteEvent = (index: number) => {
+    // Get each index of the event on the same position
+    const pointer: number[] = []
+    levelData.value.event.forEach((e, index) => {
+        if(e.position.x === tileInfo.value.events[0].position.x && e.position.y === tileInfo.value.events[0].position.y){
+            pointer.push(index)
+        }
+    })
+
+    // Delete the event in levelData
+    levelData.value.event.splice(pointer[index], 1)
+
+    // Delete the event in tileInfo
+    tileInfo.value.events.splice(index, 1)
+
+    saveLevelData()
 }
 </script>
