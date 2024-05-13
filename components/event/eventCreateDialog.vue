@@ -33,7 +33,7 @@
                         <v-list>
                             <template v-if="selectedType === 'ITEM'">
                                 <!-- item -->
-                                <v-btn color="secondary" @click="toggleDialog('event-item')">Add item</v-btn>
+                                <v-btn color="secondary" @click="getEventIndex">Add item</v-btn>
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
@@ -51,11 +51,12 @@
 
                             <template v-if="selectedType === 'SCENE'">
                                 <!-- scene -->
-                                <v-btn color="secondary" @click="appendNewScene">Add Scene</v-btn>
+                                <v-btn color="secondary" @click="getEventIndex">Add Scene</v-btn>
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
-                                    {{ `${index + 1}. Dialogue: ${item.dialogue.length? item.dialogue[0].content : ''}` }}
+                                    {{ `${index + 1}. Dialogue: ${ item.dialogue.length?
+                                        item.dialogue[0].content.length? item.dialogue[0].content : item.dialogue[0].option[0].content : ''}` }}
                                 </v-list-item>    
                             </template>
 
@@ -89,7 +90,8 @@
       </v-card>
     </v-dialog>
 
-    <event-item-list @event-item-update="updateEvent"/>
+    <event-item-list v-if="eventItemDialog"
+        :latest-index="latestIndex"/>
     <event-scene-create v-if="eventSceneCreateDialog"
         :latest-index="latestIndex"
         :child-index="childIndex" />
@@ -101,7 +103,7 @@ import { storeToRefs } from 'pinia'
 import eventItemList from './eventItemList.vue';
 import eventSceneCreate from './eventSceneCreate.vue';
 
-const { createEventDialog, eventSceneCreateDialog } = storeToRefs(useDialogStore())
+const { createEventDialog, eventSceneCreateDialog, eventItemDialog } = storeToRefs(useDialogStore())
 const { tileInfo, levelData } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
@@ -122,19 +124,23 @@ const selectedType = ref<string>("")
 const latestIndex = ref<number>(levelData.value.event.length - 1)
 const childIndex = ref<number>(-1)
 
-const appendNewScene = () => {
-    levelData.value.event[latestIndex.value].scene.push(
-        {
-            background: "",
-            audio: "",
-            people: 1,
-            dialogue: []
-        }
-    )
+const getEventIndex = () => {
+    if(selectedType.value === "ITEM"){
+        toggleDialog('event-item')
+    }else{
+        levelData.value.event[latestIndex.value].scene.push(
+            {
+                background: "",
+                audio: "",
+                people: 1,
+                dialogue: []
+            }
+        )
 
-    childIndex.value = levelData.value.event[latestIndex.value].scene.length - 1
+        childIndex.value = levelData.value.event[latestIndex.value].scene.length - 1
 
-    toggleDialog('scene-create')
+        toggleDialog('scene-create')        
+    }
 }
 
 const removeEventItem = (index: number) => {
@@ -151,18 +157,6 @@ const selectType = (type:string) => {
     }
 
     console.log(editContentType.value)
-}
-
-const updateEvent = (v: any) => {
-    console.log(v)
-
-    if(selectedType.value === 'ITEM'){
-        tileInfo.value.events[tileInfo.value.events.length - 1].item = tileInfo.value.events[tileInfo.value.events.length - 1].item.concat(v)
-    }else{
-        tileInfo.value.events[tileInfo.value.events.length - 1].scene = tileInfo.value.events[tileInfo.value.events.length - 1].scene.concat(v)
-    }
-
-    editContentType.value = editContentType.value.concat(v)
 }
 
 const cancelEventCreate = () => {
