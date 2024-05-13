@@ -33,7 +33,7 @@
                         <v-list>
                             <template v-if="selectedType === 'ITEM'">
                                 <!-- item -->
-                                <v-btn color="secondary" @click="toggleDialog('event-item')">Add item</v-btn>
+                                <v-btn color="secondary" @click="getEventIndex">Add item</v-btn>
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
@@ -51,11 +51,12 @@
 
                             <template v-if="selectedType === 'SCENE'">
                                 <!-- scene -->
-                                <v-btn color="secondary" @click="toggleDialog('scene-create')">Add Scene</v-btn>
+                                <v-btn color="secondary" @click="getEventIndex">Add Scene</v-btn>
                                 <v-list-item 
                                     v-for="(item, index) in editContentType"
                                     :key="index">
-                                    {{ `${index + 1}. Dialogue: ${item.dialogue[0].content.length? item.dialogue[0].content : item.dialogue[0].option[0].content}` }}
+                                    {{ `${index + 1}. Dialogue: ${ item.dialogue.length?
+                                        item.dialogue[0].content.length? item.dialogue[0].content : item.dialogue[0].option[0].content : ''}` }}
 
                                     <v-icon class="ml-2" 
                                         color="secondary" 
@@ -94,8 +95,11 @@
       </v-card>
     </v-dialog>
 
-    <event-item-list v-if="eventItemDialog" @event-item-update="updateEvent"/>
-    <event-scene-create v-if="eventSceneCreateDialog" @create-scene="updateEvent" />
+    <event-item-list v-if="eventItemDialog" 
+        :latest-index="eventIndex" />
+    <event-scene-create v-if="eventSceneCreateDialog"
+        :latest-index="eventIndex"
+        :child-index="childIndex" />
     <event-scene-edit v-if="eventSceneEditDialog" :scene="sceneToEdit" @edit-scene="editEvent" />
 </template>
 
@@ -125,9 +129,12 @@ const triggerType = ref<string[]>([
 const editContentType = ref()
 const selectedType = ref<string>("")
 const sceneToEdit = ref()
+const eventIndex = ref<number>(tileInfo.value.indexes[editEventIndex.value])
 const editIndex = ref<number>(0)
+const childIndex = ref<number>(0)
 
 const editScene = (index: number) => {
+    editIndex.value = index
     sceneToEdit.value = editContentType.value[index]
     toggleDialog("scene-edit")
 }
@@ -144,21 +151,30 @@ const selectType = (type:string) => {
     console.log(editContentType.value)
 }
 
+const getEventIndex = () => {
+    if(selectedType.value === "ITEM"){
+        toggleDialog('event-item')
+    }else{
+        levelData.value.event[eventIndex.value].scene.push(
+            {
+                background: "",
+                audio: "",
+                people: 1,
+                dialogue: []
+            }
+        )
+
+        childIndex.value = levelData.value.event[eventIndex.value].scene.length - 1
+
+        toggleDialog('scene-create')        
+    }
+}
+
+
 const removeEventItem = (index: number) => {
     editContentType.value.splice(index, 1)
 }
 
-const updateEvent = (v: any) => {
-    console.log(v)
-
-    if(selectedType.value === 'ITEM'){
-        tileInfo.value.events[editEventIndex.value].item = tileInfo.value.events[editEventIndex.value].item.concat(v)
-    }else{
-        tileInfo.value.events[editEventIndex.value].scene = tileInfo.value.events[editEventIndex.value].scene.concat(v)
-    }
-
-    editContentType.value = editContentType.value.concat(v)
-}
 
 const editEvent = (v: any) => {
     console.log(v)
