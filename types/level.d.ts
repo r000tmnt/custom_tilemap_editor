@@ -60,6 +60,7 @@ interface levelEventModel {
 
 interface tileInfoModel extends eventPositionModel {
     events: levelEventModel[]
+    indexes: number[]
 }
 
 interface characterReferenceModel {
