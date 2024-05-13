@@ -69,7 +69,8 @@ export const useEditorStore = defineStore('editor', () => {
     const tileInfo = ref<tileInfoModel>({
         x: 0,
         y: 0,
-        events: []
+        events: [],
+        indexes: []
     })
 
     // Canvas layers
@@ -105,15 +106,17 @@ export const useEditorStore = defineStore('editor', () => {
      */
     const getEventsonTile = (x: number, y: number) => {
         const events: levelEventModel[] = []
+        const indexes: number[] = []
     
         for(let i=0, levelEvent = levelData.value.event; i < levelEvent.length; i++){
             const eventPosition = levelEvent[i].position
             if(eventPosition.x === x && eventPosition.y === y){
                     events.push(levelEvent[i])
+                    indexes.push(i)
             }
         }
     
-        return events
+        return { events, indexes }
     }
 
     /**
