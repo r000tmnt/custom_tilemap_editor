@@ -36,6 +36,8 @@ const props = defineProps(
     }
 )
 
+const emit = defineEmits(["event-delete"])
+
 const { tileInfo, levelData, editEventIndex } = storeToRefs(useEditorStore())
 const { saveLevelData } = useEditorStore()
 const { toggleDialog } = useDialogStore()
@@ -74,5 +76,6 @@ const deleteEvent = (index: number) => {
     tileInfo.value.events.splice(index, 1)
 
     saveLevelData()
+    emit("event-delete")
 }
 </script>
