@@ -54,13 +54,19 @@ import { storeToRefs } from 'pinia';
 import type { materialDataModel, otherDataModel, potionDataModel, armorDataModel, weaponDataModel, keyDataModel } from "~/types/item";
 import type { eventItemModel } from "~/types/level"
 
-
+const { levelData } = storeToRefs(useEditorStore())
+const { saveLevelData } = useEditorStore()
 const { item } = storeToRefs(useItemStore())
 const { getItemData, getItemType } = useItemStore()
 const { eventItemDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 
-const emit = defineEmits(["eventItemUpdate"])
+const props = defineProps({
+  latestIndex: {
+    type: Number,
+    default: 0,
+  }
+})
 
 const selectedItem = ref<eventItemModel[]>([])
 
@@ -93,7 +99,8 @@ const setItemAmount = (e: any, id:string) => {
 
 const updateEvent = () => {
     console.log(selectedItem.value)
-    emit("eventItemUpdate", selectedItem.value)
+    levelData.value.event[props.latestIndex].item = selectedItem.value
+    saveLevelData()
     toggleDialog("event-item")
 }
 
