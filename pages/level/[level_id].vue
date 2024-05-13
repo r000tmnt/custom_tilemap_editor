@@ -80,7 +80,8 @@
                         class="col pa-2">
                         <editor-tile-info 
                             :width="canvasRef?.width" 
-                            :height="canvasRef?.height"/>
+                            :height="canvasRef?.height"
+                            @event-delete="removeEventOnTile" />
                         <!-- <div class="draggable border" 
                         ref="draggableRefs"
                         @mousemove="highlightColumn(2)"></div> -->
