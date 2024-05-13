@@ -41,7 +41,7 @@
                   </template>
                 </v-select> -->
                 <v-btn @click="toggleDialog('scene-bg')">
-                  {{ `Background image ${newScene.background.length? newScene.background: ''}` }}
+                  {{ `Background image ${levelData.event[props.latestIndex].scene[props.childIndex].background.length? levelData.event[props.latestIndex].scene[props.childIndex].background: ''}` }}
                 </v-btn>
 
                 <!-- Aduio file -->
@@ -57,7 +57,7 @@
                 <!-- Max people on the screen, default to 1 -->
                 <v-text-field 
                   type="number" 
-                  v-model="newScene.people"
+                  v-model="levelData.event[props.latestIndex].scene[props.childIndex].people"
                   @input="(e:any) => updatePeopleInScene(e)"
                   :rules="inputRules"></v-text-field>
 
@@ -69,7 +69,7 @@
                 </v-card-actions>
 
                 <!-- Dialogue -->
-                <v-list v-for="(dialogue, index) in newScene.dialogue">
+                <v-list v-for="(dialogue, index) in levelData.event[props.latestIndex].scene[props.childIndex].dialogue">
                     {{ `${index + 1}. ${dialogue.content}` }}
                     <v-icon class="ml-2" 
                         color="secondary" 
@@ -112,50 +112,53 @@ import eventDialogueEdit from './eventDialogueEdit.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
-const { tileInfo, editEventIndex, audioAssets, assets, levelData } = storeToRefs(useEditorStore())
+const { audioAssets, levelData } = storeToRefs(useEditorStore())
 const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionCreateDialog } = storeToRefs(useDialogStore())
-const { selectRules, inputRules } = useRuleStore()
-const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
+const { inputRules } = useRuleStore()
+const { getAudioAssets, getBattleAudioAsset, saveLevelData } = useEditorStore()
 
-const emit = defineEmits(["createScene"])
+const props = defineProps({
+  latestIndex: {
+    type: Number,
+    default: 0,
+  },
+  childIndex: {
+    type: Number,
+    default: 0,
+  }
+})
 
 const formRef = ref()
-
-const newScene = ref<eventSceneModel>({
-  background: "",
-  audio: "",
-  people: 1,
-  dialogue: []
-})
 
 const dialogueToEdit = ref<eventDialogueModel>()
 const editIndex = ref<number>(-1)
 
 const editDialogue = (index: number) => {
     editIndex.value = index
-    dialogueToEdit.value = newScene.value.dialogue[index]
+    dialogueToEdit.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[index]
     toggleDialog("scene-dialogue-edit")
 }
 
 const updatePeopleInScene = (e: any) => {
   if(Number(e.target.value) <= 0){
-    newScene.value.people = 1
+    levelData.value.event[props.latestIndex].scene[props.childIndex].people = 1
   }else{
-    newScene.value.people = Number(e.target.value) 
+    levelData.value.event[props.latestIndex].scene[props.childIndex].people = Number(e.target.value) 
   }
 }
 
 const setBackground = (path: string) => {
-  newScene.value.background = path
+  levelData.value.event[props.latestIndex].scene[props.childIndex].background = path
 }
 
 const confirmDialogue = (v: eventDialogueModel) => {
   console.log("comfirmDialogue :>>>", v)
-  newScene.value.dialogue.push(v)
+  levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue.push(v)
+  console.log(levelData.value.event[props.latestIndex].scene[props.childIndex])
 }
 
 const confirmOption = (v: dialogueOptionModel) => {
-  newScene.value.dialogue.push({
+  levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue.push({
     person: "",
     style: "",
     size: "",
@@ -166,13 +169,14 @@ const confirmOption = (v: dialogueOptionModel) => {
 
 const updateDialogue = (v: eventDialogueModel) => {
     console.log("updateDialogue :>>>", v)
-    newScene.value.dialogue[editIndex.value] = v
+    levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[editIndex.value] = v
 }
 
 const createScene = () => {
   formRef.value?.validate().then((result: any) => {
     if(result.valid){
-      emit("createScene", newScene.value)
+      console.log(levelData.value.event[props.latestIndex].scene[props.childIndex])
+      saveLevelData()
       toggleDialog("scene-create")
     }
   })
