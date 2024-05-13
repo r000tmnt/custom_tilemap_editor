@@ -151,7 +151,7 @@ const redrawContentOnTile = (originalX: number, originalY: number, x: number, y:
 
     const event = getEventsonTile(x, y)
 
-    if(event.length){
+    if(event.events.length){
         drawPoint({ x, y, type: 4 })
     }
 
@@ -200,7 +200,9 @@ const canvasEvent = (e: any) => {
                     // Change tile info desc
                     tileInfo.value.x = col
                     tileInfo.value.y = row
-                    tileInfo.value.events = getEventsonTile(col, row)
+                    const { events, indexes } = getEventsonTile(col, row)
+                    tileInfo.value.events = events
+                    tileInfo.value.indexes = indexes
                 break;
                 case "draw":
                     // Draw a tile on the canvas if selected
