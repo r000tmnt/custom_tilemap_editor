@@ -1,38 +1,40 @@
 <template>
-    <v-file-input
-    label="Create asset"
-    multiple
-    accept="image/png"
-    :rules="fileRules"
-    @update:model-value="getFiles"
-    ></v-file-input>
-    <v-item-group class="d-flex" selected-class="selected">
-        <v-item
-            v-for="(img, index) in assets.env"
-            :key="img" 
-            v-slot="{ isSelected, selectedClass, toggle }"
-            @group:selected="(v: any) => selectTile(v, index)">
-                <v-card
-                :class="['d-flex align-center bg-grey', selectedClass]"
-                :height="tileSize"
-                :width="tileSize"
-                dark
-                @click="toggle"
-                >
-                    <!-- <div
-                        class="flex-grow-1 text-center"
+    <section class="w-25 pa-2">
+        <v-file-input
+        label="Create asset"
+        multiple
+        accept="image/png"
+        :rules="fileRules"
+        @update:model-value="getFiles"
+        ></v-file-input>
+        <v-item-group class="d-flex" selected-class="selected">
+            <v-item
+                v-for="(img, index) in assets.env"
+                :key="img" 
+                v-slot="{ isSelected, selectedClass, toggle }"
+                @group:selected="(v: any) => selectTile(v, index)">
+                    <v-card
+                    :class="['d-flex align-center bg-grey', selectedClass]"
+                    :height="tileSize"
+                    :width="tileSize"
+                    dark
+                    @click="toggle"
                     >
-                        {{ isSelected ? 'Selected' : 'Click Me!' }}
-                    </div> -->
-                    <v-img 
-                        width="32" 
-                        height="32" 
-                        alt="tile"
-                        :src="img">
-                    </v-img>
-                </v-card>
-        </v-item>
-    </v-item-group>
+                        <!-- <div
+                            class="flex-grow-1 text-center"
+                        >
+                            {{ isSelected ? 'Selected' : 'Click Me!' }}
+                        </div> -->
+                        <v-img 
+                            width="32" 
+                            height="32" 
+                            alt="tile"
+                            :src="img">
+                        </v-img>
+                    </v-card>
+            </v-item>
+        </v-item-group>        
+    </section>
 </template>
 
 <script setup lang="ts">
