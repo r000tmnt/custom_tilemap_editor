@@ -1,5 +1,7 @@
 <template>
-    <v-card class="info" subtitle="Tile info" :text="`Width:${props.width}\nHeight:${props.height}\nX:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
+    <v-card class="info ml-auto mr-2" 
+        subtitle="Tile info" 
+        :text="`Width:${props.width}\nHeight:${props.height}\nX:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
         <v-card-actions>
             <v-btn color="primary" 
                 @click="createEvent(tileInfo.x, tileInfo.y)">Add event</v-btn>
