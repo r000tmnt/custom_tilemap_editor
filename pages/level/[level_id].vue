@@ -25,8 +25,7 @@
 
             <!-- tilemap editor -->
             <main id="right"
-                class="col pa-2 mx-auto overflow-x-auto overflow-y-auto"
-                :style="`width: ${canvasRef?.width}px; height: ${canvasRef?.height}px`">
+                class="pa-2 w-50 mx-auto overflow-x-auto overflow-y-auto">
                 <!-- map layer -->
                 <canvas 
                     ref="canvasRef"
