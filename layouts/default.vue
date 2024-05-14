@@ -1,5 +1,6 @@
 <template>
-    <v-theme-provider :theme="editorTheme" with-background>
+    <v-theme-provider :theme="editorTheme" with-background
+        class="h-screen overflow-hidden">
         <v-app>
             <slot />   
 
