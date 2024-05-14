@@ -1,5 +1,5 @@
 <template>
-    <v-card class="info ml-auto mr-2" 
+    <v-card class="info ml-auto mr-2 pa-2" 
         subtitle="Tile info" 
         :text="`Width:${props.width}\nHeight:${props.height}\nX:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
         <v-card-actions>
@@ -14,6 +14,7 @@
             <v-list-item v-for="(event, index) in tileInfo.events" :key="index">
                 <v-card hover>
                     {{ `Item: ${event.item.length} Scene: ${event.scene.length} Trigger: ${event.trigger}` }}
+                    <br/>
                     <v-btn size="x-small" variant="outlined" color="secondary" class="ml-auto" @click="editEvent(index)">EDIT</v-btn>
                     <v-btn size="x-small" variant="outlined" color="warning" class="ml-2" @click="deleteEvent(index)">DELETE</v-btn>
                 </v-card>
