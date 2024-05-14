@@ -22,8 +22,8 @@
         <v-list-item @click="toggleDialog('map-expander')">Expand map</v-list-item>
     </v-list>
 
-    <event-enemy-selector @set-mob="setMobStartingPoint" />
-    <editor-map-expander @expand-map="emit('expandMap')"/>
+    <event-enemy-selector v-if="enemySelector" @set-mob="setMobStartingPoint" />
+    <editor-map-expander v-if="mapExpander" @expand-map="emit('expandMap')"/>
 </template>
 
 <script setup lang="ts">
@@ -35,7 +35,7 @@ import type { mobDataModel } from '~/types/character';
 import eventEnemySelector from './editorEnemySelector.vue'
 import editorMapExpander from './editorMapExpander.vue'
 
-const { contextMenu } = storeToRefs(useDialogStore())
+const { contextMenu, mapExpander, enemySelector } = storeToRefs(useDialogStore())
 const { levelData } = storeToRefs(useEditorStore())
 const { saveLevelData, storeSteps } = useEditorStore()
 const { getMobData } = useCharacterStore()
