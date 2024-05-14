@@ -1,111 +1,63 @@
 <template>
     <v-container v-if="levelData.map.length === 0">
-            <v-row>
-                <v-col cols="12" class="text-center">
-                    Loading...
-                </v-col>
-                <v-col cols="12">
-                    <v-progress-linear
-                        color="deep-purple-accent-4"
-                        height="6"
-                        indeterminate
-                        rounded
-                    ></v-progress-linear>
-                </v-col>
-            </v-row>
-        </v-container>
+        <v-row>
+            <v-col cols="12" class="text-center">
+                Loading...
+            </v-col>
+            <v-col cols="12">
+                <v-progress-linear
+                    color="deep-purple-accent-4"
+                    height="6"
+                    indeterminate
+                    rounded
+                ></v-progress-linear>
+            </v-col>
+        </v-row>
+    </v-container>
 
-        <section v-else>
-            <!-- paint brushes and other tools -->
-            <editor-tool-bar @toggle-layout="changeLayuout" />
+    <section v-else class="">
+        <!-- paint brushes and other tools -->
+        <editor-tool-bar @toggle-layout="changeLayuout" />
 
-            <v-row class="editor">
-                    <!-- tile assets -->
-                    <v-col id="left" 
-                        :cols="column[0]"
-                        class="col pa-2">
-                        <editor-assets />
-                        <div class="draggable border"
-                            @mouseover="highlightColumn"
-                            @mouseleave="leaveColumn">
-                            <div class="control flex hide">
-                                <div class="customChip"
-                                    @click.stop="narrowColumn(0)"
-                                    @mouseover.stop="highlightControl"
-                                    @mouseleave.stop="leaveControl">
-                                    &#8249;
-                                </div>
-                                <div class="customChip"
-                                    @click.stop="expandColumn(0)"
-                                    @mouseover.stop="highlightControl"
-                                    @mouseleave.stop="leaveControl">
-                                    &#8250;
-                                </div>
-                            </div>
-                        </div>
-                    </v-col>
+        <div class="editor d-flex">
+            <!-- tile assets -->
+            <editor-assets />
 
-                    <!-- tilemap editor -->
-                    <v-col id="right" 
-                        :cols="column[1]"
-                        class="col pa-2">
-                        <!-- map layer -->
-                        <canvas 
-                            ref="canvasRef"
-                            @mousedown="canvasEvent"
-                        ></canvas>
-                        <div class="draggable border"
-                            @mouseover="highlightColumn"
-                            @mouseleave="leaveColumn">
-                            <div class="control flex hide">
-                                <div class="customChip"
-                                    @click.stop="narrowColumn(1)"
-                                    @mouseover.stop="highlightControl"
-                                    @mouseleave.stop="leaveControl">
-                                    &#8249;
-                                </div>
-                                <div class="customChip"
-                                    @click.stop="expandColumn(1)"
-                                    @mouseover.stop="highlightControl"
-                                    @mouseleave.stop="leaveControl">
-                                    &#8250;
-                                </div>
-                            </div>                   
-                        </div>
-                        
-                    </v-col>
+            <!-- tilemap editor -->
+            <main id="right"
+                class="col pa-2 mx-auto overflow-x-auto overflow-y-auto"
+                :style="`width: ${canvasRef?.width}px; height: ${canvasRef?.height}px`">
+                <!-- map layer -->
+                <canvas 
+                    ref="canvasRef"
+                    @mousedown="canvasEvent"
+                ></canvas>
+            </main>
 
-                    <!-- tile info -->
-                    <v-col :cols="column[2]" 
-                        class="col pa-2">
-                        <editor-tile-info 
-                            :width="canvasRef?.width" 
-                            :height="canvasRef?.height"
-                            @event-delete="removeEventOnTile" />
-                        <!-- <div class="draggable border" 
-                        ref="draggableRefs"
-                        @mousemove="highlightColumn(2)"></div> -->
-                    </v-col>
-                </v-row>  
-                
-                <event-create-dialog v-if="createEventDialog" />
-                <event-edit-dialog v-if="editEventDialog" />
-                <editor-context-menu 
-                    :x="pointedSpot.x" 
-                    :y="pointedSpot.y"
-                    :row="pointedSpot.row"
-                    :col="pointedSpot.col"
-                    @set-starting-point="drawPoint"
-                    @remove-starting-point="clearPoint"
-                    @clear-all="clearMap"
-                    @expand-map="drawCanvas"/>
-                <event-delete-warning @event-delete-all="removeEventOnTile" />
-        </section>         
+            <!-- tile info -->
+            <editor-tile-info 
+                :width="canvasRef?.width" 
+                :height="canvasRef?.height"
+                @event-delete="removeEventOnTile" />
+        </div>  
+    </section>         
 
+    <event-create-dialog v-if="createEventDialog" />
+    <event-edit-dialog v-if="editEventDialog" />
+    <editor-context-menu 
+        :x="pointedSpot.x" 
+        :y="pointedSpot.y"
+        :row="pointedSpot.row"
+        :col="pointedSpot.col"
+        @set-starting-point="drawPoint"
+        @remove-starting-point="clearPoint"
+        @clear-all="clearMap"
+        @expand-map="drawCanvas"/>
+    <event-delete-warning v-if="eventDeleteDialog" @event-delete-all="removeEventOnTile" />
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, watch, ref } from 'vue';
+import { onBeforeMount, watch, ref, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
 import type { eventPositionModel } from '~/types/level'
@@ -120,10 +72,10 @@ import eventEditDialog from '~/components/event/eventEditDialog.vue';
 import eventDeleteWarning from '~/components/event/eventDeleteWarning.vue';
 
 const route = useRoute()
-const { levelData, steps, tiles, selectedTile, mode, tileInfo, layers, editorTheme } = storeToRefs(useEditorStore())
+const { levelData, steps, tiles, selectedTile, mode, tileInfo, layers } = storeToRefs(useEditorStore())
 const { initEditor, storeSteps, saveLevelData, getEventsonTile } = useEditorStore()
 const { tileSize } = storeToRefs(useMainStore())
-const { contextMenu, createEventDialog, editEventDialog } = storeToRefs(useDialogStore())
+const { contextMenu, createEventDialog, editEventDialog, eventDeleteDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -141,7 +93,7 @@ const redrawContentOnTile = (originalX: number, originalY: number, x: number, y:
     context.value.clearRect(originalX - 1, originalY - 1, tileSize.value + 2, tileSize.value + 2)
     context.value.fillRect(originalX, originalY, tileSize.value, tileSize.value)
 
-    if(asset.length){
+    if(asset && asset.length){
         const tile = tiles.value.find(t => t.src.includes(asset))
 
         if(tile){
@@ -414,51 +366,6 @@ const changeLayuout = (v: any) => {
     }
 }
 
-const highlightColumn = (e: any) => {
-    console.log(e)
-    if(e.target.children[0]){
-        // e.target.classList.add('highlight')
-        // e.target.style.cursor = "col-resize"
-        e.target.children[0].classList.remove("hide")
-    }
-}
-
-const highlightControl = (e: any) => {
-    if(e.target){
-        e.target.style.background = "skyBlue"
-        e.target.style.color = "white"
-    }
-}
-
-const leaveColumn = (e: any) => {
-    // console.log(e)
-    if(e.target.children[0]){
-        // e.target.classList.remove('highlight')
-        // e.target.style.cursor = "default"
-        e.target.children[0].classList.add("hide")
-    }
-}
-
-const leaveControl = (e: any) => {
-    if(e.target){
-        e.target.style.background = "lightgray"
-        e.target.style.color = "black"
-    }
-}
-
-const narrowColumn = (index: number) => {
-    if(column.value[index] > 1){
-        column.value[index] -= 1
-        column.value[index + 1] += 1
-    }
-}
-
-const expandColumn = (index: number) => {
-    if(column.value[index] < 10){
-        column.value[index] += 1
-        column.value[index + 1] -= 1
-    }
-}
 
 const drawPoint = (v: any) => {    
     const { type, x, y } = v
@@ -607,13 +514,14 @@ const drawCanvas = () => {
 
 watch(() => canvasRef.value, (newVal) => {
     console.log("newVal :>>>", newVal)
-    if(newVal){
+    if(newVal !== null){
         console.log(canvasRef.value)
         drawCanvas()
     }
 
     // Hide the default browser context menu when right click on the canvas
     canvasRef.value?.addEventListener("contextmenu", (e: any) => { e.preventDefault() })
+    document.getElementById("right")?.addEventListener("scroll", () => canvasPosition.value = canvasRef.value?.getBoundingClientRect())
     document.addEventListener("click", () => { if(contextMenu.value)  toggleDialog("context-menu") })
     document.addEventListener("keydown", canvasKeyPressEvent)
 })
@@ -623,6 +531,12 @@ onBeforeMount(() => {
     if(route?.params?.level_id){
         initEditor(String(route.params.level_id))
     }
+})
+
+// Reset canvas when leaving the page
+onBeforeUnmount(() => {
+    canvasRef.value = null
+    levelData.value.map.splice(0)
 })
 </script>
 
@@ -635,7 +549,7 @@ section{
     margin-top: 10px;
     margin-left: 6px;
     width: 100vw;
-    /* height: 100%; */
+    /* height: max-content; */
 }
 
 /* #canvasContainer{
