@@ -1,5 +1,5 @@
 <template>
-    <section class="w-25 pa-2">
+    <section class="pa-2 bg-grey-darken-4">
         <v-file-input
         label="Create asset"
         multiple
@@ -7,7 +7,7 @@
         :rules="fileRules"
         @update:model-value="getFiles"
         ></v-file-input>
-        <v-item-group class="d-flex" selected-class="selected">
+        <v-item-group class="d-flex mt-2" selected-class="selected">
             <v-item
                 v-for="(img, index) in assets.env"
                 :key="img" 
@@ -18,6 +18,7 @@
                     :height="tileSize"
                     :width="tileSize"
                     dark
+                    :rounded="0"
                     @click="toggle"
                     >
                         <!-- <div
