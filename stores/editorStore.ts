@@ -119,6 +119,19 @@ export const useEditorStore = defineStore('editor', () => {
         return { events, indexes }
     }
 
+    const getImagesAssets = async() => {
+        // Get image assets
+        for(let [key, value] of Object.entries(assets.value)){
+            // const { data } = await useAsyncData(`getImagetype${key}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${key}`))
+
+            const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${key}`)
+            console.log("request:>>> ", request_assets)
+            if(request_assets.status === 200){
+                assets.value[key as keyof levelAssetModel] = request_assets.assets
+            }  
+        }
+    }
+
     /**
      * Initialize the editor
      * @param id - The identifier of the levelData to find
@@ -130,16 +143,7 @@ export const useEditorStore = defineStore('editor', () => {
 
         const request : levelDataResponse = data.value as levelDataResponse
 
-        // Get image assets
-        for(let [key, value] of Object.entries(assets.value)){
-            // const { data } = await useAsyncData(`getImagetype${key}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${key}`))
-
-            const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${key}`)
-            console.log("request:>>> ", request_assets)
-            if(request_assets.status === 200){
-                assets.value[key as keyof levelAssetModel] = request_assets.assets
-            }  
-        }
+        await getImagesAssets()
 
         console.log("request:>>> ", request)
         
@@ -277,6 +281,7 @@ export const useEditorStore = defineStore('editor', () => {
         getEventsonTile,
         getAudioAssets,
         getBattleAudioAsset,
-        saveAsset
+        saveAsset,
+        getImagesAssets
     }
 })
