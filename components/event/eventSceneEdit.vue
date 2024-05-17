@@ -113,7 +113,7 @@ import eventDialogueEdit from './eventDialogueEdit.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneEditDialog } = storeToRefs(useDialogStore())
-const { tileInfo, editEventIndex, audioAssets, assets, levelData } = storeToRefs(useEditorStore())
+const { audioAssets, levelData } = storeToRefs(useEditorStore())
 const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionCreateDialog } = storeToRefs(useDialogStore())
 const { selectRules, inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
