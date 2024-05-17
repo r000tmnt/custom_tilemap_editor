@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 export default defineEventHandler(async(event) => {
     const { fields, files } = event.context.formidable;
     
@@ -8,15 +11,15 @@ export default defineEventHandler(async(event) => {
 
     // console.log(body)
 
-    // const { type } = body
+    const { type } = fields
 
-    // files.forEach((file: any) => {
-    //     console.log(file)
+    files.forEach((file: any) => {
+        console.log(file)
 
-    //     const filePath = path.join(process.cwd(), `./public/assets/image/${type}`)
+        const filePath = path.join(process.cwd(), `./public/assets/image/${type}`)
 
-    //     fs.writeFileSync(filePath, file)
-    // });
+        fs.writeFileSync(filePath, file)
+    });
 
     
 
