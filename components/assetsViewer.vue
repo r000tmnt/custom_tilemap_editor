@@ -11,11 +11,15 @@
       >
         <div class="d-flex">
             <v-img v-for="(img, index) in props.asset" 
-                :key="img" 
+                :key="index" 
                 :width="type === 'bg'? 100: 32" 
                 :height="type === 'bg'? 100: 32" 
-                :src="img"></v-img>
+                :src="String(img)"></v-img>
         </div>
+
+        <v-card-actions>
+            <v-btn @click="toggleDialog('asset-viewer')">CLOSE</v-btn>
+        </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
@@ -24,6 +28,7 @@
 import { storeToRefs } from 'pinia';
 
 const { assetViewer } = storeToRefs(useDialogStore())
+const { toggleDialog } = useDialogStore()
 
 const props = defineProps({
     asset: {
