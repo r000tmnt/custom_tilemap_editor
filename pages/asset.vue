@@ -7,17 +7,22 @@
         <div class="d-flex flex-wrap p-2 w-75 mx-auto">
             <v-row>
                 <v-col v-for="type in assetType"
-                    @click="selectType(type)"
+                    :key="type"
                     cols="4">
                     <v-card :title="type">
                         <template v-slot:actions>
-                            <v-btn color="secondary" text="VIEW"></v-btn>
+                            <v-btn color="secondary" 
+                                text="VIEW"
+                                @click="selectType(type)"></v-btn>
                         </template>
                     </v-card>
                 </v-col>                
             </v-row>
-
-        </div>        
+        </div> 
+        
+        <assets-viewer v-if="assetViewer"
+            :asset="assetToDisplay"
+            :type="selectedType" />
     </section>
 </template>
 
@@ -30,15 +35,28 @@ import { storeToRefs } from 'pinia';
 import { ref, onBeforeMount, onMounted } from 'vue'
 import type { levelAssetModel } from '~/types/level';
 
-const { assets } = storeToRefs(useEditorStore())
+import assetsViewer from  '~/components/assetsViewer.vue'
+
+const { assets, audioAssets } = storeToRefs(useEditorStore())
+const { assetViewer } = storeToRefs(useDialogStore())
+const { toggleDialog } = useDialogStore()
 const { getImagesAssets, getAudioAssets, getBattleAudioAsset } = useEditorStore()
 
 const assetType = ref(Object.entries(assets.value).map(a => a[0]))
 
 const assetToDisplay = ref<any[]>([])
+const selectedType = ref<string>("")
 
 const selectType = (type: string) => {
-    assetToDisplay.value = assets.value[type as keyof levelAssetModel]
+    selectedType.value = type
+
+    if(type === 'audio'){
+        assetToDisplay.value = Object.entries(audioAssets.value).map(au => au[1])
+    }else{
+        assetToDisplay.value = assets.value[type as keyof levelAssetModel]
+    }
+
+    toggleDialog("asset-viewer")
 }
 
 onMounted(() => {
