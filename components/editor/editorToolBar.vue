@@ -77,7 +77,7 @@
 import { storeToRefs } from 'pinia'
 import levelInfoEdit from '../levelInfoEdit.vue';
 import levelConversationEdit from '../levelConversationEdit.vue';
-import type { eventPositionModel, levelEventModel } from '~/types/level'
+// import type { eventPositionModel, levelEventModel } from '~/types/level'
 
 const { levelData, mode, editorTheme, configState } = storeToRefs(useEditorStore())
 const { layers, configOptions } = storeToRefs(useEditorStore())
