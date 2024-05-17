@@ -14,6 +14,10 @@
                     <Nuxt-link to="/skill">
                         <v-list-item link prepend-icon="mdi-magic-staff" title="SKILL"></v-list-item>                        
                     </Nuxt-link>
+
+                    <Nuxt-link to="/asset">
+                        <v-list-item link prepend-icon="mdi-invoice-list" title="ASSET"></v-list-item>                        
+                    </Nuxt-link>
                 </v-navigation-drawer>
 
                 <v-app-bar id="bar" :elevation="5">
