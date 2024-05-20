@@ -20,12 +20,10 @@
         <v-row v-if="props.type !== 'audio'" class="pl-4">
           <v-col v-for="(img, index) in props.asset"
             :key="String(index)"
-            class="d-flex child-flex ma-2"
-            cols="4"
+            class="d-flex child-flex m-2"
+            :cols="type === 'bg'? 4 : 1"
             >
             <v-img 
-                :width="type === 'bg'? 100: 32" 
-                :height="type === 'bg'? 100: 32" 
                 :src="String(img)"
                 aspect-ratio="1"
                 cover></v-img>
