@@ -11,7 +11,7 @@ export default defineEventHandler(async(event) => {
     const relativePath = path.relative(process.cwd(), "./public")
     const audioPath = (type === "general")? "/assets/audio/" : "/assets/audio/battle"
     const files = fs.readdirSync(`${relativePath}${audioPath}`)
-    const assets = files.map(file => `/assets/audio/${file}`)
+    const assets = files.map(file => (type === "general")? `/assets/audio/${file}` : `/assets/audio/battle/${file}`)
 
     return { status: 200, assets: assets.filter(a => a.includes(".mp3") || a.includes(".wav")) }
 })
