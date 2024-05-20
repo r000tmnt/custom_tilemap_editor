@@ -52,6 +52,7 @@ const selectType = (type: string) => {
 
     if(type === 'audio'){
         assetToDisplay.value = Object.entries(audioAssets.value).map(au => au[1])
+        assetToDisplay.value = assetToDisplay.value.flat()
     }else{
         assetToDisplay.value = assets.value[type as keyof levelAssetModel]
     }
