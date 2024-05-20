@@ -220,23 +220,36 @@ export const useEditorStore = defineStore('editor', () => {
 
         // const { data } = await useAsyncData('saveAsset', () => $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData }))
 
-        const { data } = await $api(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData })
+        if(!type.includes("audio")){
+            const { data } = await $api(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData })
 
-        const uploadResult : responseModel = data.value as responseModel
+            const uploadResult : responseModel = data.value as responseModel
 
-        console.log(uploadResult)
+            console.log(uploadResult)
 
-        if(uploadResult.status === 200){
-            // Update the asset listed in the store
-            // const { data } = await useAsyncData(`getImageType${type}`, () => $fetch(`${mainStore.base_url}api/asset/image?type=${type}`))
+            if(uploadResult.status === 200){
+                const { data } = await $api(`${mainStore.base_url}api/asset/image?type=${type}`)
 
-            const { data } = await $api(`${mainStore.base_url}api/asset/image?type=${type}`)
+                const request_assets : levelAssetResponseModel = data.value as levelAssetResponseModel
+                console.log("request:>>> ", request_assets)
+                console.log("request:>>> ", request_assets)
+                if(request_assets.status === 200){
+                    assets.value[type as keyof levelAssetModel] = request_assets.assets
+                } 
+            }            
+        }else{
+            const { data } = await $api(`${mainStore.base_url}api/asset/audio`, { method: "POST", body: formData })
 
-            const request_assets : levelAssetResponseModel = data.value as levelAssetResponseModel
-            console.log("request:>>> ", request_assets)
-            console.log("request:>>> ", request_assets)
-            if(request_assets.status === 200){
-                assets.value[type as keyof levelAssetModel] = request_assets.assets
+            const uploadResult : responseModel = data.value as responseModel
+
+            const audioType = type === 'audio'? 'general' : 'battle'
+
+            if(uploadResult.status === 200){
+                if(audioType === 'general'){
+                    await getAudioAssets()
+                }else{
+                    await getBattleAudioAsset()
+                }
             } 
         }
     }
