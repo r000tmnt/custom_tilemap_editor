@@ -9,14 +9,20 @@
         width="500"
         title="View assets"
       >
-        <div v-if="props.type !== 'audio'" 
-            class="d-flex flex-wrap">
-            <v-img v-for="(img, index) in props.asset" 
-                :key="index" 
+        <v-row v-if="props.type !== 'audio'" class="pl-4">
+          <v-col v-for="(img, index) in props.asset"
+            :key="String(index)"
+            class="d-flex child-flex ma-2"
+            cols="4"
+            >
+            <v-img 
                 :width="type === 'bg'? 100: 32" 
                 :height="type === 'bg'? 100: 32" 
-                :src="String(img)"></v-img>
-        </div>
+                :src="String(img)"
+                aspect-ratio="1"
+                cover></v-img>
+          </v-col>
+        </v-row>
 
         <div v-else
           class="d-flex flex-wrap">
