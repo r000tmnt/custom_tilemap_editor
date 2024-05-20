@@ -12,7 +12,7 @@
       <v-file-input
         label="Create asset"
         multiple
-        accept="image/png"
+        :accept="type !== 'audio'? 'image/png' : 'audio/mp3, audio/wav'"
         :rules="fileRules"
         @update:model-value="getFiles"
         ></v-file-input>
