@@ -18,6 +18,10 @@
                     <Nuxt-link to="/asset">
                         <v-list-item link prepend-icon="mdi-invoice-list" title="ASSET"></v-list-item>                        
                     </Nuxt-link>
+
+                    <Nuxt-link to="/lang">
+                        <v-list-item link prepend-icon="mdi-translate-variant" title="LANG"></v-list-item>
+                    </Nuxt-link>
                 </v-navigation-drawer>
 
                 <v-app-bar id="bar" :elevation="5">
