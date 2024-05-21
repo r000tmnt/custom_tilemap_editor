@@ -122,6 +122,13 @@ interface effectItemReferenceModel {
     type: number
 }
 
+interface translationDataModel {
+    class: string[]
+    item: string[]
+    level: string[]
+    skill: string[]
+}
+
 export { 
     responseModel,
     levelList,
@@ -139,5 +146,6 @@ export {
     effectItemReferenceModel,
     eventPositionModel,
     objectiveDataModel,
-    objectiveOptionalModel
+    objectiveOptionalModel,
+    translationDataModel
 }
