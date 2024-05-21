@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import type { levelList, translationDataModel } from '~/types/level';
 
 // Define mainStore
 const mainStore = useMainStore()
@@ -13,7 +14,26 @@ export const useLangStore = defineStore('lang', () => {
         // "ui"
     ])
 
+    const translationData = ref<translationDataModel>({
+        class: [""],
+        item: [""],
+        level: [""],
+        skill: [""]
+    })
+
+    const getTranslationData = async(type: string) => {
+        const tranlationRequest : levelList = await $fetch(`${mainStore.base_url}/lang?type=${type}`)
+
+        console.log(tranlationRequest)
+
+        if(tranlationRequest.status === 200){
+            translationData.value[`${type as keyof translationDataModel}`] = tranlationRequest.files
+        }
+    }
+
     return {
-        translateTargets
+        translateTargets,
+        translationData,
+        getTranslationData
     }
 })
