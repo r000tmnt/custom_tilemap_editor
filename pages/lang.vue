@@ -20,6 +20,7 @@
             </v-row>
         </div> 
         
+        <translation-viewer v-if="translationViewer" :type="selectedType" />
     </section>
 </template>
 
@@ -31,15 +32,21 @@ definePageMeta({
 import { storeToRefs } from 'pinia';
 import { ref, onBeforeMount, onMounted } from 'vue'
 
+import translationViewer from '~/components/translationViewer.vue'
+
 const { translateTargets } = storeToRefs(useLangStore())
+const { translationViewer } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
+const { getTranslationData } = useLangStore()
 
 const assetToDisplay = ref<any[]>([])
 const selectedType = ref<string>("")
 
-const selectType = (type: string) => {
-    const translationPath = `../locale/${selectedType.value}`
-    // TODO - Get message inside locale directory
+// TODO - Get message inside locale directory
+const selectType = (type: string) => {    
+    selectedType.value = type
+    getTranslationData(type)
+    toggleDialog('translation-viewer')
 }
 
 onMounted(() => {
