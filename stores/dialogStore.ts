@@ -45,6 +45,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const eventDeleteDialog = ref<boolean>(false)
     // On and off switch for asset viewer dialog
     const assetViewer = ref<boolean>(false)
+    // On and off switch for tranlation viewer
+    const translationViewer = ref<boolean>(false)
     
     const toggleDialog = (type: string) => {
         switch(type){
@@ -114,6 +116,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'asset-viewer':
                 assetViewer.value = !assetViewer.value
             break;
+            case 'translation-viewer':
+                translationViewer.value = !translationViewer.value
+            break;
             // and more...
         }
     }
@@ -141,6 +146,7 @@ export const useDialogStore = defineStore('dialog', () => {
         skillEditDialog,
         eventDeleteDialog,
         assetViewer,
+        translationViewer,
         toggleDialog
     }
 })
