@@ -1,4 +1,4 @@
-export default {
+{
     "potion_health_1": {
         "name": "Health potion",
         "desc": "Restore 10 points of health."

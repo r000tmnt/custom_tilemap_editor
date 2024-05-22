@@ -1,4 +1,4 @@
-export default {
+{
     "action": {
         "move": "移動",
         "attack": "攻擊",
@@ -70,5 +70,5 @@ export default {
         "pickAfterBattle": "捨取道具",
         "finish": "結束",
         "warn": "當前階段結束後將無法取回遺留在現場的物品。"
-    },
+    }
 }

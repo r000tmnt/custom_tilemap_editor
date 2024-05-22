@@ -1,4 +1,4 @@
-export default {
+{
     "status_1": {
         "name": "Focus",
         "desc": "Enhance the hit rate and evade rate by 30% on oneself."

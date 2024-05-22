@@ -1,4 +1,4 @@
-export default {
+{
     "potion_health_1": {
         "name": "生命藥水",
         "desc": "回復10點生命值"
