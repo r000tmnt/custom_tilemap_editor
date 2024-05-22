@@ -22,7 +22,7 @@ export const useLangStore = defineStore('lang', () => {
     })
 
     const getTranslationData = async(type: string) => {
-        const tranlationRequest : levelList = await $fetch(`${mainStore.base_url}/lang?type=${type}`)
+        const tranlationRequest : levelList = await $fetch(`${mainStore.base_url}api/lang/${type}`)
 
         console.log(tranlationRequest)
 
