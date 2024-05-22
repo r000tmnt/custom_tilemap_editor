@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-  v-model="translationViewer"
+  v-model="translationListDialog"
   width="auto"
   persistent
 >
@@ -9,10 +9,11 @@
     width="1000"
     :title="`${props.type} translation`"
   >
-
-    <v-list-item v-for="item in translationData[props.type as keyof translationDataModel]">
-        {{ item }}
-    </v-list-item>
+    <template v-slot:text>
+      <v-list-item v-for="item in translationData[props.type as keyof translationDataModel]">
+          {{ item.split(".")[0] }}
+      </v-list-item>      
+    </template>
     <!--<div class="d-flex">
          en message & zh message 
         <v-data-table></v-data-table>
@@ -31,7 +32,7 @@ import { ref } from 'vue';
 import type { translationDataModel } from '~/types/level';
 
 const { translationData } = storeToRefs(useLangStore())
-const { translationViewer } = storeToRefs(useDialogStore())
+const { translationListDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 
 const props = defineProps({
