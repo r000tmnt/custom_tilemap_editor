@@ -37,7 +37,7 @@ import translationList from '~/components/translationList.vue'
 const { translateTargets } = storeToRefs(useLangStore())
 const { translationListDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-const { getTranslationData } = useLangStore()
+const { getTranslationList } = useLangStore()
 
 const assetToDisplay = ref<any[]>([])
 const selectedType = ref<string>("")
@@ -45,7 +45,7 @@ const selectedType = ref<string>("")
 // TODO - Get message inside locale directory
 const selectType = (type: string) => {    
     selectedType.value = type
-    getTranslationData(type)
+    getTranslationList(type)
     toggleDialog('translation-viewer')
 }
 
