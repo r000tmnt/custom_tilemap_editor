@@ -20,7 +20,7 @@
             </v-row>
         </div> 
         
-        <translation-viewer v-if="translationViewer" :type="selectedType" />
+        <translation-list v-if="translationListDialog" :type="selectedType" />
     </section>
 </template>
 
@@ -32,10 +32,10 @@ definePageMeta({
 import { storeToRefs } from 'pinia';
 import { ref, onBeforeMount, onMounted } from 'vue'
 
-import translationViewer from '~/components/translationViewer.vue'
+import translationList from '~/components/translationList.vue'
 
 const { translateTargets } = storeToRefs(useLangStore())
-const { translationViewer } = storeToRefs(useDialogStore())
+const { translationListDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { getTranslationData } = useLangStore()
 
