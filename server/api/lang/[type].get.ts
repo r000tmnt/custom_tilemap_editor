@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-// import path from 'node:path';
+import path from 'node:path';
 
 export default defineEventHandler((event) => {
     const params = getRouterParams(event)
@@ -8,8 +8,12 @@ export default defineEventHandler((event) => {
 
     const { type } = params
 
+    // Get file names first
     try{
-        const files = fs.readdirSync(`../../../locale/${type}/`)
+        // const files = fs.readdirSync(`./locale/${type}/`)
+        let files: string[] = []
+
+        files = fs.readdirSync(`${process.env.DATA_PATH}/${type}/`)
 
         console.log(files)
 
