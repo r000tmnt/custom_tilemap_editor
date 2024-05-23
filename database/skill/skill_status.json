@@ -47,7 +47,7 @@
         },
         "animation": "enchant",
         "effect": {
-            "type": "status",
+            "type": 1,
             "range": 1,
             "base_on_attribute": "none",
             "multiply_as": 1,
