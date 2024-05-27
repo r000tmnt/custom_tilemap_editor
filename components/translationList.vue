@@ -44,11 +44,12 @@
       </template>
     </template>
 
-    <v-card-actions>
-        <v-btn @click="toggleDialog('translation-viewer')">CLOSE</v-btn>
-    </v-card-actions>
+      <v-card-actions>
+          <v-btn @click="toggleDialog('translation-viewer')">CLOSE</v-btn>
+          <v-btn v-if="Object.entries(translationDetail).length" color="primary">SAVE</v-btn>
+      </v-card-actions>
     </v-card>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
