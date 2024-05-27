@@ -37,6 +37,7 @@
         </div>
 
         <template v-slot:append>
+            <v-btn icon="mdi-play-box-edit-outline"></v-btn>
             <v-btn icon="mdi-export"></v-btn>
             <!-- <v-btn icon="mdi-cog"></v-btn> -->
             <v-menu :close-on-content-click="false" 
