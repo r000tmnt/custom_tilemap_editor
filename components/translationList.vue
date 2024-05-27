@@ -19,14 +19,51 @@
                   class="d-flex my-2 pa-2"
                   :key="key">
                   <template v-if="type === 'level' || type === 'class'">
-                    <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>                  
+                    <template v-if="targetToEdit.lang === 'EN' && targetToEdit.index === index">
+                      <div v-if="String(key).includes('option')">
+                        <v-text-field :label="String(key)" v-model="value.value"></v-text-field>  
+                        <v-text-field label="response" v-model="value.content"></v-text-field>  
+                      </div>
+
+                      <v-text-field v-else :label="String(key)" v-model="translationDetail.en[String(key)]"></v-text-field>
+                      <v-btn 
+                        variant="outlined" 
+                        color="grey" 
+                        class="ml-auto"
+                        @click="cancelEdit">CANCEL</v-btn>   
+                    </template>
+                  
+                    <template v-else>
+                      <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>   
+                      <v-btn 
+                        variant="outlined" 
+                        color="secondary" 
+                        class="ml-auto"
+                        @click="switchToEdit('EN', index)">EDIT</v-btn>                      
+                    </template>            
                   </template>
 
                   <template v-if="type === 'skill' || type === 'item'">
-                    <div class="px-2" style="white-space: pre-line;">{{ `${key}: name: ${value.name}\ndesc: ${value.desc}` }}</div>   
-                  </template>
+                    <template v-if="targetToEdit.lang === 'EN' && targetToEdit.index === index">
+                      <v-text-field label="name" v-model="value.name"></v-text-field>  
+                      <v-text-field label="desc" v-model="value.desc"></v-text-field>  
 
-                  <v-btn variant="outlined" color="secondary" class="ml-auto">EDIT</v-btn>
+                      <v-btn 
+                        variant="outlined" 
+                        color="grey" 
+                        class="ml-auto"
+                        @click="cancelEdit">CANCEL</v-btn>  
+                    </template>
+
+                    <template v-else>
+                      <div class="px-2" style="white-space: pre-line;">{{ `${key}: name: ${value.name}\ndesc: ${value.desc}` }}</div>   
+                      <v-btn 
+                        variant="outlined" 
+                        color="secondary" 
+                        class="ml-auto"
+                        @click="switchToEdit('EN', index)">EDIT</v-btn>  
+                    </template>                    
+                  </template>
                 </div>
             </div>
 
@@ -36,14 +73,51 @@
                   class="d-flex my-2 pa-2"
                   :key="key">
                   <template v-if="type === 'level' || type === 'class'">
-                    <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>                  
+                    <template v-if="targetToEdit.lang === 'ZH' && targetToEdit.index === index">
+                      <div v-if="String(key).includes('option')">
+                        <v-text-field :label="String(key)" v-model="value.value"></v-text-field>  
+                        <v-text-field label="response" v-model="value.content"></v-text-field>  
+                      </div>
+
+                      <v-text-field v-else :label="String(key)" v-model="translationDetail.en[String(key)]"></v-text-field>
+                      <v-btn 
+                        variant="outlined" 
+                        color="grey" 
+                        class="ml-auto"
+                        @click="cancelEdit">CANCEL</v-btn>  
+                    </template>
+                  
+                    <template v-else>
+                      <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>        
+                      <v-btn 
+                        variant="outlined" 
+                        color="secondary" 
+                        class="ml-auto"
+                        @click="switchToEdit('ZH', index)">EDIT</v-btn>                  
+                    </template>            
                   </template>
 
                   <template v-if="type === 'skill' || type === 'item'">
-                    <div class="px-2" style="white-space: pre-line;">{{ `${key}: name: ${value.name}\ndesc: ${value.desc}` }}</div>   
+                    <template v-if="targetToEdit.lang === 'ZH' && targetToEdit.index === index">
+                      <v-text-field label="name" v-model="value.name"></v-text-field>  
+                      <v-text-field label="desc" v-model="value.desc"></v-text-field>  
+
+                      <v-btn 
+                        variant="outlined" 
+                        color="grey" 
+                        class="ml-auto"
+                        @click="cancelEdit">CANCEL</v-btn>  
+                    </template>
+
+                    <template v-else>
+                      <div class="px-2" style="white-space: pre-line;">{{ `${key}: name: ${value.name}\ndesc: ${value.desc}` }}</div>   
+                      <v-btn 
+                        variant="outlined" 
+                        color="secondary" 
+                        class="ml-auto"
+                        @click="switchToEdit('ZH', index)">EDIT</v-btn>  
+                    </template>                    
                   </template>
-                  
-                  <v-btn variant="outlined" color="secondary" class="ml-auto">EDIT</v-btn>
                 </div>
             </div>
         </v-form>
@@ -68,7 +142,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { onBeforeUnmount } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import type { translationDataModel } from '~/types/level';
 
 const { translationData, translationDetail } = storeToRefs(useLangStore())
@@ -82,6 +156,23 @@ const props = defineProps({
         default: "class"
     }
 })
+
+const targetToEdit = ref({
+  lang: "",
+  index: 0
+})
+
+const switchToEdit = (lang: string, index: number) => {
+  targetToEdit.value.lang = lang
+  targetToEdit.value.index = index
+}
+
+const cancelEdit = () => {
+  targetToEdit.value = {
+    lang: "",
+    index: 0
+  }
+}
 
 const getTranslation = (item: string) => {
   // Get the tanslated string from locale
