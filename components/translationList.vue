@@ -134,7 +134,7 @@
 
       <v-card-actions>
           <v-btn @click="toggleDialog('translation-viewer')">CLOSE</v-btn>
-          <v-btn v-if="Object.entries(translationDetail).length" color="primary">SAVE</v-btn>
+          <v-btn v-if="Object.entries(translationDetail).length" color="primary" @click="saveTranslationData(props.type, viewingTranslation)">SAVE</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -148,7 +148,7 @@ import type { translationDataModel } from '~/types/level';
 const { translationData, translationDetail } = storeToRefs(useLangStore())
 const { translationListDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-const { getTranslationData } = useLangStore()
+const { getTranslationData, saveTranslationData } = useLangStore()
 
 const props = defineProps({
     type: {
@@ -157,9 +157,11 @@ const props = defineProps({
     }
 })
 
+const viewingTranslation = ref<string>("")
+
 const targetToEdit = ref({
   lang: "",
-  index: 0
+  index: 0,
 })
 
 const switchToEdit = (lang: string, index: number) => {
@@ -175,6 +177,7 @@ const cancelEdit = () => {
 }
 
 const getTranslation = (item: string) => {
+  viewingTranslation.value = item
   // Get the tanslated string from locale
   getTranslationData(item, props.type)
 }
