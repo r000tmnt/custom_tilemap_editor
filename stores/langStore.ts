@@ -134,7 +134,7 @@ export const useLangStore = defineStore('lang', () => {
     }
 
     const saveTranslationData = async(type: string, name: string) => {
-        const saveRequest : responseModel = await $fetch(`${mainStore.base_url}api/lang/save`, { body: { type, name, ...translationDetail.value } })
+        const saveRequest : responseModel = await $fetch(`${mainStore.base_url}api/lang/save`, { method: "POST", body: { type, name: name.split(".")[0], ...translationDetail.value } })
 
         console.log(saveRequest)
         
