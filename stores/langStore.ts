@@ -56,7 +56,7 @@ export const useLangStore = defineStore('lang', () => {
                     rawDataRequest = target.includes('class')? await $fetch(`${mainStore.base_url}api/class?target=${targetType}`) : await $fetch(`${mainStore.base_url}api/mob?target=${targetType}`)
 
                     for(let i=0; i < rawDataRequest.data.length; i++){
-                        translationDetail.value.en[`${rawDataRequest.data[i].id}`] = rawDataRequest.data.name
+                        translationDetail.value.en[`${rawDataRequest.data[i].id}`] = rawDataRequest.data[i].name
                         
                         translationDetail.value.zh[`${rawDataRequest.data[i].id}`] = ""
                     }
