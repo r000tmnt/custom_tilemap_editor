@@ -18,7 +18,14 @@
                 <div v-for="(value, key, index) in translationDetail.en"
                   class="d-flex my-2 pa-2"
                   :key="key">
-                  <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>
+                  <template v-if="type === 'level' || type === 'class'">
+                    <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>                  
+                  </template>
+
+                  <template v-if="type === 'skill' || type === 'item'">
+                    <div class="px-2" style="white-space: pre-line;">{{ `${key}: name: ${value.name}\ndesc: ${value.desc}` }}</div>   
+                  </template>
+
                   <v-btn variant="outlined" color="secondary" class="ml-auto">EDIT</v-btn>
                 </div>
             </div>
@@ -28,7 +35,14 @@
                 <div v-for="(value, key, index) in translationDetail.zh"
                   class="d-flex my-2 pa-2"
                   :key="key">
-                  <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>
+                  <template v-if="type === 'level' || type === 'class'">
+                    <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>                  
+                  </template>
+
+                  <template v-if="type === 'skill' || type === 'item'">
+                    <div class="px-2" style="white-space: pre-line;">{{ `${key}: name: ${value.name}\ndesc: ${value.desc}` }}</div>   
+                  </template>
+                  
                   <v-btn variant="outlined" color="secondary" class="ml-auto">EDIT</v-btn>
                 </div>
             </div>
