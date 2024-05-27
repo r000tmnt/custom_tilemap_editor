@@ -134,7 +134,7 @@
 
       <v-card-actions>
           <v-btn @click="toggleDialog('translation-viewer')">CLOSE</v-btn>
-          <v-btn v-if="Object.entries(translationDetail).length" color="primary" @click="saveTranslationData(props.type, viewingTranslation)">SAVE</v-btn>
+          <v-btn v-if="Object.entries(translationDetail).length" color="primary" @click="saveChanges">SAVE</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -180,6 +180,12 @@ const getTranslation = (item: string) => {
   viewingTranslation.value = item
   // Get the tanslated string from locale
   getTranslationData(item, props.type)
+}
+
+const saveChanges = () => {
+  saveTranslationData(props.type, viewingTranslation.value).then(() => {
+    cancelEdit()
+  })
 }
 
 // Reset translation detail
