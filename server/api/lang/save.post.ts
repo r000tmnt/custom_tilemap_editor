@@ -17,8 +17,8 @@ export default defineEventHandler( async(event) => {
         const enFilePath = path.join(process.cwd(), `locale/${type}/`,`${name}_en.json`)
         const zhFilePath = path.join(process.cwd(), `locale/${type}/`,`${name}_zh.json`)
 
-        fs.appendFileSync(enFilePath, en)
-        fs.appendFileSync(zhFilePath, zh)
+        fs.appendFileSync(enFilePath, JSON.stringify(en))
+        fs.appendFileSync(zhFilePath, JSON.stringify(zh))
 
         return { status: 200 }
     }catch(err){
