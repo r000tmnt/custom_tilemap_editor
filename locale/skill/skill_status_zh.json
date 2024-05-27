@@ -6,5 +6,9 @@
     "status_focus_2": {
         "name": "明晰",
         "desc": "提高對象的命中率和迴避率30%"
+    },
+    "status_poison_1": {
+        "name": "毒液撕咬",
+        "desc": "刺進皮膚，造成對方中毒"
     }
 }
