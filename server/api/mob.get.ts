@@ -8,12 +8,12 @@ export default defineEventHandler((event) => {
 
     const { target } = query
     try{
-        const mobs = fs.readFileSync(`${process.env.DATA_PATH}/mob/mob_${target}.json`, { encoding: 'utf-8' })
+        const data = fs.readFileSync(`${process.env.DATA_PATH}/mob/mob_${target}.json`, { encoding: 'utf-8' })
 
-        console.log(mobs)
+        console.log(data)
 
-        return { status: 200, mobs: JSON.parse(mobs) }
+        return { status: 200, data: JSON.parse(data) }
     }catch(err){
-        return { status: 500, mobs: [], err }
+        return { status: 500, data: [], err }
     }
 })
