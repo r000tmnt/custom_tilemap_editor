@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { levelList, translationDataModel, levelDataResponse, levelEventModel } from '~/types/level';
+import type { levelList, translationDataModel, levelDataResponse, levelEventModel, responseModel } from '~/types/level';
 import type { skillResponseModel } from "~/types/skill";
 
 // Define mainStore
@@ -133,11 +133,24 @@ export const useLangStore = defineStore('lang', () => {
         }
     }
 
+    const saveTranslationData = async(type: string, name: string) => {
+        const saveRequest : responseModel = await $fetch(`${mainStore.base_url}api/lang/save`, { body: { type, name, ...translationDetail.value } })
+
+        console.log(saveRequest)
+        
+        if(saveRequest.status === 200){
+            console.log("success")
+        }else{
+            console.log("failed")
+        }
+    }
+
     return {
         translateTargets,
         translationData,
         translationDetail,
         getTranslationList,
-        getTranslationData
+        getTranslationData,
+        saveTranslationData
     }
 })
