@@ -8,11 +8,11 @@ import key from './item/item_key_zh.json'
 import other from './item/item_other_zh.json'
 import skill_sword from './skill/skill_sword_zh.json'
 import skill_status from './skill/skill_status_zh.json'
-import job from './class/class_zh.json'
+import class_fighter from './class/class_fighter_zh.json'
 import mob from './mob/mob_zombie_zh.json'
 
 export default {
-    job,
+    class_fighter,
     mob,
     tutorial_1,
     ui,

@@ -8,13 +8,13 @@ import key from './item/item_key_en.json'
 import other from './item/item_other_en.json'
 import skill_sword from './skill/skill_sword_en.json'
 import skill_status from './skill/skill_status_en.json'
-import job from './class/class_en.json'
+import class_fighter from './class/class_fighter_en.json'
 import mob from './mob/mob_zombie_en.json'
 
 export default {
     tutorial_1,
     ui,
-    job,
+    class_fighter,
     mob,
     "item": {
         potion,
