@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { levelList, translationDataModel, levelDataResponse, levelEventModel } from '~/types/level';
+import type { skillResponseModel } from "~/types/skill";
 
 // Define mainStore
 const mainStore = useMainStore()
@@ -62,6 +63,7 @@ export const useLangStore = defineStore('lang', () => {
 
                     if(eventWithOutPosition.length){
                         let dialogueCount = 1, optionCount = 1
+
                         for(let i=0; i < eventWithOutPosition.length; i++){
                             for(let j=0, scene = eventWithOutPosition[i].scene; j < scene.length; j++){
                                 for(let k=0, dialogue = scene[j].dialogue; k < dialogue.length; k++){
@@ -83,7 +85,25 @@ export const useLangStore = defineStore('lang', () => {
                     }
                 break;
                 case 'skill':
+                    const data = await $fetch(`${mainStore.base_url}api/skill/${type}`)
 
+                    const requestSkill = data as skillResponseModel
+        
+                    if(requestSkill.status === 200){
+
+                        for(let i=0; i <= requestSkill.data.length; i++){
+                            translationDetail.value.en[requestSkill.data[i].id] = {
+                                name: requestSkill.data[i].name,
+                                desc: requestSkill.data[i].effect.desc
+                            }   
+                            
+                            translationDetail.value.zh[requestSkill.data[i].id] = {
+                                name: "",
+                                desc: ""
+                            }
+                        }
+
+                    }
                 break;
             }
         }
