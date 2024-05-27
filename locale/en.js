@@ -6,15 +6,16 @@ import armor from './item/item_armor_en.json'
 import material from './item/item_material_en.json'
 import key from './item/item_key_en.json'
 import other from './item/item_other_en.json'
-import skill_sword from './skill/sword_en.json'
-import buff from './skill/buff_en.json'
-import debuff from './skill/debuff_en.json'
+import skill_sword from './skill/skill_sword_en.json'
+import skill_status from './skill/skill_status_en.json'
 import job from './class/class_en.json'
+import mob from './mob/mob_zombie_en.json'
 
 export default {
     tutorial_1,
     ui,
     job,
+    mob,
     "item": {
         potion,
         weapon,
@@ -25,8 +26,7 @@ export default {
     },
     "skill":{
         skill_sword,
-        buff,
-        debuff
+        skill_status,
     },
     "demo": "This is the end of the demo.\nThank you for playing the game.",
     "loading": "Loading...",

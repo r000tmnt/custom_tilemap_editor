@@ -6,13 +6,14 @@ import armor from './item/item_armor_zh.json'
 import material from './item/item_material_zh.json'
 import key from './item/item_key_zh.json'
 import other from './item/item_other_zh.json'
-import skill_sword from './skill/sword_zh.json'
-import buff from './skill/buff_zh.json'
-import debuff from './skill/debuff_zh.json'
+import skill_sword from './skill/skill_sword_zh.json'
+import skill_status from './skill/skill_status_zh.json'
 import job from './class/class_zh.json'
+import mob from './mob/mob_zombie_zh.json'
 
 export default {
     job,
+    mob,
     tutorial_1,
     ui,
     "item": {
@@ -25,8 +26,7 @@ export default {
     },
     "skill":{
         skill_sword,
-        buff,
-        debuff
+        skill_status,
     },
     "demo": "這裡是 DEMO 的終點。 感謝你的遊玩",
     "loading": "讀取中...",
