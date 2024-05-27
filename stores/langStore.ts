@@ -43,19 +43,43 @@ export const useLangStore = defineStore('lang', () => {
             translationDetail.value = tranlationRequest.data
         }else{
             // Need to create a new json file
+            translationDetail.value = {
+                en: {},
+                zh: {}
+            }
             let rawDataRequest : any = {}
+
+            const splitTarget = target.split("_")[1]
+            const targetType = splitTarget.split(".")[0]
             switch(type){
                 case 'class':
-                    rawDataRequest = target.includes('class')? await $fetch(`${mainStore.base_url}api/class?target=${target}`) : await $fetch(`${mainStore.base_url}api/mob?target=${target}`)
+                    rawDataRequest = target.includes('class')? await $fetch(`${mainStore.base_url}api/class?target=${targetType}`) : await $fetch(`${mainStore.base_url}api/mob?target=${targetType}`)
+
+                    for(let i=0; i < rawDataRequest.data.length; i++){
+                        translationDetail.value.en[`${rawDataRequest.data[i].id}`] = rawDataRequest.data.name
+                        
+                        translationDetail.value.zh[`${rawDataRequest.data[i].id}`] = ""
+                    }
+                    console.log(translationDetail.value)
                 break;
                 case 'item':
-                    rawDataRequest = await $fetch(`${mainStore.base_url}api/item/${type}/`)
+                    rawDataRequest = await $fetch(`${mainStore.base_url}api/item/${targetType}/`)
 
-                    translationDetail.value.en = { name: rawDataRequest.data.name }
-                    translationDetail.value.zh = { name: "" } 
+                    for(let i=0; i < rawDataRequest.data.length; i++){
+                        translationDetail.value.en[`${rawDataRequest.data[i].id}`] = {
+                            name: rawDataRequest.data[i].name,
+                            desc: rawDataRequest.data[i].effect.desc
+                        }   
+                        
+                        translationDetail.value.zh[`${rawDataRequest.data[i].id}`] = {
+                            name: "",
+                            desc: ""
+                        }
+                    }
+                    console.log(translationDetail.value)
                 break;
                 case 'level':
-                    rawDataRequest = await $fetch(`${mainStore.base_url}api/level/${target}`)
+                    rawDataRequest = await $fetch(`${mainStore.base_url}api/level/${targetType}`)
 
                     translationDetail.value.en.title = rawDataRequest.data.tile
 
@@ -85,24 +109,24 @@ export const useLangStore = defineStore('lang', () => {
                     }
                 break;
                 case 'skill':
-                    const data = await $fetch(`${mainStore.base_url}api/skill/${type}`)
+                    rawDataRequest = await $fetch(`${mainStore.base_url}api/skill/${targetType}`)
 
-                    const requestSkill = data as skillResponseModel
+                    const requestSkill = rawDataRequest as skillResponseModel
         
                     if(requestSkill.status === 200){
 
-                        for(let i=0; i <= requestSkill.data.length; i++){
-                            translationDetail.value.en[requestSkill.data[i].id] = {
+                        for(let i=0; i < requestSkill.data.length; i++){
+                            translationDetail.value.en[`${requestSkill.data[i].id}`] = {
                                 name: requestSkill.data[i].name,
                                 desc: requestSkill.data[i].effect.desc
                             }   
                             
-                            translationDetail.value.zh[requestSkill.data[i].id] = {
+                            translationDetail.value.zh[`${requestSkill.data[i].id}`] = {
                                 name: "",
                                 desc: ""
                             }
                         }
-
+                        console.log(translationDetail.value)
                     }
                 break;
             }
