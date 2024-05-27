@@ -12,16 +12,8 @@ export default defineEventHandler((event) => {
     try{
         let enFilePath = "", zhFilePath = ""
 
-        switch(type){
-            case "class":
-                enFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).split("_")[0]}_en.json`)
-                zhFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).split("_")[0]}_zh.json`)
-            break;
-            case "item": case "level": case "skill":
-                enFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).replace(".json", "_en.json")}`)
-                zhFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).replace(".json", "_zh.json")}`)
-            break;
-        }
+        enFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).replace(".json", "_en.json")}`)
+        zhFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).replace(".json", "_zh.json")}`)
         
         const enData = fs.readFileSync(enFilePath, { encoding: 'utf-8' })
         const zhData = fs.readFileSync(zhFilePath, { encoding: 'utf-8' })
