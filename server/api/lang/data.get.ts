@@ -17,28 +17,10 @@ export default defineEventHandler((event) => {
                 enFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).split("_")[0]}_en.json`)
                 zhFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).split("_")[0]}_zh.json`)
             break;
-            case "item": case "level":
+            case "item": case "level": case "skill":
                 enFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).replace(".json", "_en.json")}`)
                 zhFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).replace(".json", "_zh.json")}`)
             break;
-            case "skill":
-                // And more...
-                const statusKeyWord = {
-                    buff: /(foucs)/,
-                    debuff: /(poison)/
-                }
-
-                if(statusKeyWord.buff.test(String(name))){
-                    enFilePath = path.join(process.cwd(), `locale/${type}`, "buff_en.json")
-                    zhFilePath = path.join(process.cwd(), `locale/${type}`, "buff_zh.json")
-                }else if(statusKeyWord.debuff.test(String(name))){
-                    enFilePath = path.join(process.cwd(), `locale/${type}`, "debuff_en.json")
-                    zhFilePath = path.join(process.cwd(), `locale/${type}`, "debuff_zh.json")
-                }else{
-                    enFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).split("_")[1]}_en.json`)
-                    zhFilePath = path.join(process.cwd(), `locale/${type}`, `${String(name).split("_")[1]}_zh.json`)
-                }
-            break; 
         }
         
         const enData = fs.readFileSync(enFilePath, { encoding: 'utf-8' })
