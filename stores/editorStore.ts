@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { levleDataModel, levelDataResponse, levelAssetModel, levelAssetResponseModel, tileInfoModel, responseModel, levelEventModel } from '~/types/level'
+import type { levleDataModel, levelDataResponse, levelAssetModel, levelAssetResponseModel, tileInfoModel, responseModel, levelEventModel, animationAssetModel, audioAssetModel } from '~/types/level'
 import $api from '~/composables/useCustomFetch'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -39,13 +39,13 @@ export const useEditorStore = defineStore('editor', () => {
     })
 
     // Animation assets
-    // const animationAssets = ref({
-    //     class: [] as string[],
-    //     mob: [] as string[]
-    // })
+    const animationAssets = ref<animationAssetModel>({
+        class: [] as string[],
+        mob: [] as string[]
+    })
 
     // Audio assets
-    const audioAssets = ref({
+    const audioAssets = ref<audioAssetModel>({
         general: [] as string[],
         battle: [] as string[]
     })
@@ -182,9 +182,23 @@ export const useEditorStore = defineStore('editor', () => {
     }
 
     // Get animation assets
-    // const getAnimationAssets = (type: string) => {
+    const getAnimationAssets = () => {
+        if(process.client){
+            Object.entries(animationAssets.value).forEach(async(a) => {
+                const type = a[0]
 
-    // }
+                const animationRequest : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/animation?type=${type}`)
+
+                console.log(animationRequest)
+
+                if(animationRequest.status === 200){
+                    animationAssets.value[type as keyof animationAssetModel] = animationRequest.assets
+                }else{
+                    console.log(animationRequest.error)
+                }
+            })            
+        }
+    }
 
     /**
      * Push a new step to keep tracking
@@ -254,6 +268,12 @@ export const useEditorStore = defineStore('editor', () => {
         }
     }
 
+    /**
+     * Delete local asset
+     * @param target - The path of the asset to delete
+     * @param type - The type of the asset
+     * @returns - Request response
+     */
     const deleteAssets = async(target: string, type: string) => {
         try {
             let deleteRequest : responseModel = { status: 0 }
@@ -310,6 +330,7 @@ export const useEditorStore = defineStore('editor', () => {
         tileInfo,
         editEventIndex,
         audioAssets,
+        animationAssets,
         layers,
         configOptions,
         editorTheme,
@@ -324,6 +345,7 @@ export const useEditorStore = defineStore('editor', () => {
         getBattleAudioAsset,
         saveAsset,
         getImagesAssets,
-        deleteAssets
+        deleteAssets,
+        getAnimationAssets
     }
 })
