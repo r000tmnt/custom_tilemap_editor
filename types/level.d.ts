@@ -107,6 +107,7 @@ interface levleDataModel {
 interface levelAssetResponseModel{
     status: number
     assets: string[]
+    error?: {}
 }
 
 interface levelAssetModel {
@@ -115,6 +116,16 @@ interface levelAssetModel {
     class: string[]
     mob: string[]
     portrait: string[]
+}
+
+interface audioAssetModel {
+    general: string[]
+    battle: string[]
+}
+
+interface animationAssetModel {
+    class: string[]
+    mob: string[]
 }
 
 interface effectItemReferenceModel {
@@ -137,6 +148,8 @@ export {
     levelEventModel ,
     levelAssetModel,
     levelAssetResponseModel,
+    audioAssetModel,
+    animationAssetModel,
     tileInfoModel,
     eventItemModel,
     eventSceneModel,
