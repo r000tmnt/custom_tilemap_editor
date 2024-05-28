@@ -4,14 +4,12 @@ import path from 'node:path';
 export default defineEventHandler( async(event) => {
     // console.log("POST :>>>", event)
 
-    // const body = await readBody(event)
+    const body = await readBody(event)
 
-    // console.log("body :>>> ", body)
+    console.log("body :>>> ", body)
 
-    const { skill, type } = event.context.formidable.fields
-
-    // console.log(`${process.env.URL}${folder}`)
-
+    // const { skill, type } = event.context.formidable.fields
+    const { skill, type } = body
     try{
         const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}/skill/`,`skill_${type}.json`)
 

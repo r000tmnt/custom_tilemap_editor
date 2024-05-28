@@ -2,11 +2,12 @@ import fs from 'node:fs';
 
 export default defineEventHandler(async(event) => {
     // console.log("DELETE :>>>", event.context)
-    // const body = await readBody(event)
+    const body = await readBody(event)
 
-    // console.log("body :>>> ", body)
+    console.log("body :>>> ", body)
 
-    const { id } = event.context.formidable.fields
+    // const { id } = event.context.formidable.fields
+    const { id } = body
 
     try {
         fs.unlinkSync(`${process.env.DATA_PATH}/level/${id}.json`)

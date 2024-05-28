@@ -4,13 +4,12 @@ import path from 'node:path';
 export default defineEventHandler( async(event) => {
     // console.log("POST :>>>", event)
 
-    // const body = await readBody(event)
+    const body = await readBody(event)
 
-    // console.log("body :>>> ", body)
+    console.log("body :>>> ", body)
 
-    const { id, name, width, height } = event.context.formidable.fields
-
-    // console.log(`${process.env.URL}${folder}`)
+    // const { id, name, width, height } = event.context.formidable.fields
+    const { id, name, width, height } = body
 
     const newMap = []
 

@@ -2,13 +2,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export default defineEventHandler( async(event) => {
-    // console.log("POST :>>>", event)
+    console.log("POST :>>>", event)
 
-    // const body = await readBody(event)
+    const body = await readBody(event)
 
-    // console.log("body :>>> ", body)
+    console.log("body :>>> ", body)
 
-    const { item, type } = event.context.formidable.fields
+    // const { item, type } = event.context.formidable.fields
+    const { item, type } = body
 
     // console.log(`${process.env.URL}${folder}`)
 
