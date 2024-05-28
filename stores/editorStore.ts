@@ -214,33 +214,31 @@ export const useEditorStore = defineStore('editor', () => {
     const saveAsset = async(files: File[], type: string) => {
         const formData = new FormData()
 
-        files.forEach((file, index) => formData.append(String(index), file))
+        files.forEach((file, index) => {
+            console.log("file :>>>", file)
+            formData.append(String(index), file)
+        })
 
         formData.append("type", type)
 
         // const { data } = await useAsyncData('saveAsset', () => $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData }))
 
         if(!type.includes("audio")){
-            const { data } = await $api(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData })
-
-            const uploadResult : responseModel = data.value as responseModel
+            const uploadResult : responseModel = await $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData })
 
             console.log(uploadResult)
 
             if(uploadResult.status === 200){
-                const { data } = await $api(`${mainStore.base_url}api/asset/image?type=${type}`)
-
-                const request_assets : levelAssetResponseModel = data.value as levelAssetResponseModel
-                console.log("request:>>> ", request_assets)
+                const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${type}`)
                 console.log("request:>>> ", request_assets)
                 if(request_assets.status === 200){
                     assets.value[type as keyof levelAssetModel] = request_assets.assets
                 } 
-            }            
+            }     
+            
+            return uploadResult
         }else{
-            const { data } = await $api(`${mainStore.base_url}api/asset/audio`, { method: "POST", body: formData })
-
-            const uploadResult : responseModel = data.value as responseModel
+            const uploadResult : responseModel = await $fetch(`${mainStore.base_url}api/asset/audio`, { method: "POST", body: formData })
 
             const audioType = type === 'audio'? 'general' : 'battle'
 
@@ -251,6 +249,8 @@ export const useEditorStore = defineStore('editor', () => {
                     await getBattleAudioAsset()
                 }
             } 
+
+            return uploadResult
         }
     }
 
