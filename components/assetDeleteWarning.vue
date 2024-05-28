@@ -25,7 +25,6 @@ import { storeToRefs } from 'pinia';
 
 const { levelData, tileInfo } = storeToRefs(useEditorStore())
 const { assetsDelete } = storeToRefs(useDialogStore())
-const { saveLevelData } = useEditorStore()
 const { toggleDialog } = useDialogStore()
 
 const props = defineProps({
@@ -40,7 +39,6 @@ const emit = defineEmits(["deleteAsset"])
 const deleteAsset = () => {
     const eventIndex = levelData.value.event.findIndex(e => e.position.x === tileInfo.value.x && e.position.y === tileInfo.value.y)
     levelData.value.event.splice(eventIndex, 1)
-    saveLevelData()
     emit("deleteAsset")
     toggleDialog("assets-delete")
 }
