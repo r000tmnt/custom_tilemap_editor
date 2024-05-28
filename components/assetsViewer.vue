@@ -17,7 +17,7 @@
         @update:model-value="getFiles"
         ></v-file-input>
       
-        <v-row v-if="props.type !== 'audio'" class="pl-4">
+        <v-row v-if="!props.type.includes('audio')" class="pl-4">
           <v-col v-for="(img, index) in props.asset"
             :key="String(index)"
             class="d-flex child-flex m-2"
@@ -31,13 +31,18 @@
           </v-col>
         </v-row>
 
-        <div v-else
-          class="d-flex flex-wrap">
-          <vuetify-audio
-            v-for="(audio, index) in props.asset"
-            :file="audio"
-            color="success"
-          ></vuetify-audio>
+        <div v-else>
+          <template v-for="(audio, index) in props.asset"
+            :key="audio">
+            <v-btn 
+              icon="mdi-close-circle-outline" 
+              style="position: absolute; right: 0; z-index: 10"
+              @click="getAssetsToDelete(String(audio))"></v-btn>
+            <vuetify-audio
+              :file="audio"
+              color="success"
+            ></vuetify-audio>
+          </template>
         </div>
 
         <v-card-actions>
@@ -78,17 +83,33 @@ const emit = defineEmits(["getNewAssets"])
 
 const assetToDelete = ref<string>("")
 
-const getAssetsToDelete = (img: string) => {
-  console.log("img:>>> ", img)
-  assetToDelete.value = img.split("/")[4]
+const getAssetsToDelete = (asset: string) => {
+  console.log("asset:>>> ", asset)
+  const assetPathArray = asset.split("/")
+  assetToDelete.value = assetPathArray[assetPathArray.length - 1]
   console.log(assetToDelete.value)
   toggleDialog("assets-delete")
 }
 
 const deleteLocalAsset = () => {
   // Call store action
+  let assetPath = ""
+  switch(props.type){
+      case 'audio-general':
+          assetPath = "audio"
+      break;
+      case 'audio-battle':
+          assetPath = "audio/battle"
+      break;
+      case 'animation':
+      break;
+      default:
+          assetPath = `images/${props.type}`
+      break;
+    }
+
   deleteAssets(
-    `assets/${(props.type !== "audio")? `images/${props.type}` : "audio"}/${assetToDelete.value}`,
+    `assets/${assetPath}/${assetToDelete.value}`,
     props.type
   ).then((res) => {
     if(res?.status === 200){
