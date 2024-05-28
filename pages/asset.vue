@@ -13,7 +13,10 @@
                         <template v-slot:actions>
                             <v-btn color="secondary" 
                                 text="VIEW"
-                                @click="selectType(type)"></v-btn>
+                                @click="() => {
+                                    selectType(type);
+                                    toggleDialog('asset-viewer');
+                                }"></v-btn>
                         </template>
                     </v-card>
                 </v-col>                
@@ -22,7 +25,8 @@
         
         <assets-viewer v-if="assetViewer"
             :asset="assetToDisplay"
-            :type="selectedType" />
+            :type="selectedType"
+            @get-new-assets="selectType" />
     </section>
 </template>
 
@@ -56,8 +60,6 @@ const selectType = (type: string) => {
     }else{
         assetToDisplay.value = assets.value[type as keyof levelAssetModel]
     }
-
-    toggleDialog("asset-viewer")
 }
 
 onMounted(() => {
