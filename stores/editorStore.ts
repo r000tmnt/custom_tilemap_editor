@@ -254,6 +254,31 @@ export const useEditorStore = defineStore('editor', () => {
         }
     }
 
+    const deleteAssets = async(target: string, type: string) => {
+        try {
+            const deleteRequest : responseModel = await $fetch(`${mainStore.base_url}api/asset/image`, { method: 'DELETE', body: { target } })
+
+            console.log(deleteRequest)
+
+            if(deleteRequest.status === 200){
+                // Remove asset in store
+                if(target.includes("images")){
+                    const assetIndex = assets.value[type as keyof levelAssetModel].findIndex(a => a.includes(target))
+
+                    if(assetIndex >= 0){
+                        assets.value[type as keyof levelAssetModel].splice(assetIndex, 1)
+                    }
+                }else{
+                    // const assetIndex = audioAssets.value[type].findIndex(a => a === target)
+                }
+            }
+
+            return deleteRequest
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     /**
      * Save the latest changes of levelData
      */
@@ -295,6 +320,7 @@ export const useEditorStore = defineStore('editor', () => {
         getAudioAssets,
         getBattleAudioAsset,
         saveAsset,
-        getImagesAssets
+        getImagesAssets,
+        deleteAssets
     }
 })

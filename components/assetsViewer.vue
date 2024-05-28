@@ -60,7 +60,7 @@ import assetDeleteWarning from './assetDeleteWarning.vue';
 
 const { assetViewer, assetsDelete } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-const { saveAsset } = useEditorStore()
+const { saveAsset, deleteAssets } = useEditorStore()
 const { fileRules } = useRuleStore()
 
 const props = defineProps({
@@ -87,6 +87,14 @@ const getAssetsToDelete = (img: string) => {
 
 const deleteLocalAsset = () => {
   // Call store action
+  deleteAssets(
+    `assets/${(props.type !== "audio")? `images/${props.type}` : "audio"}/${assetToDelete.value}`,
+    props.type
+  ).then((res) => {
+    if(res?.status === 200){
+      emit("getNewAssets", props.type)
+    }
+  })
 }
 
 const getFiles = (files: File[]) => {
