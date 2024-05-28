@@ -26,7 +26,8 @@
             <v-img 
                 :src="String(img)"
                 aspect-ratio="1"
-                cover></v-img>
+                cover
+                @click="getAssetsToDelete(String(img))"></v-img>
           </v-col>
         </v-row>
 
@@ -43,6 +44,11 @@
             <v-btn @click="toggleDialog('asset-viewer')">CLOSE</v-btn>
         </v-card-actions>
         </v-card>
+
+        <asset-delete-warning 
+          v-if="assetsDelete" 
+          :name="assetToDelete"
+          @delete-asset="deleteLocalAsset" />
     </v-dialog>
 </template>
 
@@ -50,7 +56,9 @@
 import { storeToRefs } from 'pinia';
 import vuetifyAudio from "vuetify3-audio-player"
 
-const { assetViewer } = storeToRefs(useDialogStore())
+import assetDeleteWarning from './assetDeleteWarning.vue';
+
+const { assetViewer, assetsDelete } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { saveAsset } = useEditorStore()
 const { fileRules } = useRuleStore()
@@ -66,9 +74,20 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits([
-  "getNewAssets"
-])
+const emit = defineEmits(["getNewAssets"])
+
+const assetToDelete = ref<string>("")
+
+const getAssetsToDelete = (img: string) => {
+  console.log("img:>>> ", img)
+  assetToDelete.value = img.split("/")[4]
+  console.log(assetToDelete.value)
+  toggleDialog("assets-delete")
+}
+
+const deleteLocalAsset = () => {
+  // Call store action
+}
 
 const getFiles = (files: File[]) => {
     console.log("files :>>>", files)
