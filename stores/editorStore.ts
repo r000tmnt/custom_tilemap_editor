@@ -256,22 +256,25 @@ export const useEditorStore = defineStore('editor', () => {
 
     const deleteAssets = async(target: string, type: string) => {
         try {
-            const deleteRequest : responseModel = await $fetch(`${mainStore.base_url}api/asset/image`, { method: 'DELETE', body: { target } })
+            let deleteRequest : responseModel = { status: 0 }
+            if(target.includes("images")){
+                deleteRequest = await $fetch(`${mainStore.base_url}api/asset/image`, { method: 'DELETE', body: { target } })
 
-            console.log(deleteRequest)
+                console.log(deleteRequest)
 
-            if(deleteRequest.status === 200){
-                // Remove asset in store
-                if(target.includes("images")){
+                if(deleteRequest.status === 200){
+                    // Remove asset in store
                     const assetIndex = assets.value[type as keyof levelAssetModel].findIndex(a => a.includes(target))
 
                     if(assetIndex >= 0){
                         assets.value[type as keyof levelAssetModel].splice(assetIndex, 1)
                     }
-                }else{
-                    // const assetIndex = audioAssets.value[type].findIndex(a => a === target)
                 }
             }
+
+            if(target.includes("audio")){}
+
+            if(target.includes("audio/battle")){}
 
             return deleteRequest
         } catch (error) {
