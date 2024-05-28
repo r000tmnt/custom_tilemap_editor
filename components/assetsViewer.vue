@@ -66,10 +66,14 @@ const props = defineProps({
     }
 })
 
+const emit = defineEmits([
+  "getNewAssets"
+])
+
 const getFiles = (files: File[]) => {
     console.log("files :>>>", files)
 
-    let pass = null
+    let pass: boolean | null = null
 
     // Check image width & height
     for(let i=0; i < files.length; i++){
@@ -115,14 +119,19 @@ const getFiles = (files: File[]) => {
                   case 'audio':
                   break;
                 }
+
+                if(i === (files.length - 1) && pass === true){
+                    // Call action
+                    saveAsset(files, props.type).then((res) => {
+                      console.log("res:>>> ", res)
+
+                      if(res.status === 200){
+                        emit("getNewAssets", props.type)
+                      }
+                    })
+                }
             }
         }
-    }
-
-
-    if(pass){
-        // Call action
-        saveAsset(files, props.type)
     }
     // files.forEach(f => {
     //     levelData.value.assets.push()
