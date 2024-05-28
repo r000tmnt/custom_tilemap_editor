@@ -54,16 +54,25 @@ const selectedType = ref<string>("")
 const selectType = (type: string) => {
     selectedType.value = type
 
-    if(type === 'audio'){
-        assetToDisplay.value = Object.entries(audioAssets.value).map(au => au[1])
-        assetToDisplay.value = assetToDisplay.value.flat()
-    }else{
-        assetToDisplay.value = assets.value[type as keyof levelAssetModel]
+    switch(type){
+        case 'audio-general':
+            assetToDisplay.value = audioAssets.value.general.flat()
+        break;
+        case 'audio-battle':
+            assetToDisplay.value = audioAssets.value.battle.flat()
+        break;
+        case 'animation':
+        break;
+        default:
+            assetToDisplay.value = assets.value[type as keyof levelAssetModel]
+        break;
     }
 }
 
 onMounted(() => {
-    assetType.value.push('audio')
+    assetType.value.push('audio-general')
+    assetType.value.push('audio-battle')
+    assetType.value.push('animation')
 }) 
 
 onBeforeMount(() => {
