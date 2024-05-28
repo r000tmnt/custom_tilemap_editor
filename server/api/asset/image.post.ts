@@ -1,32 +1,53 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import formidable from 'formidable';
 
 export default defineEventHandler(async(event) => {
-    const { fields, files } = event.context.formidable;
-    
-    console.log("fields :>>>", fields)
-    console.log("files :>>>", files)
-    
-    // const body = await readBody(event)
+    const form = formidable({ multiples: true })
 
-    // console.log(body)
+    const result = new Promise((resolve, reject) => {
+        form.parse(event.node.req, (err, fields, files) => {
+            console.log("fields :>>>", fields)
+            // console.log("files :>>>", files)    
+            
+            if(err){
+                reject({ status: 500, error: err })
+            }
 
-    const { type } = fields
+            if(files){
+                let fileCount = 0
 
-    files.forEach((file: any) => {
-        console.log(file)
+                const loopFile = () => {
+                    const file = files[String(fileCount)]
 
-        const filePath = path.join(process.cwd(), `./public/assets/image/${type}`)
+                    if(file){
+                        // If file Exist
+                        console.log("file :>>>", file[0])
+                        const { filepath, originalFilename } = file[0]
+                        const { type } = fields
+                        const newfilePath = path.join(process.cwd(), `./public/assets/images/${type? type[0]: 'env'}`, originalFilename? originalFilename : `${String(Date.now())}.png`)
 
-        fs.writeFileSync(filePath, file)
-    });
+                        try {
+                            const rawData = fs.readFileSync(filepath)
+                            fs.writeFile(newfilePath, rawData, function(err){
+                                console.log("write file err:>>>", err)
+                            })
+                            fileCount += 1
+                            loopFile()                            
+                        } catch (error) {
+                            reject({ status: 500, error })
+                        }
+                    }else{
+                        // If file not exist
+                        resolve({ status: 200 })
+                    }
+                }
+                loopFile()
+            }
 
-    
+            // const { type } = fields
+        })
+    })
 
-    // const relativePath = path.relative(process.cwd(), "./public")
-    // const files = fs.readdirSync(`${relativePath}/assets/images/${type}`)
-    // const assets = files.map(file => `/assets/images/${type}/${file}`)
-
-    // return { status: 200, assets: assets.filter(a => a.includes(".png")) }
-    return { status: 200 }
+    return result
 })
