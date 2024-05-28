@@ -4,7 +4,7 @@
             <h3>ASSETS</h3>
         </div>
         
-        <div class="d-flex flex-wrap p-2 w-75 mx-auto">
+        <div class="d-flex flex-wrap p-2 w-75 mx-auto mt-4">
             <v-row>
                 <v-col v-for="type in assetType"
                     :key="type"
