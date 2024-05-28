@@ -41,10 +41,10 @@ import type { levelAssetModel } from '~/types/level';
 
 import assetsViewer from  '~/components/assetsViewer.vue'
 
-const { assets, audioAssets } = storeToRefs(useEditorStore())
+const { assets, audioAssets, animationAssets } = storeToRefs(useEditorStore())
 const { assetViewer } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-const { getImagesAssets, getAudioAssets, getBattleAudioAsset } = useEditorStore()
+const { getImagesAssets, getAudioAssets, getBattleAudioAsset, getAnimationAssets } = useEditorStore()
 
 const assetType = ref(Object.entries(assets.value).map(a => a[0]))
 
@@ -61,7 +61,11 @@ const selectType = (type: string) => {
         case 'audio-battle':
             assetToDisplay.value = audioAssets.value.battle.flat()
         break;
-        case 'animation':
+        case 'animation-class':
+            assetToDisplay.value = animationAssets.value.class.flat()
+        break;
+        case 'animation-mob':
+            assetToDisplay.value = animationAssets.value.mob.flat()
         break;
         default:
             assetToDisplay.value = assets.value[type as keyof levelAssetModel]
@@ -72,12 +76,14 @@ const selectType = (type: string) => {
 onMounted(() => {
     assetType.value.push('audio-general')
     assetType.value.push('audio-battle')
-    assetType.value.push('animation')
+    assetType.value.push('animation-class')
+    assetType.value.push('animation-mob')
 }) 
 
 onBeforeMount(() => {
     getImagesAssets()
     getAudioAssets()
     getBattleAudioAsset()
+    getAnimationAssets()
 })
 </script>
