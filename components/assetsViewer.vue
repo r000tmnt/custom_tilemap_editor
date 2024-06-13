@@ -18,17 +18,36 @@
         ></v-file-input>
       
         <v-row v-if="!props.type.includes('audio')" class="pl-4">
-          <v-col v-for="(img, index) in props.asset"
-            :key="String(index)"
-            class="d-flex child-flex m-2"
-            :cols="type === 'bg'? 4 : 1"
-            >
-            <v-img 
-                :src="String(img)"
-                aspect-ratio="1"
-                cover
-                @click="getAssetsToDelete(String(img))"></v-img>
-          </v-col>
+          <template v-if="props.type.includes('animation')">
+            <v-col v-for="(animation, key, index) in animationGroup"
+              cols="12">
+              <v-col cols="6">
+                <span>{{ key }}</span>
+                <v-img 
+                  :src="String(animation? animation[frameCounter[index]] : '')"
+                  aspect-ratio="1"
+                  width="32"
+                  height="32"
+                  cover></v-img>
+              </v-col>
+              <v-col class="ml-auto" cols="6">edit frames</v-col>              
+            </v-col>
+          </template>
+
+          <template v-else>
+            <v-col v-for="(img, index) in props.asset"
+              :key="String(index)"
+              class="d-flex child-flex m-2"
+              :cols="type === 'bg'? 4 : 1"
+              >
+              <v-img 
+                  :src="String(img)"
+                  aspect-ratio="1"
+                  cover
+                  @click="getAssetsToDelete(String(img))"></v-img>
+            </v-col>            
+          </template>
+
         </v-row>
 
         <div v-else>
@@ -58,10 +77,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia';
 import vuetifyAudio from "vuetify3-audio-player"
 
 import assetDeleteWarning from './assetDeleteWarning.vue';
+import type { PropType } from 'vue';
+import type { animation } from '~/types/animation'
 
 const { assetViewer, assetsDelete } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
@@ -70,8 +92,8 @@ const { fileRules } = useRuleStore()
 
 const props = defineProps({
     asset: {
-        type: Array,
-        default: []
+        type: Array as PropType<string[]>,
+        default: [] as string[]
     },
     type: {
         type: String,
@@ -82,6 +104,11 @@ const props = defineProps({
 const emit = defineEmits(["getNewAssets"])
 
 const assetToDelete = ref<string>("")
+
+const animationGroup = ref<animation>({})
+const animationFrames = ref<number[]>([])
+const frameCounter = ref<number[]>([])
+const animationInterval = ref<any>(null)
 
 const getAssetsToDelete = (asset: string) => {
   console.log("asset:>>> ", asset)
@@ -185,4 +212,46 @@ const getFiles = (files: File[]) => {
     //     levelData.value.assets.push()
     // })
 }
+
+onMounted(() => {
+  if(props.type.includes("animation")){
+    // Divide animations with the same name
+    for(let i=0; i < props.asset.length; i++){
+      const attribute = props.asset[i].split("_")[3]
+      if(animationGroup.value[`${attribute as keyof animation}`] !== undefined){
+        animationGroup.value[`${attribute as keyof animation}`]?.push(props.asset[i])
+      }else{
+        animationGroup.value[`${attribute as keyof animation}`] = [ props.asset[i] ]
+      }
+    }
+
+    // Gather frame count
+    for(let i=0, animations = Object.entries(animationGroup.value); i < animations.length; i++){
+      console.log("animations", animations[1])
+      console.log("animationslength", animations[1].length)
+      animationFrames.value.push(animations[1].length)
+      frameCounter.value.push(0)
+    }
+
+    // Play animation
+    setInterval(() => {
+      for(let i=0, animations = Object.entries(animationGroup); i < animations.length; i++){
+        console.log("frameCounter.value[i]", frameCounter.value[i])
+        console.log("animationFrames.value[i]", animationFrames.value[i] - 1)
+        if(frameCounter.value[i] === (animationFrames.value[i] - 1)){
+          frameCounter.value[i] = 0
+        }else{
+          frameCounter.value[i] += 1
+        }
+      }
+    }, 1000)
+  }
+})
+
+onBeforeUnmount(() => {
+  if(animationInterval.value !== null){
+    clearInterval(animationInterval.value)
+    animationInterval.value = null
+  }
+})
 </script>
