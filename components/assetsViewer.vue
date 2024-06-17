@@ -252,8 +252,8 @@ onMounted(() => {
     // Play animation
     setInterval(() => {
       for(let i=0, animations = Object.entries(animationGroup); i < animations.length; i++){
-        console.log("frameCounter.value[i]", frameCounter.value[i])
-        console.log("animationFrames.value[i]", animationFrames.value[i] - 1)
+        // console.log("frameCounter.value[i]", frameCounter.value[i])
+        // console.log("animationFrames.value[i]", animationFrames.value[i] - 1)
         if(frameCounter.value[i] === (animationFrames.value[i] - 1)){
           frameCounter.value[i] = 0
         }else{
