@@ -9,35 +9,30 @@
         title="Edit frame"
         width="500"
       >
-        <v-item-group class="d-flex mt-2" selected-class="selected">
+        <v-item-group id="frameGroup" class="d-flex mt-2" selected-class="selected">
             <v-item
                 v-for="(img, index) in props.frames"
                 :key="img" 
                 v-slot="{ isSelected, selectedClass, toggle }"
-                @group:selected="(v: any) => selectTile(v, index)">
+                @group:selected="(v: any) => selectTile(v, index)"
+                ref="frameItem">
                     <v-card
+                    class="ma-2"
                     :class="['d-flex align-center bg-grey', selectedClass]"
-                    :height="tileSize"
-                    :width="tileSize"
                     dark
                     :rounded="0"
                     @click="toggle"
                     >
-                        <!-- <div
-                            class="flex-grow-1 text-center"
-                        >
-                            {{ isSelected ? 'Selected' : 'Click Me!' }}
-                        </div> -->
                         <v-img 
-                            width="32" 
-                            height="32" 
+                            :width="tileSize" 
+                            :height="tileSize" 
                             alt="tile"
                             :src="img">
                         </v-img>
                     </v-card>
             </v-item>
             <v-item>
-                <v-btn density="compact" icon="mdi-plus" class="ml-2" @click="activeHiddenUploader"></v-btn>
+                <v-btn icon="mdi-plus" class="ml-2" @click="activeHiddenUploader"></v-btn>
                 <input accept="image/png"
                     class="opacity-0 w-0 h-0"
                     type="file"
@@ -55,8 +50,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import type { PropType } from 'vue';
+
+import Sortable from 'sortablejs'
+
 const { tileSize, base_url } = storeToRefs(useMainStore())
 const { editFrameDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
@@ -72,9 +70,22 @@ const emit = defineEmits(["clearSelectedAnmimation"])
 
 const hiddenUploader = ref<HTMLInputElement | null>(null)
 
+const frameItem = ref<HTMLDivElement | null>(null)
+
+const selectedIndex = ref<number>(-1)
+
+watch(() => frameItem.value, (newVal, oldVal) => {
+    console.log(newVal)
+    if(newVal){
+        const frameGroup = document.getElementById("frameGroup")
+        Sortable.create(frameGroup)
+    }
+})
+
 // Keep the selected tile
 const selectTile = (v:any, index:number) => {
     console.log(v)
+    selectedIndex.value = index
     // if(v.value){
 
     // }
@@ -96,6 +107,7 @@ const getFile = (e: Event) => {
 
 onMounted(() => {
     console.log(hiddenUploader.value)
+    console.log(frameItem.value)
 })
 </script>
 
