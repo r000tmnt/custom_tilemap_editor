@@ -30,7 +30,9 @@
                   height="32"
                   cover></v-img>
               </v-col>
-              <v-col class="ml-auto" cols="6">edit frames</v-col>              
+              <v-col class="ml-auto" cols="6">
+                <v-btn color="seconds" @click="getAnimation(key)">edit frames</v-btn>
+              </v-col>              
             </v-col>
           </template>
 
@@ -47,7 +49,8 @@
                   @click="getAssetsToDelete(String(img))"></v-img>
             </v-col>            
           </template>
-
+          <editFrame v-if="selectedAnimation.length" :frame="selectedAnimation" 
+          @clear-selected-anmimation="selectedAnimation.splice(0)"/>
         </v-row>
 
         <div v-else>
@@ -82,6 +85,8 @@ import { storeToRefs } from 'pinia';
 import vuetifyAudio from "vuetify3-audio-player"
 
 import assetDeleteWarning from './assetDeleteWarning.vue';
+import editFrame from "./editor/editFrame.vue"
+
 import type { PropType } from 'vue';
 import type { animation } from '~/types/animation'
 
@@ -109,6 +114,7 @@ const animationGroup = ref<animation>({})
 const animationFrames = ref<number[]>([])
 const frameCounter = ref<number[]>([])
 const animationInterval = ref<any>(null)
+const selectedAnimation = ref<string[]>([])
 
 const getAssetsToDelete = (asset: string) => {
   console.log("asset:>>> ", asset)
@@ -211,6 +217,16 @@ const getFiles = (files: File[]) => {
     // files.forEach(f => {
     //     levelData.value.assets.push()
     // })
+}
+
+const getAnimation = (key: string) => {
+  console.log(key)
+  const frames = animationGroup.value[key as keyof animation] 
+  if(frames !== undefined){
+    selectedAnimation.value = frames
+    console.log(selectedAnimation.value)
+    toggleDialog("edit-frame")
+  }
 }
 
 onMounted(() => {
