@@ -49,7 +49,7 @@
                   @click="getAssetsToDelete(String(img))"></v-img>
             </v-col>            
           </template>
-          <editFrame v-if="selectedAnimation.length" :frame="selectedAnimation" 
+          <editFrame v-if="selectedAnimation.length" :frames="selectedAnimation" 
           @clear-selected-anmimation="selectedAnimation.splice(0)"/>
         </v-row>
 
