@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { levleDataModel, levelDataResponse, levelAssetModel, levelAssetResponseModel, tileInfoModel, responseModel, levelEventModel, animationAssetModel, audioAssetModel } from '~/types/level'
+import type { animationSort } from '~/types/animation'
 import $api from '~/composables/useCustomFetch'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -200,6 +201,12 @@ export const useEditorStore = defineStore('editor', () => {
         }
     }
 
+    // Sort animation assets order
+    const sortAnimationAssets = async(data: animationSort) => {
+        const sortRequest = await $fetch(`${mainStore.base_url}api/asset/animationsort`, { method: "POST", body: data })
+        console.log(sortRequest)
+    }
+
     /**
      * Push a new step to keep tracking
      * @param step - A two dimentional array of number represend the tileMap
@@ -346,6 +353,7 @@ export const useEditorStore = defineStore('editor', () => {
         saveAsset,
         getImagesAssets,
         deleteAssets,
-        getAnimationAssets
+        getAnimationAssets,
+        sortAnimationAssets
     }
 })

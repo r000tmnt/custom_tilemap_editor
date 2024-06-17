@@ -7,6 +7,14 @@ interface animation {
     top?: string[]
 }
 
+interface animationSort {
+    oldIndex: number
+    newIndex: number
+    type: string
+    oldFileName: string
+}
+
 export {
-    animation
+    animation,
+    animationSort
 }

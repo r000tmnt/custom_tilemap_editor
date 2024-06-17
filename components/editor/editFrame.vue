@@ -33,6 +33,7 @@
             </v-item>
             <v-item>
                 <v-btn icon="mdi-plus" class="ml-2" @click="activeHiddenUploader"></v-btn>
+                <!-- <v-btn icon="mdi-trash-can" class="ml-auto" color="danger" @drop="deleteFrame"></v-btn> -->
                 <input accept="image/png"
                     class="opacity-0 w-0 h-0"
                     type="file"
@@ -55,9 +56,10 @@ import type { PropType } from 'vue';
 
 import Sortable from 'sortablejs'
 
-const { tileSize, base_url } = storeToRefs(useMainStore())
+const { tileSize } = storeToRefs(useMainStore())
 const { editFrameDialog } = storeToRefs(useDialogStore())
-const { toggleDialog } = useDialogStore()
+const { toggleDialog } = useDialogStore() 
+const { sortAnimationAssets } = useEditorStore()
 
 const props = defineProps({
     frames: {
@@ -78,7 +80,22 @@ watch(() => frameItem.value, (newVal, oldVal) => {
     console.log(newVal)
     if(newVal){
         const frameGroup = document.getElementById("frameGroup")
-        Sortable.create(frameGroup)
+        Sortable.create(frameGroup, {
+            onUpdate: async function (e: any) {
+                console.log("sorting update :>>>", e)
+                // Inform backend to change file orders
+                const { oldIndex, newIndex, explicitOriginalTarget } = e
+                console.log("oldIndex :>>>", oldIndex)
+                console.log("newIndex :>>>", newIndex)
+                const { currentSrc } = explicitOriginalTarget
+                const srcArr = currentSrc.split("/")
+                console.log("scrArr", srcArr)
+                const type = srcArr[5]
+                const oldFileName = srcArr[srcArr.length - 1]
+
+                await sortAnimationAssets({ oldIndex, newIndex, type, oldFileName })
+            }
+        })
     }
 })
 
@@ -104,6 +121,10 @@ const activeHiddenUploader = () => {
 const getFile = (e: Event) => {
     console.log("getFile :>>>", e)
 }
+
+// const deleteFrame = (e: Event) => {
+//     console.log("deleteFrame :>>>", e)
+// }
 
 onMounted(() => {
     console.log(hiddenUploader.value)
