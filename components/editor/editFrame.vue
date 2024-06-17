@@ -7,6 +7,7 @@
       <v-card
         class="pa-2"
         title="Edit frame"
+        width="500"
       >
         <v-item-group class="d-flex mt-2" selected-class="selected">
             <v-item
@@ -35,9 +36,17 @@
                         </v-img>
                     </v-card>
             </v-item>
+            <v-item>
+                <v-btn density="compact" icon="mdi-plus" class="ml-2" @click="activeHiddenUploader"></v-btn>
+                <input accept="image/png"
+                    class="opacity-0 w-0 h-0"
+                    type="file"
+                    ref="hiddenUploader"
+                    @change="getFile"></input>
+            </v-item>
         </v-item-group>  
         <v-card-actions>
-            <v-btn color="secondary" @click="cancelEdit">Cancel</v-btn>
+            <v-btn class="ml-auto" color="secondary" @click="cancelEdit">Cancel</v-btn>
         </v-card-actions>
     </v-card>
 </v-dialog>
@@ -46,7 +55,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import type { PropType } from 'vue';
 const { tileSize, base_url } = storeToRefs(useMainStore())
 const { editFrameDialog } = storeToRefs(useDialogStore())
@@ -61,6 +70,8 @@ const props = defineProps({
 
 const emit = defineEmits(["clearSelectedAnmimation"])
 
+const hiddenUploader = ref<HTMLInputElement | null>(null)
+
 // Keep the selected tile
 const selectTile = (v:any, index:number) => {
     console.log(v)
@@ -72,6 +83,20 @@ const selectTile = (v:any, index:number) => {
 const cancelEdit = () => {
     toggleDialog("edit-frame")
 }
+
+const activeHiddenUploader = () => {
+    if(hiddenUploader.value){
+        hiddenUploader.value.click()
+    }
+}
+
+const getFile = (e: Event) => {
+    console.log("getFile :>>>", e)
+}
+
+onMounted(() => {
+    console.log(hiddenUploader.value)
+})
 </script>
 
 <style scoped>
