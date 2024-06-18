@@ -25,9 +25,9 @@
 
             <!-- tilemap editor -->
             <main id="right"
-                class="pa-2 w-50 mx-auto overflow-x-auto overflow-y-auto">
+                class="pa-2 w-auto mx-auto overflow-x-auto overflow-y-auto">
                 <!-- map layer -->
-                <canvas 
+                <canvas class="mx-auto"
                     ref="canvasRef"
                     @mousedown="canvasEvent"
                 ></canvas>
