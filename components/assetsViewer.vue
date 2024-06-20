@@ -10,6 +10,7 @@
         title="View assets"
       >
       <v-file-input
+        v-if="!type.includes('animation')"
         label="Create asset"
         multiple
         :accept="type !== 'audio'? 'image/png' : 'audio/mp3, audio/wav'"
@@ -35,9 +36,12 @@
               </v-col>              
             </v-col>
 
-            <editFrame v-if="selectedAnimation.length" :frames="selectedAnimation" 
+            <editFrame v-if="selectedAnimation.length" 
+            :frames="selectedAnimation"
+            :type="props.type" 
             @clear-selected-anmimation="selectedAnimation.splice(0)"
-            @set-asset-to-delete="setAssetToDelete"/>
+            @set-asset-to-delete="setAssetToDelete"
+            @send-new-frames="setAnimationFrameName"/>
           </template>
 
           <template v-else>
@@ -82,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 import vuetifyAudio from "vuetify3-audio-player"
 
@@ -90,7 +94,7 @@ import assetDeleteWarning from './assetDeleteWarning.vue';
 import editFrame from "./editor/editFrame.vue"
 
 import type { PropType } from 'vue';
-import type { animation } from '~/types/animation'
+import type { animation, animationEditData } from '~/types/animation'
 
 const { assetViewer, assetsDelete } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
@@ -111,7 +115,7 @@ const props = defineProps({
 const emit = defineEmits(["getNewAssets"])
 
 const assetToDelete = ref<string>("")
-
+const animationKey = ref<string>("")
 const animationGroup = ref<animation>({})
 const animationFrames = ref<number[]>([])
 const frameCounter = ref<number[]>([])
@@ -159,7 +163,7 @@ const deleteLocalAsset = () => {
   })
 }
 
-const getFiles = (files: File[]) => {
+const getFiles = (files: File[], name?: string) => {
     console.log("files :>>>", files)
 
     let pass: boolean | null = null
@@ -194,7 +198,7 @@ const getFiles = (files: File[]) => {
                       }  
                     }
                   break;
-                  case 'env': case 'class': case 'mob':
+                  case 'env': case 'class': case 'mob': case 'animation-class': case 'animation-mob':
                     if(width > 64 || width < 8 && height < 8 || height > 64){
                         pass = false
                     }else{
@@ -211,7 +215,7 @@ const getFiles = (files: File[]) => {
 
                 if(i === (files.length - 1) && pass === true){
                     // Call action
-                    saveAsset(files, props.type).then((res) => {
+                    saveAsset(files, props.type, name).then((res) => {
                       console.log("res:>>> ", res)
 
                       if(res.status === 200){
@@ -222,23 +226,25 @@ const getFiles = (files: File[]) => {
             }
         }
     }
-    // files.forEach(f => {
-    //     levelData.value.assets.push()
-    // })
+}
+
+const setAnimationFrameName = (data: animationEditData) => {
+  const { files, name } = data
+  getFiles(files, name)
 }
 
 const getAnimation = (key: string) => {
   console.log(key)
+  animationKey.value = key
   const frames = animationGroup.value[key as keyof animation] 
-  if(frames !== undefined){
+  if(frames){
     selectedAnimation.value = frames
     console.log(selectedAnimation.value)
     toggleDialog("edit-frame")
   }
 }
 
-onMounted(() => {
-  if(props.type.includes("animation")){
+const setAnimationAssetToDisplay = () => {
     // Divide animations with the same name
     for(let i=0; i < props.asset.length; i++){
       const attribute = props.asset[i].split("_")[3]
@@ -257,8 +263,10 @@ onMounted(() => {
       frameCounter.value.push(0)
     }
 
+    if(animationInterval.value) clearInterval(animationInterval.value)
+
     // Play animation
-    setInterval(() => {
+    animationInterval.value = setInterval(() => {
       for(let i=0, animations = Object.entries(animationGroup); i < animations.length; i++){
         // console.log("frameCounter.value[i]", frameCounter.value[i])
         // console.log("animationFrames.value[i]", animationFrames.value[i] - 1)
@@ -269,6 +277,29 @@ onMounted(() => {
         }
       }
     }, 1000)
+
+    if(animationKey.value.length){
+      const frame = animationGroup.value[animationKey.value as keyof animation]
+      
+      if(frame){
+        selectedAnimation.value = frame
+      }
+    }
+}
+
+watch(() => props.asset, (newAssets, oldAssets) => {
+  console.log("newAssets :>>>", newAssets)
+  console.log("oldAssets :>>>", oldAssets)
+  if(newAssets.length > oldAssets.length){
+    // Reset object
+    animationGroup.value = {}
+    setAnimationAssetToDisplay()
+  }
+})
+
+onMounted(() => {
+  if(props.type.includes("animation")){
+    setAnimationAssetToDisplay()
   }
 })
 
