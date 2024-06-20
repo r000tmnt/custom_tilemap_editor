@@ -231,8 +231,9 @@ export const useEditorStore = defineStore('editor', () => {
      * Save image assets to folder
      * @param files - An array of image files
      * @param type - The type, the folder to store the asset
+     * @param name - Optional. If presented, the string will be use to rename to giving file
      */
-    const saveAsset = async(files: File[], type: string) => {
+    const saveAsset = async(files: File[], type: string, name?: string) => {
         const formData = new FormData()
 
         files.forEach((file, index) => {
@@ -242,7 +243,7 @@ export const useEditorStore = defineStore('editor', () => {
 
         formData.append("type", type)
 
-        // const { data } = await useAsyncData('saveAsset', () => $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData }))
+        if(name) formData.append("name", name)
 
         if(!type.includes("audio")){
             const uploadResult : responseModel = await $fetch(`${mainStore.base_url}api/asset/image`, { method: "POST", body: formData })
@@ -250,11 +251,20 @@ export const useEditorStore = defineStore('editor', () => {
             console.log(uploadResult)
 
             if(uploadResult.status === 200){
-                const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${type}`)
-                console.log("request:>>> ", request_assets)
-                if(request_assets.status === 200){
-                    assets.value[type as keyof levelAssetModel] = request_assets.assets
-                } 
+                if(!type.includes("animation")){
+                    const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/image?type=${type}`)
+                    console.log("request:>>> ", request_assets)
+                    if(request_assets.status === 200){
+                        assets.value[type as keyof levelAssetModel] = request_assets.assets
+                    }                     
+                }else{
+                    const animationType = type.split("-")[1]
+                    const request_assets : levelAssetResponseModel = await $fetch(`${mainStore.base_url}api/asset/animation?type=${animationType}`)
+                    console.log("request:>>> ", request_assets)
+                    if(request_assets.status === 200){
+                        animationAssets.value[animationType as keyof animationAssetModel] = request_assets.assets
+                    } 
+                }
             }     
             
             return uploadResult
