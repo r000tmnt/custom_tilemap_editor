@@ -14,7 +14,13 @@ interface animationSort {
     oldFileName: string
 }
 
+interface animationEditData {
+    files: file[]
+    name: string
+}
+
 export {
     animation,
-    animationSort
+    animationSort,
+    animationEditData
 }
