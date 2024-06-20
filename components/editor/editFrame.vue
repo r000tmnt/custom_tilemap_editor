@@ -39,6 +39,7 @@
                     class="opacity-0 w-0 h-0"
                     type="file"
                     ref="hiddenUploader"
+                    multiple
                     @change="getFile"></input>
             </v-item>
         </v-item-group>  
@@ -66,10 +67,14 @@ const props = defineProps({
     frames: {
         type: Array as PropType<string[]>,
         default: [] as string[]
+    },
+    type: {
+        type: String,
+        default: ""
     }
 })
 
-const emit = defineEmits(["clearSelectedAnmimation", "setAssetToDelete"])
+const emit = defineEmits(["clearSelectedAnmimation", "setAssetToDelete", "sendNewFrames", "animationToUpdate"])
 
 const hiddenUploader = ref<HTMLInputElement | null>(null)
 
@@ -134,6 +139,13 @@ const activeHiddenUploader = () => {
 
 const getFile = (e: Event) => {
     console.log("getFile :>>>", e)
+    const target = e.target as HTMLInputElement
+
+    if(target.files?.length){
+        const animationTypeArr = props.frames[0].split("_")
+        const name = `${props.type.split("-")[1]}_${animationTypeArr[1]}_${animationTypeArr[2]}_${animationTypeArr[3]}`
+        emit("sendNewFrames", { files: Array.from(target.files), name })
+    }
 }
 
 // const deleteFrame = (e: Event) => {
@@ -143,6 +155,7 @@ const getFile = (e: Event) => {
 onMounted(() => {
     console.log(hiddenUploader.value)
     console.log(frameItem.value)
+    console.log(props.type)
 })
 </script>
 
