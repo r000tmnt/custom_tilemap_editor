@@ -77,12 +77,15 @@ const frameItem = ref<HTMLDivElement | null>(null)
 
 const selectedIndex = ref<number>(-1)
 
+// Create sortable elements when images are loaded
 watch(() => frameItem.value, (newVal, oldVal) => {
     console.log(newVal)
     if(newVal){
         const frameGroup = document.getElementById("frameGroup")
         if(frameGroup !== null)
+            // Create sortable elements with options
             Sortable.create(frameGroup, {
+                // Fire an event on image order changes
                 onUpdate: async function (e: any) {
                     console.log("sorting update :>>>", e)
                     // Inform backend to change file orders
@@ -95,12 +98,14 @@ watch(() => frameItem.value, (newVal, oldVal) => {
                     const type = srcArr[5]
                     const oldFileName = srcArr[srcArr.length - 1]
 
+                    // Pass the new order to the store
                     await sortAnimationAssets({ oldIndex, newIndex, type, oldFileName })
                 }
             })
     }
 })
 
+// Get asset file name
 const getAssetsToDelete = (asset: string) => {
   console.log("asset:>>> ", asset)
   const assetPathArray = asset.split("/")
