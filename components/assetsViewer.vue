@@ -34,6 +34,10 @@
                 <v-btn color="seconds" @click="getAnimation(key)">edit frames</v-btn>
               </v-col>              
             </v-col>
+
+            <editFrame v-if="selectedAnimation.length" :frames="selectedAnimation" 
+            @clear-selected-anmimation="selectedAnimation.splice(0)"
+            @set-asset-to-delete="setAssetToDelete"/>
           </template>
 
           <template v-else>
@@ -49,8 +53,6 @@
                   @click="getAssetsToDelete(String(img))"></v-img>
             </v-col>            
           </template>
-          <editFrame v-if="selectedAnimation.length" :frames="selectedAnimation" 
-          @clear-selected-anmimation="selectedAnimation.splice(0)"/>
         </v-row>
 
         <div v-else>
@@ -116,11 +118,15 @@ const frameCounter = ref<number[]>([])
 const animationInterval = ref<any>(null)
 const selectedAnimation = ref<string[]>([])
 
+const setAssetToDelete = (asset: string) => {
+  assetToDelete.value = asset
+  console.log(assetToDelete.value)
+}
+
 const getAssetsToDelete = (asset: string) => {
   console.log("asset:>>> ", asset)
   const assetPathArray = asset.split("/")
-  assetToDelete.value = assetPathArray[assetPathArray.length - 1]
-  console.log(assetToDelete.value)
+  setAssetToDelete(assetPathArray[assetPathArray.length - 1])
   toggleDialog("assets-delete")
 }
 
@@ -129,15 +135,17 @@ const deleteLocalAsset = () => {
   let assetPath = ""
   switch(props.type){
       case 'audio-general':
-          assetPath = "audio"
+        assetPath = "audio"
       break;
       case 'audio-battle':
-          assetPath = "audio/battle"
+        assetPath = "audio/battle"
       break;
-      case 'animation':
+      case 'animation-class': case 'animation-mob':
+        const animationType = props.type.split("-")[1]
+        assetPath = `images/${animationType}/animation`
       break;
       default:
-          assetPath = `images/${props.type}`
+        assetPath = `images/${props.type}`
       break;
     }
 
