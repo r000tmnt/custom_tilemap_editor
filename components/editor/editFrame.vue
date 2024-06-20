@@ -27,7 +27,8 @@
                             :width="tileSize" 
                             :height="tileSize" 
                             alt="tile"
-                            :src="img">
+                            :src="img"
+                            @click="getAssetsToDelete(String(img))">
                         </v-img>
                     </v-card>
             </v-item>
@@ -68,7 +69,7 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(["clearSelectedAnmimation"])
+const emit = defineEmits(["clearSelectedAnmimation", "setAssetToDelete"])
 
 const hiddenUploader = ref<HTMLInputElement | null>(null)
 
@@ -80,24 +81,32 @@ watch(() => frameItem.value, (newVal, oldVal) => {
     console.log(newVal)
     if(newVal){
         const frameGroup = document.getElementById("frameGroup")
-        Sortable.create(frameGroup, {
-            onUpdate: async function (e: any) {
-                console.log("sorting update :>>>", e)
-                // Inform backend to change file orders
-                const { oldIndex, newIndex, explicitOriginalTarget } = e
-                console.log("oldIndex :>>>", oldIndex)
-                console.log("newIndex :>>>", newIndex)
-                const { currentSrc } = explicitOriginalTarget
-                const srcArr = currentSrc.split("/")
-                console.log("scrArr", srcArr)
-                const type = srcArr[5]
-                const oldFileName = srcArr[srcArr.length - 1]
+        if(frameGroup !== null)
+            Sortable.create(frameGroup, {
+                onUpdate: async function (e: any) {
+                    console.log("sorting update :>>>", e)
+                    // Inform backend to change file orders
+                    const { oldIndex, newIndex, explicitOriginalTarget } = e
+                    console.log("oldIndex :>>>", oldIndex)
+                    console.log("newIndex :>>>", newIndex)
+                    const { currentSrc } = explicitOriginalTarget
+                    const srcArr = currentSrc.split("/")
+                    console.log("scrArr", srcArr)
+                    const type = srcArr[5]
+                    const oldFileName = srcArr[srcArr.length - 1]
 
-                await sortAnimationAssets({ oldIndex, newIndex, type, oldFileName })
-            }
-        })
+                    await sortAnimationAssets({ oldIndex, newIndex, type, oldFileName })
+                }
+            })
     }
 })
+
+const getAssetsToDelete = (asset: string) => {
+  console.log("asset:>>> ", asset)
+  const assetPathArray = asset.split("/")
+  emit("setAssetToDelete", assetPathArray[assetPathArray.length - 1])
+  toggleDialog("assets-delete")
+}
 
 // Keep the selected tile
 const selectTile = (v:any, index:number) => {
