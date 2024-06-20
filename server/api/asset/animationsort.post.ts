@@ -1,6 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+import getFrame from '~/server/utils/getFrame'
+
 export default defineEventHandler(async(event) => {
     const body = await readBody(event)
 
@@ -16,7 +18,7 @@ export default defineEventHandler(async(event) => {
         const relativePath = path.relative(process.cwd(), "./public")
         const pathPrefix = `${relativePath}/assets/images/${type}/animation`
         // Get files with simillar name
-        const frames = fs.readdirSync(pathPrefix).filter(files => files.includes(level))
+        const frames = getFrame(pathPrefix, level)
 
         const fileToExchange1 = `${pathPrefix}/${animationTypeArr[0]}_${animationTypeArr[1]}_${animationTypeArr[2]}_${animationTypeArr[3]}_${newIndex + 1}.png`
 
