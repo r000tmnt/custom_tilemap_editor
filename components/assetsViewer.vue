@@ -257,9 +257,9 @@ const setAnimationAssetToDisplay = () => {
 
     // Gather frame count
     for(let i=0, animations = Object.entries(animationGroup.value); i < animations.length; i++){
-      console.log("animations", animations[1])
-      console.log("animationslength", animations[1].length)
-      animationFrames.value.push(animations[1].length)
+      console.log("animations", animations[i][1])
+      console.log("animationslength", animations[i][1].length)
+      animationFrames.value.push(animations[i][1].length)
       frameCounter.value.push(0)
     }
 
@@ -267,7 +267,7 @@ const setAnimationAssetToDisplay = () => {
 
     // Play animation
     animationInterval.value = setInterval(() => {
-      for(let i=0, animations = Object.entries(animationGroup); i < animations.length; i++){
+      for(let i=0, animations = Object.entries(animationGroup.value); i < animations.length; i++){
         // console.log("frameCounter.value[i]", frameCounter.value[i])
         // console.log("animationFrames.value[i]", animationFrames.value[i] - 1)
         if(frameCounter.value[i] === (animationFrames.value[i] - 1)){
@@ -307,6 +307,7 @@ onBeforeUnmount(() => {
   if(animationInterval.value !== null){
     clearInterval(animationInterval.value)
     animationInterval.value = null
+    animationGroup.value = {}
   }
 })
 </script>
