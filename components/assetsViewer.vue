@@ -9,79 +9,85 @@
         width="500"
         title="View assets"
       >
-      <v-file-input
-        v-if="!type.includes('animation')"
-        label="Create asset"
-        multiple
-        :accept="type !== 'audio'? 'image/png' : 'audio/mp3, audio/wav'"
-        :rules="fileRules"
-        @update:model-value="getFiles"
-        ></v-file-input>
-      
-        <v-row v-if="!props.type.includes('audio')" class="pl-4">
-          <template v-if="props.type.includes('animation')">
-            <v-col v-for="(animation, key, index) in animationGroup"
-              cols="12">
-              <v-col cols="6">
-                <span>{{ key }}</span>
-                <v-img 
-                  :src="String(animation? animation[frameCounter[index]] : '')"
-                  aspect-ratio="1"
-                  width="32"
-                  height="32"
-                  cover></v-img>
+        <v-card-text>
+          <v-file-input
+          v-if="!type.includes('animation')"
+          label="Create asset"
+          multiple
+          :accept="type !== 'audio'? 'image/png' : 'audio/mp3, audio/wav'"
+          :rules="fileRules"
+          @update:model-value="getFiles"
+          ></v-file-input>
+
+          <v-btn prepend-icon="mdi-plus-box" color="primary" >Create animation</v-btn>
+        
+          <v-row v-if="!props.type.includes('audio')" class="pl-4 mt-2">
+            <template v-if="props.type.includes('animation')">
+              <v-col v-for="(animation, key, index) in animationGroup"
+                cols="12" class="px-0">
+                <v-row>
+                  <v-col cols="6">
+                    <span>{{ key }}</span>
+                    <v-img 
+                      :src="String(animation? animation[frameCounter[index]] : '')"
+                      aspect-ratio="1"
+                      width="32"
+                      height="32"
+                      cover></v-img>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-btn color="secondary" @click="getAnimation(key)">Edit frames</v-btn>
+                  </v-col>                     
+                </v-row>
               </v-col>
-              <v-col class="ml-auto" cols="6">
-                <v-btn color="seconds" @click="getAnimation(key)">edit frames</v-btn>
-              </v-col>              
-            </v-col>
 
-            <editFrame v-if="selectedAnimation.length" 
-            :frames="selectedAnimation"
-            :type="props.type" 
-            @clear-selected-anmimation="selectedAnimation.splice(0)"
-            @set-asset-to-delete="setAssetToDelete"
-            @send-new-frames="setAnimationFrameName"/>
-          </template>
+              <editFrame v-if="selectedAnimation.length" 
+              :frames="selectedAnimation"
+              :type="props.type" 
+              @clear-selected-anmimation="selectedAnimation.splice(0)"
+              @set-asset-to-delete="setAssetToDelete"
+              @send-new-frames="setAnimationFrameName"/>
+            </template>
 
-          <template v-else>
-            <v-col v-for="(img, index) in props.asset"
-              :key="String(index)"
-              class="d-flex child-flex m-2"
-              :cols="type === 'bg'? 4 : 1"
-              >
-              <v-img 
-                  :src="String(img)"
-                  aspect-ratio="1"
-                  cover
-                  @click="getAssetsToDelete(String(img))"></v-img>
-            </v-col>            
-          </template>
-        </v-row>
+            <template v-else>
+              <v-col v-for="(img, index) in props.asset"
+                :key="String(index)"
+                class="d-flex child-flex m-2"
+                :cols="type === 'bg'? 4 : 1"
+                >
+                <v-img 
+                    :src="String(img)"
+                    aspect-ratio="1"
+                    cover
+                    @click="getAssetsToDelete(String(img))"></v-img>
+              </v-col>            
+            </template>
+          </v-row>
 
-        <div v-else>
-          <template v-for="(audio, index) in props.asset"
-            :key="audio">
-            <v-btn 
-              icon="mdi-close-circle-outline" 
-              style="position: absolute; right: 0; z-index: 10"
-              @click="getAssetsToDelete(String(audio))"></v-btn>
-            <vuetify-audio
-              :file="audio"
-              color="success"
-            ></vuetify-audio>
-          </template>
-        </div>
-
+          <div v-else>
+            <template v-for="(audio, index) in props.asset"
+              :key="audio">
+              <v-btn 
+                icon="mdi-close-circle-outline" 
+                style="position: absolute; right: 0; z-index: 10"
+                @click="getAssetsToDelete(String(audio))"></v-btn>
+              <vuetify-audio
+                :file="audio"
+                color="success"
+              ></vuetify-audio>
+            </template>
+          </div>
+        </v-card-text>
+        
         <v-card-actions>
             <v-btn @click="toggleDialog('asset-viewer')">CLOSE</v-btn>
         </v-card-actions>
-        </v-card>
+      </v-card>
 
-        <asset-delete-warning 
-          v-if="assetsDelete" 
-          :name="assetToDelete"
-          @delete-asset="deleteLocalAsset" />
+      <asset-delete-warning 
+        v-if="assetsDelete" 
+        :name="assetToDelete"
+        @delete-asset="deleteLocalAsset" />
     </v-dialog>
 </template>
 
