@@ -19,7 +19,7 @@
           @update:model-value="getFiles"
           ></v-file-input>
 
-          <v-btn v-else prepend-icon="mdi-plus-box" color="primary" >Create animation</v-btn>
+          <v-btn v-else prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('create-animation')">Create animation</v-btn>
         
           <v-row v-if="!props.type.includes('audio')" class="pl-4 mt-2">
             <template v-if="props.type.includes('animation')">
@@ -40,6 +40,8 @@
                   </v-col>                     
                 </v-row>
               </v-col>
+
+              <addFrame v-if="createAnimation" :type="props.type.split('-')[1]"></addFrame>
 
               <editFrame v-if="selectedAnimation.length" 
               :frames="selectedAnimation"
@@ -100,11 +102,12 @@ import vuetifyAudio from "vuetify3-audio-player"
 
 import assetDeleteWarning from './assetDeleteWarning.vue';
 import editFrame from "./editor/editFrame.vue"
+import addFrame from './editor/addFrame.vue';
 
 import type { PropType } from 'vue';
 import type { animation, animationEditData } from '~/types/animation'
 
-const { assetViewer, assetsDelete } = storeToRefs(useDialogStore())
+const { assetViewer, assetsDelete, createAnimation } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { saveAsset, deleteAssets } = useEditorStore()
 const { fileRules } = useRuleStore()
