@@ -19,7 +19,7 @@
           @update:model-value="getFiles"
           ></v-file-input>
 
-          <v-btn prepend-icon="mdi-plus-box" color="primary" >Create animation</v-btn>
+          <v-btn v-else prepend-icon="mdi-plus-box" color="primary" >Create animation</v-btn>
         
           <v-row v-if="!props.type.includes('audio')" class="pl-4 mt-2">
             <template v-if="props.type.includes('animation')">
@@ -53,11 +53,13 @@
               <v-col v-for="(img, index) in props.asset"
                 :key="String(index)"
                 class="d-flex child-flex m-2"
-                :cols="type === 'bg'? 4 : 1"
+                :cols="type === 'bg' || type === 'portrait'? 4 : 1"
                 >
                 <v-img 
                     :src="String(img)"
                     aspect-ratio="1"
+                    :width="props.type.includes('bg') || props.type.includes('portrait')? 100 : 32"
+                    :height="props.type.includes('bg') || props.type.includes('portrait')? 100 : 32"
                     cover
                     @click="getAssetsToDelete(String(img))"></v-img>
               </v-col>            
