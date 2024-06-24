@@ -12,7 +12,7 @@ export default defineEventHandler( async(event) => {
     try{
         const filePath = path.join(process.cwd(), `${process.env.DATA_PATH}/level/`,`${id}.json`)
 
-        fs.writeFileSync(filePath, JSON.stringify(event.context.formidable.fields))
+        fs.writeFileSync(filePath, JSON.stringify(body))
 
         return { status: 200 }
     }catch(err){
