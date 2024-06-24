@@ -4,7 +4,7 @@
         border="md"
         rounded
         elevation="12"
-        :style="`top: ${props.y}px; left: ${props.x}px`"
+        :style="`top: ${props.y}px; left: ${props.x}px; max-height: 310px; over-flow-y: auto`"
         v-if="contextMenu"
         style="z-index: 10">
         <v-list-group value="Set starting point"
