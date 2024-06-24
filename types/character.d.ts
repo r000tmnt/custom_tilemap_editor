@@ -27,12 +27,17 @@ interface mobDataModel extends characterDataModel {
 }
 
 interface mobResponseModel extends responseModel {
-    mobs: mobDataModel[]
+    data: mobDataModel[]
+}
+
+interface classResponseModel extends responseModel{
+    data: classDataModel[]
 }
 
 export{
     itemDropModel,
     classDataModel,
     mobDataModel,
-    mobResponseModel
+    mobResponseModel,
+    classResponseModel
 }
