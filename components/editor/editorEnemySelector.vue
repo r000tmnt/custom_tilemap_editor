@@ -45,19 +45,20 @@ import type { mobDataModel } from '~/types/character';
 const { enemySelector } = storeToRefs(useDialogStore())
 const { assets, levelData, tileInfo } = storeToRefs(useEditorStore())
 const { mobs } = storeToRefs(useCharacterStore())
-const { tileSize } = storeToRefs(useMainStore())
+// const { tileSize } = storeToRefs(useMainStore())
 const { toggleDialog } = useDialogStore()
 
 const emit = defineEmits(["setMob"])
 
 const setMob = (mob: mobDataModel) => {
-    levelData.value.enemy.push({ startingPoint: { x: Math.floor(tileInfo.value.x / tileSize.value), y: Math.floor(tileInfo.value.y / tileSize.value) } })
+    // levelData.value.enemy.push({ startingPoint: { x: Math.floor(tileInfo.value.x / tileSize.value), y: Math.floor(tileInfo.value.y / tileSize.value) } })
     emit("setMob", mob)
+    cancelSetMobStartingPoint()
 }
 
 const cancelSetMobStartingPoint = () => {
     // Remove the latest append object
-    levelData.value.enemy.pop()
+    // levelData.value.enemy.pop()
     toggleDialog('enemy-starting-point')
 }
 </script>
