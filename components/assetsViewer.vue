@@ -220,7 +220,8 @@ const getFiles = (files: File[], name?: string) => {
                       }  
                     }
                   break;
-                  case 'audio':
+                  case 'audio-general': case 'audio-battle':
+                    pass = true
                   break;
                 }
 
