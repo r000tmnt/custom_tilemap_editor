@@ -2,12 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export default defineEventHandler( async(event) => {
-    const body = await readBody(event)
+    const pathPrefix = `${process.env.DATA_PATH}/skill/`
+    // Get the list of skill data file
+    const skill = fs.readdirSync(pathPrefix)
 
-    console.log("body :>>> ", body)
-
-    // const { items } = event.context.formidable.fields
-    const { skill, type } = body
+    console.log(skill)
 
     // Check if folder exist
     if(!fs.existsSync(`${process.env.OUTPUT_PATH}/dataBase`)){
@@ -18,24 +17,20 @@ export default defineEventHandler( async(event) => {
         fs.mkdirSync(`${process.env.OUTPUT_PATH}/dataBase/skill/`)
     }
 
-    if(type.legnth){
-        try{
-            for(let i=0; i < skill.length; i++){
-                const newLevel = `export default {
-                    data: [${skill[i]}]
-                }
-                `     
-                
-                const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/skill/`,`skill_${type}.js`)
-                fs.appendFileSync(filePath, newLevel)
-            }
+    try{
+        for(let i=0; i < skill.length; i++){
+            const content = fs.readFileSync(`${pathPrefix}${skill[i]}`, { encoding: "utf-8" })
 
-            return { status: 200 }
-        }catch(err){
-            console.log(err)
-            return { status: 500, err }
+            const newLevel = `export default {
+                data: ${content}
+            }
+            `     
+            
+            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/skill/`, skill[i])
+            fs.appendFileSync(filePath, newLevel)
         }
-    }else{
+
+        // Generate the collector file
         try{
             for(let i=0; i < skill.length; i++){
                 const newLevel = `import skill_sword from "./skill_sword"
@@ -51,7 +46,7 @@ export default defineEventHandler( async(event) => {
                 }
                 `     
                 
-                const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/skill/`,`skill.js`)
+                const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,`skill.js`)
                 fs.appendFileSync(filePath, newLevel)
             }
 
@@ -59,6 +54,11 @@ export default defineEventHandler( async(event) => {
         }catch(err){
             console.log(err)
             return { status: 500, err }
-        }
+        }            
+        // return { status: 200 }
+    }catch(err){
+        console.log(err)
+        return { status: 500, err }
     }
+
 })
