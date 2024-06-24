@@ -91,6 +91,8 @@ export default defineEventHandler(async(event) => {
                         loopFile()
                     }
                 }
+            }else{
+                reject({ status: 500, error: "type is not defined" })
             }
         })
     })
