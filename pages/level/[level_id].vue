@@ -81,7 +81,6 @@ const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
 const pointedSpot = ref({ x: 0, y: 0, row: 0, col: 0 })
-const column = ref<number[]>([3, 6, 3])
 const mouseTraker = ref<eventPositionModel[]>([])
 
 const redrawContentOnTile = (originalX: number, originalY: number, x: number, y: number) => {
@@ -103,20 +102,21 @@ const redrawContentOnTile = (originalX: number, originalY: number, x: number, y:
     const event = getEventsonTile(x, y)
 
     if(event.events.length){
-        drawPoint({ x, y, type: 4 })
+        const eventIndex = levelData.value.event.findIndex(e => e.position.x === x && e.position.y === y)
+        drawPoint({ x, y, type: 4 }, eventIndex)
     }
 
-    const player = levelData.value.player.find(p => p.startingPoint.x === y && p.startingPoint.y === x)
-    const enemy = levelData.value.enemy.find(p => p.startingPoint.x === y && p.startingPoint.y === x)
+    const player = levelData.value.player.find(p => p.startingPoint.x === x && p.startingPoint.y === y)
+    const enemy = levelData.value.enemy.find(p => p.startingPoint.x === x && p.startingPoint.y === y)
 
     if(player){
         drawPoint({ x, y, type: 2 })
-        drawCharacterIcon({ x: originalX, y: originalY, type: 2 })
+        // drawCharacterIcon({ x: originalX, y: originalY, type: 2 })
     }
 
     if(enemy){
         drawPoint({ x, y, type: 3 })
-        drawCharacterIcon({ x: originalX, y: originalY, type: 3 })
+        // drawCharacterIcon({ x: originalX, y: originalY, type: 3 })
     }
 
     context.value.strokeStyle = "rgb(211, 211, 211)"
@@ -339,7 +339,7 @@ const changeLayuout = (v: any) => {
                 for(let i=0, player = levelData.value.player; i < player.length; i++){
                     const { x, y } = player[i].startingPoint
                     const asset = tiles.value.find(t => t.src.includes("fighter"))
-                    context.value.drawImage(asset, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+                    // context.value.drawImage(asset, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
                     drawPoint({ x, y, type: 2 })
                 }
 
@@ -347,7 +347,7 @@ const changeLayuout = (v: any) => {
                     const { job } = enemy[i]
                     const { x, y } = enemy[i].startingPoint
                     const asset = tiles.value.find(t => t.src.includes(job? job : 'zombie'))
-                    context.value.drawImage(asset, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
+                    // context.value.drawImage(asset, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
                     drawPoint({ x, y, type: 3 })
                 }
             }
@@ -356,7 +356,7 @@ const changeLayuout = (v: any) => {
                 for(let i=0, event = levelData.value.event; i < event.length; i++){
                     if(Object.entries(event[i].position).length){
                         const { x, y } = event[i].position
-                        drawPoint({ x, y, type: 4 })
+                        drawPoint({ x, y, type: 4 }, i)
                     }
                 }
             }
@@ -366,7 +366,7 @@ const changeLayuout = (v: any) => {
 }
 
 
-const drawPoint = (v: any) => {    
+const drawPoint = (v: any, index?: number) => {    
     const { type, x, y } = v
 
     context.value.save()
@@ -387,24 +387,47 @@ const drawPoint = (v: any) => {
 
     context.value.fillRect(x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
     context.value.restore()
+    drawCharacterIcon(v, index)
 }
 
-const drawCharacterIcon = (v:any) => {
+const drawCharacterIcon = (v:any, index?: number) => {
     const { x, y, type } = v
 
-    const icon = (type === 2)? "class/class_fighter_1" : "mob/mob_zombie_1"
+    let icon = ""
+
+    switch(type){
+        case 2:
+            icon = "class/class_fighter_1" 
+        break;
+        case 3:
+            icon = "mob/mob_zombie_1"
+        break;
+        case 4:
+            if(index){
+                if(levelData.value.event[index].item.length)
+                    icon = "env/item"
+            }else{
+                icon = ""
+            }
+        break
+    }
+
+    console.log(type)
+    console.log(icon)
 
     const tile = tiles.value.find(t => t.src.includes(icon))
 
-    if(tile){
-        context.value.drawImage(tile, x, y, tileSize.value, tileSize.value)
+    console.log(tile)
+
+    if(tile && icon.length){
+        context.value.drawImage(tile, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
     }else{
         const img = document.createElement('img')
         img.src = `/assets/images/${icon}.png`
         // console.log(img)
         
         img.onload = () => {
-            context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
+            context.value.drawImage(img, x * tileSize.value, y * tileSize.value, tileSize.value, tileSize.value)
         }
 
         tiles.value.push(img)
@@ -483,20 +506,11 @@ const drawCanvas = () => {
                         context.value.drawImage(img, x, y, tileSize.value, tileSize.value)
                     }
                 }
-
-                if(levelData.value.player.find(p => p.startingPoint.x === j && p.startingPoint.y === i)){
-                    drawCharacterIcon({ x, y, type: 2 })
-                }
-
-                if(levelData.value.enemy.find(e => e.startingPoint.x === j && e.startingPoint.y === i)){
-                    drawCharacterIcon({ x, y, type: 3 })
-                }
             }
         }
 
         for(let i=0, event = levelData.value.event; i < event.length; i++){
-            const { x, y } = event[i].position
-            drawPoint({ type: 4, x, y })
+            drawPoint({ type: 4, ...event[i].position }, i)
         }
 
         for(let i=0, player = levelData.value.player; i < player.length; i++){
