@@ -18,6 +18,10 @@
         <v-list-item 
             :class="{'disabled': pointType < 2}"
             @click="removeStartingPoint">Remove starting point</v-list-item>
+        <v-list-item
+            :class="{'disabled': ifEventExist}">Copy event</v-list-item>
+        <v-list-item
+            :class="{'disabled': eventClipBoard === null}">Paste event</v-list-item>
         <v-list-item @click="clearMap">Clear tiles on the map</v-list-item>
         <v-list-item @click="toggleDialog('map-expander')">Expand map</v-list-item>
     </v-list>
@@ -27,22 +31,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia';
 import type { mobDataModel } from '~/types/character';
-
+import type { levelEventModel } from '~/types/level';
 // Components
 import eventEnemySelector from './editorEnemySelector.vue'
 import editorMapExpander from './editorMapExpander.vue'
 
+
 const { contextMenu, mapExpander, enemySelector } = storeToRefs(useDialogStore())
 const { levelData } = storeToRefs(useEditorStore())
-const { saveLevelData, storeSteps } = useEditorStore()
+const { saveLevelData, storeSteps, getEventsonTile } = useEditorStore()
 const { getMobData } = useCharacterStore()
 const { toggleDialog } = useDialogStore()
 
 const pointType = ref<number>(-1)
 const pointer = ref<number>(-1)
+const eventClipBoard = ref<levelEventModel | null>(null)
+
+// Check if the tile is binded with event
+const ifEventExist = computed(() => {
+    const tile = getEventsonTile(props.col, props.row)
+    console.log(tile)
+    return tile.events.length === 0
+})
 
 const props = defineProps({
     x: {
@@ -66,6 +79,8 @@ const props = defineProps({
 const emit = defineEmits([
     "setStartingPoint",
     "removeStartingPoint",
+    "copyEvent",
+    "pasteEvent",
     "clearAll",
     "expandMap"
 ])
