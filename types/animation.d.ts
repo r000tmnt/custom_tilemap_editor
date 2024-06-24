@@ -1,12 +1,7 @@
 import { animationSort } from '~/types/animation';
 import type responseModel from './serverResponse';
 interface animation {
-    attack?: string[]
-    down?: string[]
-    idle?: string[]
-    left?: string[]
-    right?: string[]
-    top?: string[]
+    [key: string]: string[]
 }
 
 interface animationSort {
