@@ -9,6 +9,15 @@ export default defineEventHandler( async(event) => {
     // const { items } = event.context.formidable.fields
     const { items, type } = body
 
+    // Check if folder exist
+    if(!fs.existsSync(`${process.env.OUTPUT_PATH}/dataBase`)){
+        fs.mkdirSync(`${process.env.OUTPUT_PATH}/dataBase`)
+    }
+
+    if(!fs.existsSync(`${process.env.OUTPUT_PATH}/dataBase/item/`)){
+        fs.mkdirSync(`${process.env.OUTPUT_PATH}/dataBase/item/`)
+    }
+
     try{
         for(let i=0; i < items.length; i++){
             const newLevel = `import { t } from '../../utils/i18n'
