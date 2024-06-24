@@ -104,28 +104,27 @@ const setStartingPoint = (type: number) => {
         //TODO - Select enemy
         getMobData()
         toggleDialog("enemy-starting-point")
-        emit("setStartingPoint", { x: props.col, y: props.row, type })
+        // emit("setStartingPoint", { x: props.col, y: props.row, type })
     }
 }
 
 const setMobStartingPoint = (mob: mobDataModel) => {
-    levelData.value.enemy[levelData.value.enemy.length - 1].job = mob.id
-    levelData.value.enemy[levelData.value.enemy.length - 1].name = mob.name
+    levelData.value.enemy.push({ job: mob.id, name: mob.name, startingPoint: { x: props.col, y: props.row } })
     emit("setStartingPoint", { x: props.col, y: props.row, type: 3 })
     saveLevelData()
     toggleDialog("context-menu")
 }
 
 const removeStartingPoint = (e: any) => {
+    e.stopPropagation()
     if(pointType.value > 1){
         if(pointType.value === 2){
             levelData.value.player.splice(pointer.value, 1)
         }else{
             levelData.value.enemy.splice(pointer.value, 1)
-        }        
+        }    
+        saveLevelData()    
         emit("removeStartingPoint", { x: props.col, y: props.row, type: pointer.value })
-    }else{
-        e.stopPropagation()
     }
 }
 
