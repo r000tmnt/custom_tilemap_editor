@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { classDataModel, mobDataModel, mobResponseModel } from "~/types/character";
+import type { classDataModel, classResponseModel, mobDataModel, mobResponseModel } from "~/types/character";
 import type { baseAttributeModel } from "~/types/item";
 
 export const useCharacterStore = defineStore('character', () => {
@@ -31,12 +31,24 @@ export const useCharacterStore = defineStore('character', () => {
         "Burn", "Poison", "Freeze", "Stone", "Sleep", "Bleed"
     ])
 
+    const getClassData = async() => {
+        try {
+            const classRequest: classResponseModel = await $fetch(`${mainStore.base_url}api/class`)
+
+            if(classRequest.status === 200){
+                classes.value = classRequest.data
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const getMobData = async() => {
         try {
             const mobRequest: mobResponseModel = await $fetch(`${mainStore.base_url}api/mob`)
 
             if(mobRequest.status === 200){
-                mobs.value = mobRequest.mobs
+                mobs.value = mobRequest.data
             }
         } catch (error) {
             console.log(error)
@@ -48,6 +60,7 @@ export const useCharacterStore = defineStore('character', () => {
         mobs,
         attributes,
         statusList,
-        getMobData
+        getMobData,
+        getClassData
     }
 })
