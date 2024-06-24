@@ -2,12 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export default defineEventHandler( async(event) => {
-    const body = await readBody(event)
+    const pathPrefix = `${process.env.DATA_PATH}/item/`
+    // Get the list of item data file
+    const items = fs.readdirSync(pathPrefix)
 
-    console.log("body :>>> ", body)
-
-    // const { items } = event.context.formidable.fields
-    const { items, type } = body
+    console.log(items)
 
     // Check if folder exist
     if(!fs.existsSync(`${process.env.OUTPUT_PATH}/dataBase`)){
@@ -20,10 +19,10 @@ export default defineEventHandler( async(event) => {
 
     try{
         for(let i=0; i < items.length; i++){
-            const newLevel = `import { t } from '../../utils/i18n'
+            const content = fs.readFileSync(`${pathPrefix}${items[i]}`, { encoding: 'utf-8' })
 
-            export default {
-                data: [${items[i]}]
+            const newItem = `export default {
+                data: ${content}
             },
 
             getAll(){
@@ -39,8 +38,8 @@ export default defineEventHandler( async(event) => {
             }
             `     
             
-            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/item/`,`item_${type}.js`)
-            fs.appendFileSync(filePath, newLevel)
+            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/item/`,items[i])
+            fs.appendFileSync(filePath, newItem)
         }
 
         return { status: 200 }
