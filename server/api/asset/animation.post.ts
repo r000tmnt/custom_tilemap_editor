@@ -29,7 +29,7 @@ export default defineEventHandler(async(event) => {
 
                         const newFileName = `${type}_${target}_${level}_${name}_${fileCount + 1}.png`
 
-                        const pathPrefix = `./public/assets/images/${target}/animation`
+                        const pathPrefix = `./public/assets/images/${type}/animation`
 
                         const newfilePath = path.join(process.cwd(), pathPrefix, newFileName)
 
