@@ -1,41 +1,120 @@
 {
-            "id": "tutorial_2",
-            "name": "tutorial_2",
-            "map": [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]],
-            "audio": "", 
-            "assets": [ 
-                "",
-                "",
-                "",
-                "",
-                ""
-            ],
-            "phase": [ "conversation", "titleCard", "battle", "conversation", "end" ],
-            "event": [],
-            "enemy": [],
-            "player": [],
-            "objective": {
-                "victory": {
-                    "target": "enemy",
-                    "value": 0
-                },
-                "fail": {
-                    "target": "player",
-                    "value": 0
-                },
-                "optional": [
-                    {
-                        "target": "turn",
-                        "value": 6,
-                        "prize": [
-                            { 
-                                "id": "currency_1",
-                                "type": 1,
-                                "amount": 100
-                            }
-                        ]
-                    }
-                ]
-            },
-            "difficulty": 1
+  "id": "tutorial_2",
+  "name": "The corridor",
+  "map": [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ],
+  "audio": "",
+  "assets": ["", "wall.png", "wall.png", "item.png"],
+  "phase": ["conversation", "titleCard", "battle", "conversation", "end"],
+  "event": [
+    {
+      "position": {},
+      "item": [],
+      "scene": [
+        {
+          "background": "",
+          "people": 1,
+          "audio": "",
+          "dialogue": [
+            {
+              "person": "unknow",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "hey",
+              "audio": []
+            }
+          ]
         }
+      ],
+      "trigger": "auto"
+    },
+    {
+      "position": { "x": 18, "y": 2 },
+      "item": [{ "amount": 10, "id": "currency_1", "type": 1 }],
+      "scene": [
+        {
+          "background": "",
+          "audio": "",
+          "people": 1,
+          "dialogue": [
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "test",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "",
+              "size": "",
+              "content": "",
+              "option": [
+                {
+                  "value": "test option",
+                  "style": "#ffffff",
+                  "size": "",
+                  "content": "not a real thing",
+                  "effect": []
+                }
+              ]
+            },
+            {
+              "person": "unknow",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "Still testing",
+              "audio": []
+            }
+          ]
+        }
+      ],
+      "trigger": "auto"
+    },
+    {
+      "position": { "x": 14, "y": 2 },
+      "item": [],
+      "scene": [
+        {
+          "background": "",
+          "audio": "",
+          "people": 1,
+          "dialogue": [
+            {
+              "person": "unknow",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "hello there",
+              "audio": []
+            }
+          ]
+        }
+      ],
+      "trigger": "auto"
+    }
+  ],
+  "enemy": [{ "startingPoint": { "x": 13, "y": 1 } }],
+  "player": [{ "startingPoint": { "x": 12, "y": 1 } }],
+  "objective": {
+    "victory": { "target": "enemy", "value": 0 },
+    "fail": { "target": "player", "value": 0 },
+    "optional": [
+      {
+        "target": "turn",
+        "value": 6,
+        "prize": [{ "id": "currency_1", "type": 1, "amount": 100 }]
+      }
+    ]
+  },
+  "difficulty": 1
+}
