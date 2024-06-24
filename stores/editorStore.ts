@@ -296,7 +296,7 @@ export const useEditorStore = defineStore('editor', () => {
         }else{
             const uploadResult : responseModel = await $fetch(`${mainStore.base_url}api/asset/audio`, { method: "POST", body: formData })
 
-            const audioType = type === 'audio'? 'general' : 'battle'
+            const audioType = type.includes("battle")? 'battle' : 'general'
 
             if(uploadResult.status === 200){
                 if(audioType === 'general'){
