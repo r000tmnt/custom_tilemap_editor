@@ -201,8 +201,20 @@ const canvasEvent = (e: any) => {
             if(!contextMenu.value){
                 toggleDialog("context-menu")
             }
+            // Check if y is deeper then 60% of the window height
+            const windowHeight = window.innerHeight
+            const percentage = windowHeight / 100
+
+            console.log("window height :>>>", windowHeight)
+            console.log("percentage :>>>", percentage)
+
+            if(e.clientY >= (percentage * 60)){
+                pointedSpot.value.y = e.clientY - (percentage * 25)
+            }else{
+                pointedSpot.value.y = e.clientY
+            }
+
             pointedSpot.value.x = e.clientX
-            pointedSpot.value.y = e.clientY
             pointedSpot.value.row = row
             pointedSpot.value.col = col
         break;
