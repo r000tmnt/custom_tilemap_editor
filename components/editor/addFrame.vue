@@ -32,6 +32,7 @@
                     <v-text-field
                         placeholder="Name of the move"
                         :rules="inputRules"
+                        v-model="formState.name"
                     ></v-text-field>     
                 </v-row>
                 
