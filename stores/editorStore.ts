@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { levleDataModel, levelDataResponse, levelAssetModel, levelAssetResponseModel, tileInfoModel, responseModel, levelEventModel, animationAssetModel, audioAssetModel } from '~/types/level'
-import type { animationSort } from '~/types/animation'
+import type { animationCreateModel, animationSort, animationResponseModel } from '~/types/animation'
 import $api from '~/composables/useCustomFetch'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -203,8 +203,33 @@ export const useEditorStore = defineStore('editor', () => {
 
     // Sort animation assets order
     const sortAnimationAssets = async(data: animationSort) => {
-        const sortRequest = await $fetch(`${mainStore.base_url}api/asset/animationsort`, { method: "POST", body: data })
+        const sortRequest : animationResponseModel = await $fetch(`${mainStore.base_url}api/asset/animationsort`, { method: "POST", body: data })
         console.log(sortRequest)
+
+        if(sortRequest.status !== 200){
+            console.log(sortRequest.error)
+        }
+    }
+
+    // Create animation
+    const createNewAnimation = async(data: animationCreateModel) => {
+        const form = new FormData()
+
+        form.append("type", data.type)
+        form.append("target", data.target)
+        form.append("level", String(data.level))
+        form.append("name", data.name)
+
+        for(let i=0; i < data.frames.length; i++){
+            form.append(String(i), data.frames[i])
+        }
+
+        const createRequest : animationResponseModel = await $fetch(`${mainStore.base_url}api/asset/animation`, { method: "POST", body: form })
+        console.log(createRequest)
+
+        if(createRequest.status !== 200){
+            console.log(createRequest.error)
+        }
     }
 
     /**
@@ -364,6 +389,7 @@ export const useEditorStore = defineStore('editor', () => {
         getImagesAssets,
         deleteAssets,
         getAnimationAssets,
-        sortAnimationAssets
+        sortAnimationAssets,
+        createNewAnimation
     }
 })
