@@ -36,7 +36,7 @@
                       cover></v-img>
                   </v-col>
                   <v-col cols="6">
-                    <v-btn color="secondary" @click="getAnimation(key)">Edit frames</v-btn>
+                    <v-btn color="secondary" @click="getAnimation(String(key))">Edit frames</v-btn>
                   </v-col>                     
                 </v-row>
               </v-col>
