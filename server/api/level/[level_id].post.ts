@@ -9,6 +9,15 @@ export default defineEventHandler( async(event) => {
     // const { levels } = event.context.formidable.fields
     const { levels } = body
 
+    // Check if folder exist
+    if(!fs.existsSync(`${process.env.OUTPUT_PATH}/dataBase`)){
+        fs.mkdirSync(`${process.env.OUTPUT_PATH}/dataBase`)
+    }
+
+    if(!fs.existsSync(`${process.env.OUTPUT_PATH}/dataBase/level/`)){
+        fs.mkdirSync(`${process.env.OUTPUT_PATH}/dataBase/level/`)
+    }
+
     try{
         for(let i=0; i < levels.length; i++){
             const newLevel = `import { t } from '../../utils/i18n'
@@ -16,7 +25,7 @@ export default defineEventHandler( async(event) => {
             export default {
                 ${levels[i]}
             }`     
-            
+                        
             const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/level/`,`${levels[i].id}.js`)
             fs.appendFileSync(filePath, newLevel)
         }
