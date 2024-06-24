@@ -32,7 +32,7 @@ interface skillDataModel {
 interface skillState {
     none: skillDataModel[]
     sword: skillDataModel[]
-    kneif: skillDataModel[]
+    knife: skillDataModel[]
     wand: skillDataModel[]
     staff: skillDataModel[]
     axe: skillDataModel[]

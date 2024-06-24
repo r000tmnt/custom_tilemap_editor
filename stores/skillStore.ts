@@ -12,7 +12,7 @@ export const useSkillStore = defineStore('skill', () => {
     const skills = ref<skillState>({
         none: [],
         sword: [],
-        kneif: [],
+        knife: [],
         wand: [],
         staff: [],
         axe: [],
