@@ -33,7 +33,7 @@ export const useCharacterStore = defineStore('character', () => {
 
     const getClassData = async() => {
         try {
-            const classRequest: classResponseModel = await $fetch(`${mainStore.base_url}api/class`)
+            const classRequest: classResponseModel = await $fetch(`${mainStore.base_url}api/class/data`)
 
             if(classRequest.status === 200){
                 classes.value = classRequest.data
@@ -45,7 +45,7 @@ export const useCharacterStore = defineStore('character', () => {
 
     const getMobData = async() => {
         try {
-            const mobRequest: mobResponseModel = await $fetch(`${mainStore.base_url}api/mob`)
+            const mobRequest: mobResponseModel = await $fetch(`${mainStore.base_url}api/mob/data`)
 
             if(mobRequest.status === 200){
                 mobs.value = mobRequest.data
