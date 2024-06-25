@@ -22,23 +22,23 @@ export default defineEventHandler( async(event) => {
             const content = fs.readFileSync(`${pathPrefix}${items[i]}`, { encoding: 'utf-8' })
 
             const newItem = `export default {
-                data: ${content}
-            },
+                data: ${content},
 
-            getAll(){
-                return this.data
-            },
+                getAll(){
+                    return this.data
+                },
 
-            getOne(id){
-                return this.data.find(a => a.id === id)
-            },
+                getOne(id){
+                    return this.data.find(a => a.id === id)
+                },
 
-            search(keyWord){
-                return this.data.filter(a => a.name.includes(keyWord))
+                search(keyWord){
+                    return this.data.filter(a => a.name.includes(keyWord))
+                }
             }
             `     
             
-            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/item/`,items[i])
+            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/item/`,items[i].replace(".json", ".js"))
             fs.appendFileSync(filePath, newItem)
         }
 
@@ -47,6 +47,4 @@ export default defineEventHandler( async(event) => {
         console.log(error)
         return { status: 500, error }
     }
-
-
 })

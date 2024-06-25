@@ -18,6 +18,8 @@ export default defineEventHandler( async(event) => {
     }
 
     try{
+        let skillList = ""
+        let skillExpand = ""
         for(let i=0; i < skill.length; i++){
             const content = fs.readFileSync(`${pathPrefix}${skill[i]}`, { encoding: "utf-8" })
 
@@ -25,24 +27,23 @@ export default defineEventHandler( async(event) => {
                 ${content}
             }
             `     
+
+            const skillName = skill[i].split(".")[0]
+
+            skillList += `import ...${skillName} from "./skill/${skillName}"\n`
+            skillExpand += `...${skillName},\n`
             
-            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/skill/`, skill[i])
+            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/skill/`, skill[i].replace(".json", ".js"))
             fs.appendFileSync(filePath, newSkill)
         }
 
         // Generate the collector file
         try{
-            const skillCollector = `import skill_sword from "./skill_sword"
-            import skill_status from "./skill_status"
-            import skill_knife from "./skill_knife"
-            import skill_type from "./skill_type"
+            const skillCollector = `${skillList}
 
             export default {
                 data: [
-                    ...skill_sword,
-                    ...skill_status,
-                    ...skill_knife,
-                    ...skill_type
+                    ${skillExpand}
                 ],
 
                 getAll(){

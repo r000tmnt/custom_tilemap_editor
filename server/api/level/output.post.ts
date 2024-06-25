@@ -26,7 +26,7 @@ export default defineEventHandler( async(event) => {
                 ${content}
             }`     
                         
-            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/level/`, levels[i])
+            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/level/`, levels[i].replace(".json", ".js"))
             fs.appendFileSync(filePath, newLevel)
         }
 

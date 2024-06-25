@@ -26,7 +26,7 @@ export default defineEventHandler( async(event) => {
             }
             `     
             
-            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/class/`, classes[i])
+            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/class/`, classes[i].replace(".json", ".js"))
             fs.appendFileSync(filePath, newClass)
         }
 
@@ -57,7 +57,7 @@ export default defineEventHandler( async(event) => {
                 search(keyWord){
                     return this.data.filter(c => c.name.includes(keyWord))
                 }
-                }
+            }
             `
 
             const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,`class.js`)
