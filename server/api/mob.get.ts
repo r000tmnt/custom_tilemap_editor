@@ -24,7 +24,7 @@ export default defineEventHandler((event) => {
         console.log(data)
 
         return { status: 200, data }
-    }catch(err){
-        return { status: 500, data: [], err }
+    }catch(error){
+        return { status: 500, error }
     }
 })

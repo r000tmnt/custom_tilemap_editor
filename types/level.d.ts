@@ -6,7 +6,6 @@ interface levelDataResponse extends responseModel {
 
 interface levelList extends responseModel {
     files: string[]
-    err? : {}
 }
 
 interface optionEffectModel {
@@ -104,10 +103,8 @@ interface levleDataModel {
     difficulty: number
 }
 
-interface levelAssetResponseModel{
-    status: number
+interface levelAssetResponseModel extends responseModel{
     assets: string[]
-    error?: {}
 }
 
 interface levelAssetModel {
@@ -141,7 +138,6 @@ interface translationDataModel {
 }
 
 export { 
-    responseModel,
     levelList,
     levelDataResponse, 
     levleDataModel, 

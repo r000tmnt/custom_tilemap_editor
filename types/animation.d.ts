@@ -1,5 +1,4 @@
 import { animationSort } from '~/types/animation';
-import type responseModel from './serverResponse';
 interface animation {
     [key: string]: string[]
 }
@@ -24,14 +23,9 @@ interface animationCreateModel {
     frames: File[]
 }
 
-interface animationResponseModel extends responseModel {
-    error?: {}
-}
-
 export {
     animation,
     animationSort,
     animationEditData,
     animationCreateModel,
-    animationResponseModel
 }

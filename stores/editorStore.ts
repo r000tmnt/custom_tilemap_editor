@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { levleDataModel, levelDataResponse, levelAssetModel, levelAssetResponseModel, tileInfoModel, responseModel, levelEventModel, animationAssetModel, audioAssetModel } from '~/types/level'
-import type { animationCreateModel, animationSort, animationResponseModel } from '~/types/animation'
+import type { levleDataModel, levelDataResponse, levelAssetModel, levelAssetResponseModel, tileInfoModel, levelEventModel, animationAssetModel, audioAssetModel } from '~/types/level'
+import type responseModel  from '~/types/serverResponse'
+import type { animationCreateModel, animationSort } from '~/types/animation'
 import $api from '~/composables/useCustomFetch'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -203,7 +204,7 @@ export const useEditorStore = defineStore('editor', () => {
 
     // Sort animation assets order
     const sortAnimationAssets = async(data: animationSort) => {
-        const sortRequest : animationResponseModel = await $fetch(`${mainStore.base_url}api/asset/animationsort`, { method: "POST", body: data })
+        const sortRequest : responseModel = await $fetch(`${mainStore.base_url}api/asset/animationsort`, { method: "POST", body: data })
         console.log(sortRequest)
 
         if(sortRequest.status !== 200){
@@ -224,7 +225,7 @@ export const useEditorStore = defineStore('editor', () => {
             form.append(String(i), data.frames[i])
         }
 
-        const createRequest : animationResponseModel = await $fetch(`${mainStore.base_url}api/asset/animation`, { method: "POST", body: form })
+        const createRequest : responseModel = await $fetch(`${mainStore.base_url}api/asset/animation`, { method: "POST", body: form })
         console.log(createRequest)
 
         if(createRequest.status !== 200){
@@ -352,6 +353,21 @@ export const useEditorStore = defineStore('editor', () => {
             await $fetch(`${mainStore.base_url}api/level/${levelData.value.id}`, { method: 'PATCH', body: levelData.value })
         }catch(error){
             console.error("saveLevelData error :>>>", error)
+        }
+    }
+
+    // A syquence of packing up project
+    // 1. Output level data
+    // 2. Output item data
+    // 3. Output skill data
+    // 4. Output assets
+    // 5. Output class & mob data
+    // and more...?
+    const buildProject = async() => {
+        try{
+            const levelOutputRequest = await $fetch(`${mainStore.base_url}api/level/output`, { method: 'POST'})
+        }catch(error){
+            console.log("build project error :>>>", error)
         }
     }
 

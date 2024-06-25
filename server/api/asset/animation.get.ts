@@ -15,6 +15,6 @@ export default defineEventHandler(async(event) => {
 
         return { status: 200, assets }        
     } catch (error) {
-        return { status: 200, error }  
+        return { status: 500, error }  
     }
 })

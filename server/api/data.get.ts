@@ -8,7 +8,7 @@ export default defineEventHandler(() => {
         console.log(files)
 
         return { status: 200, files }
-    }catch(err){
-        return { status: 500, files: [], err }
+    }catch(error){
+        return { status: 500, files: [], error }
     }
 })

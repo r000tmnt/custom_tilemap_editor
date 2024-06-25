@@ -9,8 +9,14 @@ export default defineEventHandler(async(event) => {
     const { type } = query
 
     const relativePath = path.relative(process.cwd(), "./public")
-    const files = fs.readdirSync(`${relativePath}/assets/images/${type}`)
-    const assets = files.map(file => `/assets/images/${type}/${file}`)
 
-    return { status: 200, assets: assets.filter(a => a.includes(".png")) }
+    try {
+        const files = fs.readdirSync(`${relativePath}/assets/images/${type}`)
+        const assets = files.map(file => `/assets/images/${type}/${file}`)
+
+        return { status: 200, assets: assets.filter(a => a.includes(".png")) }        
+    } catch (error) {
+        console.log("get image asset error :>>>", error)
+        return { status: 500, error }   
+    }
 })

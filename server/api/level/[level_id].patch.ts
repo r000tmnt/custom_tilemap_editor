@@ -15,9 +15,9 @@ export default defineEventHandler( async(event) => {
         fs.writeFileSync(filePath, JSON.stringify(body))
 
         return { status: 200 }
-    }catch(err){
-        console.log(err)
-        return { status: 500, err }
+    }catch(error){
+        console.log(error)
+        return { status: 500, error }
     }
 
 

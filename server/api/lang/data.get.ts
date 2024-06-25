@@ -22,7 +22,7 @@ export default defineEventHandler((event) => {
         console.log("data:>>> ", zhData)
 
         return { status: 200, data: { en: JSON.parse(enData), zh: JSON.parse(zhData) } }       
-    }catch(err){
-        return { status: 500, err }
+    }catch(error){
+        return { status: 500, error }
     }
 })

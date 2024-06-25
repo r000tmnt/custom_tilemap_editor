@@ -19,9 +19,9 @@ export default defineEventHandler( async(event) => {
         fs.appendFileSync(zhFilePath, JSON.stringify(zh))
 
         return { status: 200 }
-    }catch(err){
-        console.log(err)
-        return { status: 500, err }
+    }catch(error){
+        console.log(error)
+        return { status: 500, error }
     }
 
 

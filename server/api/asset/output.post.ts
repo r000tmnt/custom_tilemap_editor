@@ -20,5 +20,6 @@ export default defineEventHandler(async() => {
         return { status: 200 }        
     } catch (error) {
         console.log("api failed: ", error)
+        return { status: 500, error }
     }
 })
