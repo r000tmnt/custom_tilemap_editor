@@ -2,48 +2,48 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export default defineEventHandler( async(event) => {
-    const pathPrefix = `${process.env.DATA_PATH}/class/`
+    const pathPrefix = `${process.env.DATA_PATH}/mob/`
     // Get the list of skill data file
-    const classes = fs.readdirSync(pathPrefix)
+    const mobs = fs.readdirSync(pathPrefix)
 
-    console.log(classes)
+    console.log(mobs)
 
     // Check if folder exist
     if(!fs.existsSync(`${process.env.OUTPUT_PATH}/dataBase`)){
         fs.mkdirSync(`${process.env.OUTPUT_PATH}/dataBase`)
     }
 
-    if(!fs.existsSync(`${process.env.OUTPUT_PATH}/dataBase/class/`)){
-        fs.mkdirSync(`${process.env.OUTPUT_PATH}/dataBase/class/`)
+    if(!fs.existsSync(`${process.env.OUTPUT_PATH}/dataBase/mob/`)){
+        fs.mkdirSync(`${process.env.OUTPUT_PATH}/dataBase/mob/`)
     }
 
     try{
-        for(let i=0; i < classes.length; i++){
-            const content = fs.readFileSync(`${pathPrefix}${classes[i]}`, { encoding: "utf-8" })
+        for(let i=0; i < mobs.length; i++){
+            const content = fs.readFileSync(`${pathPrefix}${mobs[i]}`, { encoding: "utf-8" })
 
-            const newClass = `export default {
+            const newMob = `export default {
                 ${content}
             }
             `     
             
-            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/class/`, classes[i].replace(".json", ".js"))
-            fs.appendFileSync(filePath, newClass)
+            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/class/`, mobs[i].replace(".json", ".js"))
+            fs.appendFileSync(filePath, newMob)
         }
 
         // Generate the collector file
         try{
-            let classlist = ""
-            let classExpand = ""
-            for(let i=0; i < classes.length; i++){
-                const className = classes[i].split(".")[0]
-                classlist += `import ${className} from "./class/${className}"\n`
-                classExpand += `...${className},\n`
+            let moblist = ""
+            let mobExpand = ""
+            for(let i=0; i < mobs.length; i++){
+                const mobName = mobs[i].split(".")[0]
+                moblist += `import ${mobName} from "./mob/${mobName}"\n`
+                mobExpand += `...${mobName},\n`
             }
 
-            const classCollector = `${classlist}
+            const classCollector = `${moblist}
                 export default {
                     data: [
-                        ${classExpand}
+                        ${mobExpand}
                     ],
 
                 getAll(){
@@ -60,7 +60,7 @@ export default defineEventHandler( async(event) => {
             }
             `
 
-            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,`class.js`)
+            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,`mob.js`)
             fs.appendFileSync(filePath, classCollector)
 
             return { status: 200 }
