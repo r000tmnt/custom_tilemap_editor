@@ -38,7 +38,7 @@
 
         <template v-slot:append>
             <v-btn icon="mdi-play-box-edit-outline"></v-btn>
-            <v-btn icon="mdi-export"></v-btn>
+            <v-btn icon="mdi-export" @click="buildProject"></v-btn>
             <!-- <v-btn icon="mdi-cog"></v-btn> -->
             <v-menu :close-on-content-click="false" 
                 width="200"
@@ -80,8 +80,8 @@ import levelInfoEdit from '../levelInfoEdit.vue';
 import levelConversationEdit from '../levelConversationEdit.vue';
 // import type { eventPositionModel, levelEventModel } from '~/types/level'
 
-const { levelData, mode, editorTheme, configState } = storeToRefs(useEditorStore())
-const { layers, configOptions } = storeToRefs(useEditorStore())
+const { levelData, mode, editorTheme, configState, layers, configOptions } = storeToRefs(useEditorStore())
+const { buildProject } = useEditorStore()
 const { toggleDialog } = useDialogStore()
 
 const emit = defineEmits(['toggleLayout'])
