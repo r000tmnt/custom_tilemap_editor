@@ -12,21 +12,23 @@ import class_fighter from './class/class_fighter_zh.json'
 import mob from './mob/mob_zombie_zh.json'
 
 export default {
-    class_fighter,
+    job: {
+        ...class_fighter
+    },
     mob,
     tutorial_1,
     ui,
     "item": {
-        potion,
-        weapon,
-        armor,
-        material,
-        key,
-        other
+        ...potion,
+        ...weapon,
+        ...armor,
+        ...material,
+        ...key,
+        ...other
     },
     "skill":{
-        skill_sword,
-        skill_status,
+        ...skill_sword,
+        ...skill_status,
     },
     "demo": "這裡是 DEMO 的終點。 感謝你的遊玩",
     "loading": "讀取中...",
