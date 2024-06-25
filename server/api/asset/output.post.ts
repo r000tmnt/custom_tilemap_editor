@@ -1,25 +1,30 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import copyFile from '~/server/utils/copyFile';
 
 export default defineEventHandler(async() => {
-    // Copy anything under the public directory to outPut directory
+    // Copy anything under the locale directory to outPut directory
+
+    if(!fs.existsSync(`${process.env.OUTPUT_PATH}/assets`)){
+        fs.mkdirSync(`${process.env.OUTPUT_PATH}/assets`)
+    }
+
     try {
-        const entries = fs.readdirSync("./public", { recursive: true, withFileTypes: true })
+        const relativePath = path.relative(process.cwd(), "./public")
+
+        console.log("relativePath :>>>", relativePath)
+
+        const entries = fs.readdirSync(relativePath, { recursive: true, withFileTypes: true })
+
+        console.log("entries :>>>", entries)
 
         for(let entry of entries){
-            let src = path.join(entry.path, entry.name)
-            let destPath = src.replace("./public", `./${process.env.OUTPUT_PATH}`)
-            let destDir = path.dirname(destPath)
-
-            if(entry.isFile()){
-                fs.mkdirSync(destDir, { recursive: true })
-                fs.copyFile(src, destPath, (err) => { console.log("copy file failed: ", err) })
-            }
+            copyFile("public", relativePath, entry, false)
         }
 
         return { status: 200 }        
     } catch (error) {
-        console.log("api failed: ", error)
+        console.log("Output assets failed: ", error)
         return { status: 500, error }
     }
 })

@@ -21,13 +21,10 @@ export default defineEventHandler( async(event) => {
         for(let i=0; i < classes.length; i++){
             const content = fs.readFileSync(`${pathPrefix}${classes[i]}`, { encoding: "utf-8" })
 
-            const newClass = `export default {
-                ${content}
-            }
-            `     
+            const newClass = `export default ${content}`     
             
             const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/class/`, classes[i].replace(".json", ".js"))
-            fs.appendFileSync(filePath, newClass)
+            fs.writeFileSync(filePath, newClass)
         }
 
         // Generate the collector file

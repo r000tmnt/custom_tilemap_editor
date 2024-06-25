@@ -39,7 +39,7 @@ export default defineEventHandler( async(event) => {
             `     
             
             const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/item/`,items[i].replace(".json", ".js"))
-            fs.appendFileSync(filePath, newItem)
+            fs.writeFileSync(filePath, newItem)
         }
 
         return { status: 200 }

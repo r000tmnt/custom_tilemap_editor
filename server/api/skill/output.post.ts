@@ -23,18 +23,15 @@ export default defineEventHandler( async(event) => {
         for(let i=0; i < skill.length; i++){
             const content = fs.readFileSync(`${pathPrefix}${skill[i]}`, { encoding: "utf-8" })
 
-            const newSkill = `export default {
-                ${content}
-            }
-            `     
+            const newSkill = `export default ${content}`     
 
             const skillName = skill[i].split(".")[0]
 
-            skillList += `import ...${skillName} from "./skill/${skillName}"\n`
+            skillList += `import ${skillName} from "./skill/${skillName}"\n`
             skillExpand += `...${skillName},\n`
             
             const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/skill/`, skill[i].replace(".json", ".js"))
-            fs.appendFileSync(filePath, newSkill)
+            fs.writeFileSync(filePath, newSkill)
         }
 
         // Generate the collector file
@@ -61,7 +58,7 @@ export default defineEventHandler( async(event) => {
             `     
             
             const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,`skill.js`)
-            fs.appendFileSync(filePath, skillCollector)
+            fs.writeFileSync(filePath, skillCollector)
 
             return { status: 200 }
         }catch(error){

@@ -21,13 +21,10 @@ export default defineEventHandler( async(event) => {
         for(let i=0; i < mobs.length; i++){
             const content = fs.readFileSync(`${pathPrefix}${mobs[i]}`, { encoding: "utf-8" })
 
-            const newMob = `export default {
-                ${content}
-            }
-            `     
+            const newMob = `export default ${content}`     
             
-            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/class/`, mobs[i].replace(".json", ".js"))
-            fs.appendFileSync(filePath, newMob)
+            const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/mob/`, mobs[i].replace(".json", ".js"))
+            fs.writeFileSync(filePath, newMob)
         }
 
         // Generate the collector file
@@ -61,7 +58,7 @@ export default defineEventHandler( async(event) => {
             `
 
             const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,`mob.js`)
-            fs.appendFileSync(filePath, classCollector)
+            fs.writeFileSync(filePath, classCollector)
 
             return { status: 200 }
         }catch(error){

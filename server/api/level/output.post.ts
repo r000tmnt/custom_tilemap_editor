@@ -22,12 +22,10 @@ export default defineEventHandler( async(event) => {
             const content = fs.readFileSync(`${pathPrefix}${levels[i]}`, { encoding: "utf-8" })
             const newLevel = `import { t } from '../../utils/i18n'
 
-            export default {
-                ${content}
-            }`     
+            export default ${content}`     
                         
             const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/level/`, levels[i].replace(".json", ".js"))
-            fs.appendFileSync(filePath, newLevel)
+            fs.writeFileSync(filePath, newLevel)
         }
 
         // Generate level collector
@@ -81,13 +79,15 @@ export default defineEventHandler( async(event) => {
         const levelCollectorPath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,"level.js")
 
         try {
-            fs.appendFileSync(levelCollectorPath, levelCollector)
+            fs.writeFileSync(levelCollectorPath, levelCollector)
 
             // Generate level list
             const levelList = levels.map(lv => {
-                if(!lv.includes("test")){
-                    return lv.split(".json")
-                }
+                return lv.split(".json")[0]
+            })
+
+            levelList.forEach((lv, index) => {
+                if(lv.includes("test")) levelList.splice(index, 1)
             })
 
             const levelListPath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,"levelList.js")
@@ -95,11 +95,11 @@ export default defineEventHandler( async(event) => {
             console.log("Level list :>>>", levelList)
 
             const file = `export default {
-                data: ${levelList}
+                data: [ ${levelList.map(level => String(level))} ]
             }`
 
             try{
-                fs.appendFileSync(levelListPath, file)
+                fs.writeFileSync(levelListPath, file)
                 return { status: 200 }
             }catch(error){
                 console.log("Generate level list error :>>>", error)

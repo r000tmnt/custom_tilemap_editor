@@ -1,24 +1,30 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import copyFile from '~/server/utils/copyFile';
 
 export default defineEventHandler(async() => {
     // Copy anything under the locale directory to outPut directory
+
+    if(!fs.existsSync(`${process.env.OUTPUT_PATH}/locale`)){
+        fs.mkdirSync(`${process.env.OUTPUT_PATH}/locale`)
+    }
+
     try {
-        const entries = fs.readdirSync("./locale", { recursive: true, withFileTypes: true })
+        const relativePath = path.relative(process.cwd(), "./locale")
+
+        console.log("relativePath :>>>", relativePath)
+
+        const entries = fs.readdirSync(relativePath, { recursive: true, withFileTypes: true })
+
+        console.log("entries :>>>", entries)
 
         for(let entry of entries){
-            let src = path.join(entry.path, entry.name)
-            let destPath = src.replace("./locale", `./${process.env.OUTPUT_PATH}`)
-            let destDir = path.dirname(destPath)
-
-            if(entry.isFile()){
-                fs.mkdirSync(destDir, { recursive: true })
-                fs.copyFile(src, destPath, (err) => { console.log("copy file failed: ", err) })
-            }
+            copyFile("locale", relativePath, entry, true)
         }
 
         return { status: 200 }        
     } catch (error) {
-        console.log("api failed: ", error)
+        console.log("Output locale failed: ", error)
+        return { status: 500, error }
     }
 })
