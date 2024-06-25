@@ -95,8 +95,9 @@ export const useEditorStore = defineStore('editor', () => {
 
     const configState = ref<boolean>(false)
 
-    //
     const editEventIndex = ref<number>(0)
+
+    const buildMessage = ref<string>("")
 
     const mainStore = useMainStore()
     
@@ -356,18 +357,73 @@ export const useEditorStore = defineStore('editor', () => {
         }
     }
 
-    // A syquence of packing up project
+    // Packing up project
     // 1. Output level data
     // 2. Output item data
     // 3. Output skill data
-    // 4. Output assets
-    // 5. Output class & mob data
+    // 4. Output class data
+    // 5. Output mob data
+    // 6. Output local data
+    // 7. Output assets
     // and more...?
     const buildProject = async() => {
         try{
-            const levelOutputRequest = await $fetch(`${mainStore.base_url}api/level/output`, { method: 'POST'})
+            buildMessage.value = "Generating level data files..."
+            const levelOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/level/output`, { method: 'POST'})
+
+            if(levelOutputRequest.status === 200){
+                buildMessage.value = "Generating item data files..."
+                const itemOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/item/output`, { method: 'POST'})
+
+                if(itemOutputRequest.status === 200){
+                    buildMessage.value = "Generating skill data files..."
+                    const skillOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/skill/output`, { method: 'POST'})
+
+                    if(skillOutputRequest.status === 200){
+                        buildMessage.value = "Generating class data files..."
+
+                        const classOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/class/output`, { method: 'POST'})
+
+                        if(classOutputRequest.status === 200){
+                            buildMessage.value = "Generating mob data files..."
+
+                            const mobOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/mob/output`, { method: 'POST'})
+
+                            if(mobOutputRequest.status === 200){
+                                buildMessage.value = "Copying locale files..."
+
+                                const localeCopyRequest : responseModel = await $fetch(`${mainStore.base_url}api/lang/output`, { method: 'POST'})
+
+                                if(localeCopyRequest.status === 200){
+                                    buildMessage.value = "Copying asset files..."
+                                    const assetOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/asset/output`, { method: 'POST'})
+            
+                                    if(assetOutputRequest.status === 200){
+                                        buildMessage.value = "Done."
+                                    }else{
+                                        buildMessage.value = "Failed to copy asset files"
+                                    }
+                                }else{
+                                    buildMessage.value = "Failed to copy local files"
+                                }
+                            }else{
+                                buildMessage.value = "Failed to generate mob data files"
+                            }
+                        }else{
+                            buildMessage.value = "Failed to generate class data files"
+                        }
+                    }else{
+                        buildMessage.value = "Failed to generate skill data files"
+                    }
+                }else{
+                    buildMessage.value = "Failed to generate item data files"
+                }
+            }else{
+                buildMessage.value = "Failed to generate level data files"
+            }
         }catch(error){
             console.log("build project error :>>>", error)
+            buildMessage.value = `Build project error: ${error}`
         }
     }
 
@@ -393,6 +449,7 @@ export const useEditorStore = defineStore('editor', () => {
         configOptions,
         editorTheme,
         configState,
+        buildMessage,
         initEditor,
         storeSteps,
         previousStep,
@@ -406,6 +463,7 @@ export const useEditorStore = defineStore('editor', () => {
         deleteAssets,
         getAnimationAssets,
         sortAnimationAssets,
-        createNewAnimation
+        createNewAnimation,
+        buildProject
     }
 })
