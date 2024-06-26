@@ -9,7 +9,7 @@
             width="800"
             max-height="1000"
             :scrollable="true"
-            title="Create new event"
+            title="Create new dialogue"
         >
             <v-form ref="formRef" class="pt-4 px-5">
                 <v-row>
