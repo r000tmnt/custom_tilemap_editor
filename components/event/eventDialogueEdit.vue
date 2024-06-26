@@ -9,7 +9,7 @@
             width="800"
             max-height="1000"
             :scrollable="true"
-            title="Create new event"
+            title="Edit event dialogue"
         >
             <v-form ref="formRef" class="pt-4 px-5">
                 <v-row>
@@ -92,6 +92,7 @@ const props = defineProps({
 const emit = defineEmits(["editDialogue"])
 
 const characterList = ref([
+    "none",
     "unknow"
 ])
 
@@ -109,7 +110,7 @@ const editDialogue = () => {
     formRef.value?.validate().then((result: any) => {
         if(result.valid){
             emit("editDialogue", newDialogue.value)
-            toggleDialog("scene-dialogue-create")
+            toggleDialog("scene-dialogue-edit")
         }
     })
 }
