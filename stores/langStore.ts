@@ -85,6 +85,7 @@ export const useLangStore = defineStore('lang', () => {
 
                     if(!Array.isArray(rawDataRequest.data)){
                         translationDetail.value.en.title = rawDataRequest.data.name
+                        translationDetail.value.zh.title = ""
 
                         const eventWithOutPosition = rawDataRequest.data.event.filter((e:levelEventModel) => !Object.entries(e.position).length)
 
@@ -98,11 +99,15 @@ export const useLangStore = defineStore('lang', () => {
                                             for(let l=0, option = dialogue[k].option; l < option.length; l++){
                                                 translationDetail.value.en[`option_${optionCount}`].value = option[l].value
                                                 translationDetail.value.en[`option_${optionCount}`].content = option[l].contnet
+                                                
+                                                translationDetail.value.zh[`option_${optionCount}`].value = ""
+                                                translationDetail.value.zh[`option_${optionCount}`].content = ""
 
                                                 optionCount += 1
                                             }
                                         }else{
                                             translationDetail.value.en[`dialogue_${dialogueCount}`] = dialogue[k].content
+                                            translationDetail.value.zh[`dialogue_${dialogueCount}`] = ""
 
                                             dialogueCount += 1
                                         }
