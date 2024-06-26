@@ -4,6 +4,7 @@ import path from 'node:path';
 export default defineEventHandler( async(event) => {
     const pathPrefix = `${process.env.DATA_PATH}/level/`
     const levels = fs.readdirSync(pathPrefix)
+    let levelList = ""
 
     console.log(levels)
 
@@ -19,6 +20,9 @@ export default defineEventHandler( async(event) => {
 
     try{
         for(let i=0; i < levels.length; i++){
+            if(!levels[i].includes("test")){
+                levelList += `"${levels[i].split(".")[0]}",\n`
+            } 
             const content = fs.readFileSync(`${pathPrefix}${levels[i]}`, { encoding: "utf-8" })
             const newLevel = `import { t } from '../../utils/i18n'
 
@@ -81,21 +85,14 @@ export default defineEventHandler( async(event) => {
         try {
             fs.writeFileSync(levelCollectorPath, levelCollector)
 
-            // Generate level list
-            const levelList = levels.map(lv => {
-                return lv.split(".json")[0]
-            })
-
-            levelList.forEach((lv, index) => {
-                if(lv.includes("test")) levelList.splice(index, 1)
-            })
-
             const levelListPath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,"levelList.js")
         
             console.log("Level list :>>>", levelList)
 
             const file = `export default {
-                data: [ ${levelList.map(level => String(level))} ]
+                data: [
+                    ${levelList}
+                ]
             }`
 
             try{
