@@ -97,6 +97,8 @@ export const useEditorStore = defineStore('editor', () => {
 
     const editEventIndex = ref<number>(0)
 
+    const buildProgress = ref<number>(0)
+
     const buildMessage = ref<string>("")
 
     const mainStore = useMainStore()
@@ -366,61 +368,60 @@ export const useEditorStore = defineStore('editor', () => {
     // 6. Output local data
     // 7. Output assets
     // and more...?
-    const buildProject = async() => {
+    const buildProject = () => {
+        let stepCount = 0
+
+        const urls = [
+            `${mainStore.base_url}api/level/output`,
+            `${mainStore.base_url}api/item/output`,
+            `${mainStore.base_url}api/skill/output`,
+            `${mainStore.base_url}api/class/output`,
+            `${mainStore.base_url}api/mob/output`,
+            `${mainStore.base_url}api/lang/output`,
+            `${mainStore.base_url}api/asset/output`,
+        ]
+
+        const progressMsg = [
+            "Generating item data files...",
+            "Generating skill data files...",
+            "Generating class data files...",
+            "Generating mob data files...",
+            "Copying locale files...",
+            "Copying asset files...",
+            "Done"
+        ]
+        
+        const errorMsg = [
+            "Failed to generate level data files",
+            "Failed to generate item data files",
+            "Failed to generate skill data files",
+            "Failed to generate class data files",
+            "Failed to generate mob data files",
+            "Failed to copy local files",
+            "Failed to copy asset files"
+        ]
+
         try{
+            // First message
             buildMessage.value = "Generating level data files..."
-            const levelOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/level/output`, { method: 'POST'})
 
-            if(levelOutputRequest.status === 200){
-                buildMessage.value = "Generating item data files..."
-                const itemOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/item/output`, { method: 'POST'})
+            const loopRequest = async() => {
+                const outputRequest : responseModel = await $fetch(urls[stepCount], { method: 'POST' })
 
-                if(itemOutputRequest.status === 200){
-                    buildMessage.value = "Generating skill data files..."
-                    const skillOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/skill/output`, { method: 'POST'})
-
-                    if(skillOutputRequest.status === 200){
-                        buildMessage.value = "Generating class data files..."
-
-                        const classOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/class/output`, { method: 'POST'})
-
-                        if(classOutputRequest.status === 200){
-                            buildMessage.value = "Generating mob data files..."
-
-                            const mobOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/mob/output`, { method: 'POST'})
-
-                            if(mobOutputRequest.status === 200){
-                                buildMessage.value = "Copying locale files..."
-
-                                const localeCopyRequest : responseModel = await $fetch(`${mainStore.base_url}api/lang/output`, { method: 'POST'})
-
-                                if(localeCopyRequest.status === 200){
-                                    buildMessage.value = "Copying asset files..."
-                                    const assetOutputRequest : responseModel = await $fetch(`${mainStore.base_url}api/asset/output`, { method: 'POST'})
-            
-                                    if(assetOutputRequest.status === 200){
-                                        buildMessage.value = "Done."
-                                    }else{
-                                        buildMessage.value = "Failed to copy asset files"
-                                    }
-                                }else{
-                                    buildMessage.value = "Failed to copy local files"
-                                }
-                            }else{
-                                buildMessage.value = "Failed to generate mob data files"
-                            }
-                        }else{
-                            buildMessage.value = "Failed to generate class data files"
-                        }
+                if(outputRequest.status === 200){
+                    buildMessage.value = progressMsg[stepCount]
+                    if((stepCount + 1) === urls.length){
+                        buildProgress.value = 100
                     }else{
-                        buildMessage.value = "Failed to generate skill data files"
+                        buildProgress.value += Math.floor(100/urls.length)
+                        stepCount += 1
+                        loopRequest()
                     }
                 }else{
-                    buildMessage.value = "Failed to generate item data files"
+                    buildMessage.value = `${errorMsg[stepCount]}\n${outputRequest.error}`
                 }
-            }else{
-                buildMessage.value = "Failed to generate level data files"
             }
+            loopRequest()
         }catch(error){
             console.log("build project error :>>>", error)
             buildMessage.value = `Build project error: ${error}`
@@ -450,6 +451,7 @@ export const useEditorStore = defineStore('editor', () => {
         editorTheme,
         configState,
         buildMessage,
+        buildProgress,
         initEditor,
         storeSteps,
         previousStep,
