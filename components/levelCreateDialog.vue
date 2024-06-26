@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { storeToRefs } from 'pinia'
-import type { responseModel } from '~/types/level'
+import type responseModel from '~/types/serverResponse'
 
 const { base_url } = storeToRefs(useMainStore())
 const { createLevelDialog } = storeToRefs(useDialogStore())
