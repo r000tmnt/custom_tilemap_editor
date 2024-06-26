@@ -48,6 +48,7 @@ watch(() => buildMessage.value, (newMsg, oldMsg) => {
 // Reset progress value when closing dialog
 onBeforeUnmount(() => {
     console.log("outputmessagewindow onBeforeUnmount")
+    buildMessage.value = "Generating level data files..."
     value.value = 0
 })
 </script>
