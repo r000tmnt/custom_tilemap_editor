@@ -24,7 +24,7 @@
                         <v-icon icon="mdi-trash-can" color="danger" @click="removeEvent(index)"></v-icon>
                       </v-list-item> 
                   </template>
-                  <v-btn color="secondary" @click="toggleDialog('scene-create')">Add Scene</v-btn>
+                  <v-btn color="secondary" @click="prepareIndex">Add Scene</v-btn>
                   
                   <v-list-item v-for="(content, pointer) in item.scene" >
                     {{ `Event-${index + 1}-Scene-${pointer + 1}` }}
@@ -32,9 +32,6 @@
                     <v-icon icon="mdi-trash-can" color="danger" @click="removeScene(index, pointer)"></v-icon>
                   </v-list-item>
                 </v-list-group>
-                <!-- <v-icon class="ml-2" icon="mdi-arrow-down" color="secondary"></v-icon> -->
-                <!-- <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="editScene(index)"></v-icon> -->
-                <!-- <v-icon icon="mdi-trash-can" color="danger" @click="eventBeforeBattle.splice(index, 1)"></v-icon> -->
             </v-list> 
         </v-form>
 
@@ -46,7 +43,8 @@
     </v-dialog>
 
     <event-scene-create v-if="eventSceneCreateDialog" 
-       />
+      :latest-index="latestIndex"
+      :child-index="childIndex" />
     <event-scene-edit v-if="eventSceneEditDialog" 
       :scene="sceneToEdit"
       @edit-scene="editConversationScene" />
@@ -116,8 +114,18 @@ const removeScene = (index: number, pointer: number) => {
 }
 
 const prepareIndex = () => {
-  latestIndex.value = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
+  latestIndex.value = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length) - 1
+  levelData.value.event[latestIndex.value].scene.push(
+      {
+          background: "",
+          audio: "",
+          people: 1,
+          dialogue: []
+      }
+  )
 
+  childIndex.value = levelData.value.event[latestIndex.value].scene.length - 1
+  toggleDialog('scene-create') 
 }
 
 const createEvent = () => {
