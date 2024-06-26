@@ -10,8 +10,8 @@
         title="Packing up project"
         width="500"
       >
-        <v-progress-circular class="mx-auto my-4" :model-value="value" :rotate="360" :size="100" :width="15" color="teal">
-            <template v-slot:default> {{ value }} % </template>
+        <v-progress-circular class="mx-auto my-4" :model-value="buildProgress" :rotate="360" :size="100" :width="15" color="teal">
+            <template v-slot:default> {{ buildProgress }} % </template>
         </v-progress-circular>
 
         {{ buildMessage }}
@@ -27,28 +27,14 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { ref, watch, onBeforeUnmount } from 'vue';
+import { onBeforeUnmount } from 'vue';
 
 const { outputMessage } = storeToRefs(useDialogStore())
-const { buildMessage } = storeToRefs(useEditorStore())
+const { buildMessage, buildProgress } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
-
-const value = ref<number>(0)
-
-watch(() => buildMessage.value, (newMsg, oldMsg) => {
-    if(newMsg.length && !newMsg.includes("Failed")){
-        if(newMsg.includes("Done")){
-            value.value = 100
-        }else{
-            value.value += Math.floor(100/7)
-        }
-    }
-})
 
 // Reset progress value when closing dialog
 onBeforeUnmount(() => {
-    console.log("outputmessagewindow onBeforeUnmount")
-    buildMessage.value = "Generating level data files..."
-    value.value = 0
+    buildProgress.value = 0
 })
 </script>
