@@ -79,7 +79,7 @@
                         <v-text-field label="response" v-model="value.content"></v-text-field>  
                       </div>
 
-                      <v-text-field v-else :label="String(key)" v-model="translationDetail.en[String(key)]"></v-text-field>
+                      <v-text-field v-else :label="String(key)" v-model="translationDetail.zh[String(key)]"></v-text-field>
                       <v-btn 
                         variant="outlined" 
                         color="grey" 
@@ -133,7 +133,7 @@
     </template>
 
       <v-card-actions>
-          <v-btn @click="toggleDialog('translation-viewer')">CLOSE</v-btn>
+          <v-btn @click="closeTranslationList">CLOSE</v-btn>
           <v-btn v-if="Object.entries(translationDetail).length" color="primary" @click="saveChanges">SAVE</v-btn>
       </v-card-actions>
     </v-card>
@@ -180,6 +180,16 @@ const getTranslation = (item: string) => {
   viewingTranslation.value = item
   // Get the tanslated string from locale
   getTranslationData(item, props.type)
+}
+
+const closeTranslationList = () => {
+  if(Object.entries(translationDetail.value).length){
+    // Back to the list
+    translationDetail.value = {}
+  }else{
+    // Close dialog
+    toggleDialog('translation-viewer')
+  }
 }
 
 const saveChanges = () => {
