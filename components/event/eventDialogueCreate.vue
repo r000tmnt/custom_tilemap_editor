@@ -79,6 +79,7 @@ const { selectRules, inputRules } = useRuleStore()
 const emit = defineEmits(["createDialogue"])
 
 const characterList = ref([
+    "none",
     "unknow"
 ])
 
