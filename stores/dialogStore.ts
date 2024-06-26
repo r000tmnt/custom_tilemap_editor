@@ -32,7 +32,7 @@ export const useDialogStore = defineStore('dialog', () => {
     // On and off switch for level name edit input
     const levelInfoEdit = ref<boolean>(false)
     // On and off switch for level conversation phase
-    const levelConversationEdit = ref<boolean>(false)
+    const levelConversationEventEdit = ref<boolean>(false)
     // On and off switch for item create dialog
     const itemCreateDialog = ref<boolean>(false)
     // On and off switch for item edit dialog
@@ -107,7 +107,7 @@ export const useDialogStore = defineStore('dialog', () => {
                 levelInfoEdit.value = !levelInfoEdit.value
             break;
             case 'level-conversation-edit':
-                levelConversationEdit.value = !levelConversationEdit.value
+                levelConversationEventEdit.value = !levelConversationEventEdit.value
             break;
             case 'item-create':
                 itemCreateDialog.value = !itemCreateDialog.value
@@ -159,7 +159,7 @@ export const useDialogStore = defineStore('dialog', () => {
         enemySelector,
         mapExpander,
         levelInfoEdit,
-        levelConversationEdit,
+        levelConversationEventEdit,
         itemCreateDialog,
         itemEditDialog,
         skillCreateDialog,
