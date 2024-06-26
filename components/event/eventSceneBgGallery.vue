@@ -21,6 +21,9 @@
                         @click="selectBackground(path)"></v-img>
                 </v-col>
             </v-row>
+            <v-card-actions>
+                <v-btn class="mx-auto" @click="toggleDialog('scene-bg')">CANCEL</v-btn>
+            </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
