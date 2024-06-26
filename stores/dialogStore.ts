@@ -53,6 +53,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const editFrameDialog = ref<boolean>(false)
     // On and off switch for create animation
     const createAnimation = ref<boolean>(false)
+    // On and off switch for output message dialog
+    const outputMessage = ref<boolean>(false)
     
     const toggleDialog = (type: string) => {
         switch(type){
@@ -134,6 +136,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'create-animation':
                 createAnimation.value = !createAnimation.value
             break;
+            case 'output-message':
+                outputMessage.value = !outputMessage.value
+            break;
             // and more...
         }
     }
@@ -165,6 +170,7 @@ export const useDialogStore = defineStore('dialog', () => {
         assetsDelete,
         editFrameDialog,
         createAnimation,
+        outputMessage,
         toggleDialog
     }
 })
