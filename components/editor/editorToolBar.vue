@@ -71,7 +71,7 @@
     </v-app-bar>  
 
     <level-info-edit />
-    <level-conversation-edit />
+    <level-conversation-edit v-if="levelConversationEventEdit" />
     <editor-output-window v-if="outputMessage" />
 </template>
 
@@ -83,7 +83,7 @@ import editorOutputWindow from './editorOutputWindow.vue';
 // import type { eventPositionModel, levelEventModel } from '~/types/level'
 
 const { levelData, mode, editorTheme, configState, layers, configOptions } = storeToRefs(useEditorStore())
-const { outputMessage } = storeToRefs(useDialogStore())
+const { outputMessage, levelConversationEventEdit } = storeToRefs(useDialogStore())
 const { buildProject } = useEditorStore()
 const { toggleDialog } = useDialogStore()
 
