@@ -15,11 +15,20 @@ interface optionEffectModel {
     value: number | string
 }
 
+interface optionConditionModel {
+    type: string
+    value: string
+    possess?: boolean
+    greater?: boolean
+    percentage?: number
+}
+
 interface dialogueOptionModel {
     value: string
     style: string
     size: string
     content: string
+    condition: optionConditionModel
     effect: optionEffectModel[]
 }
 
