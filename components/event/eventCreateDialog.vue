@@ -72,7 +72,8 @@
                 <v-row>
                     <v-select
                         label="Trigger"
-                        :items="triggerType">
+                        :items="triggerType"
+                        v-model="levelData.event[latestIndex].trigger">
                     </v-select>
                 </v-row>
 
@@ -104,19 +105,13 @@ import eventItemList from './eventItemList.vue';
 import eventSceneCreate from './eventSceneCreate.vue';
 
 const { createEventDialog, eventSceneCreateDialog, eventItemDialog } = storeToRefs(useDialogStore())
-const { tileInfo, levelData } = storeToRefs(useEditorStore())
+const { tileInfo, levelData, triggerType } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
 
 const eventType = ref<string[]>([
     "ITEM",
     "SCENE"
-])
-
-const triggerType = ref<string[]>([
-    "stepOn",
-    "beside",
-    "defeat",
 ])
 
 const editContentType = ref()
