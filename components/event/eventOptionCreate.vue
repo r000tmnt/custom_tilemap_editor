@@ -28,12 +28,28 @@
                         :rules="inputRules"></v-textarea>
                 </v-col>
             </v-row>
-            <!-- <v-row>
+            <v-row>
                 <v-col>
-                    <v-select title="click audio"
-                            :items="audioAssets.general"></v-select>
+                    <v-select title="Option condition type"
+                        :items="optionConditionType"
+                        v-model="newOption.condition.type"
+                        @update:model-value="setConditionValueList"></v-select>
+                    <v-select title="Option condition value"
+                        :disabled="!newOption.condition.type.length"
+                        :items="optionConditionValue"
+                        v-model="newOption.condition.value"></v-select>
+                    <v-checkbox v-if="newOption.condition.type === 'item'" 
+                        label="In possession?"
+                        v-model="newOption.condition.possess"></v-checkbox>
+                    <v-checkbox v-if="newOption.condition.type === 'status'"
+                        label="Greater than"
+                        v-model="newOption.condition.greater"></v-checkbox>
+                    <v-text-field v-if="newOption.condition.type === 'status'"
+                        type="number"
+                        placeholder="In percentage"
+                        v-model="newOption.condition.percentage"></v-text-field>    
                 </v-col>
-            </v-row> -->
+            </v-row>
             <v-row>
                 <v-col>
                     <!-- Effect -->
@@ -61,10 +77,12 @@ import type { dialogueOptionModel, optionEffectModel } from '~/types/level'
 
 import eventOptionEffect from './eventOptionEffect.vue';
 
-// const { audioAssets } = storeToRefs(useEditorStore())
+const { optionConditionType, optionConditionValue } = storeToRefs(useEditorStore())
 const { optionCreateDialog } = storeToRefs(useDialogStore())
+const { type } = storeToRefs(useItemStore())
 const { toggleDialog } = useDialogStore()
 const { inputRules } = useRuleStore()
+const { getItemType } = useItemStore()
 
 const emit = defineEmits(["createOption"])
 
@@ -75,11 +93,26 @@ const newOption = ref<dialogueOptionModel>({
     style: "#ffffff",
     size: "",
     content: "",
+    condition: {
+        type: "",
+        value: ""
+    },
     effect: []
 })
 
 const confirmEffect = (v: optionEffectModel) => {
     newOption.value.effect.push(v)
+}
+
+const setConditionValueList = () => {
+    switch(newOption.value.condition.type){
+        case "itme":
+            getItemType().then(() => {
+                optionConditionValue.value = type.value.map(t => t.category)
+                newOption.value.condition.possess = false
+            })
+        break;
+    }
 }
 
 const createOption = () => {
