@@ -99,6 +99,8 @@
       @edit-dialogue="updateDialogue" />
     <event-option-create v-if="optionCreateDialog" 
         @create-option="confirmOption" />
+    <event-option-list v-if="optionListDialog"
+      :dialogue="dialogueToEdit" />
 </template>
 
 <script setup lang="ts">
@@ -110,11 +112,12 @@ import eventSceneBgGallery from './eventSceneBgGallery.vue';
 import eventDialogueCreate from './eventDialogueCreate.vue';
 import eventOptionCreate from './eventOptionCreate.vue';
 import eventDialogueEdit from './eventDialogueEdit.vue';
+import eventOptionList from './eventOptionList.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneEditDialog } = storeToRefs(useDialogStore())
-const { audioAssets, levelData } = storeToRefs(useEditorStore())
-const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionCreateDialog } = storeToRefs(useDialogStore())
+const { audioAssets, levelData, tileInfo } = storeToRefs(useEditorStore())
+const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionCreateDialog, optionListDialog } = storeToRefs(useDialogStore())
 const { selectRules, inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
 
@@ -142,7 +145,13 @@ const editIndex = ref<number>(-1)
 const editDialogue = (index: number) => {
     editIndex.value = index
     dialogueToEdit.value = newScene.value.dialogue[index]
-    toggleDialog("scene-dialogue-edit")
+    
+    if(dialogueToEdit.value.option){
+      
+      toggleDialog("dialogue-option-list")
+    }else{
+      toggleDialog("scene-dialogue-edit")
+    }
 }
 
 const updatePeopleInScene = (e: any) => {
