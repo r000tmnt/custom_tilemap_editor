@@ -87,13 +87,13 @@ export const useLangStore = defineStore('lang', () => {
                         translationDetail.value.en.title = rawDataRequest.data.name
                         translationDetail.value.zh.title = ""
 
-                        const eventWithOutPosition = rawDataRequest.data.event.filter((e:levelEventModel) => !Object.entries(e.position).length)
+                        const eventWithOutConversation = rawDataRequest.data.event.filter((e:levelEventModel) => e.scene.length)
 
-                        if(eventWithOutPosition.length){
+                        if(eventWithOutConversation.length){
                             let dialogueCount = 1, optionCount = 1
 
-                            for(let i=0; i < eventWithOutPosition.length; i++){
-                                for(let j=0, scene = eventWithOutPosition[i].scene; j < scene.length; j++){
+                            for(let i=0; i < eventWithOutConversation.length; i++){
+                                for(let j=0, scene = eventWithOutConversation[i].scene; j < scene.length; j++){
                                     for(let k=0, dialogue = scene[j].dialogue; k < dialogue.length; k++){
                                         if(dialogue[k].option && dialogue[k].option.length){
                                             for(let l=0, option = dialogue[k].option; l < option.length; l++){
