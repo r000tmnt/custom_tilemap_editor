@@ -30,11 +30,11 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <v-select title="Option condition type"
+                    <v-select label="Option condition type"
                         :items="optionConditionType"
                         v-model="newOption.condition.type"
                         @update:model-value="setConditionValueList"></v-select>
-                    <v-select title="Option condition value"
+                    <v-select label="Option condition value"
                         :disabled="!newOption.condition.type.length"
                         :items="optionConditionValue"
                         v-model="newOption.condition.value"></v-select>
@@ -105,12 +105,28 @@ const confirmEffect = (v: optionEffectModel) => {
 }
 
 const setConditionValueList = () => {
+    console.log(newOption.value.condition.type)
     switch(newOption.value.condition.type){
-        case "itme":
+        case "item":
             getItemType().then(() => {
                 optionConditionValue.value = type.value.map(t => t.category)
                 newOption.value.condition.possess = false
             })
+        break;
+        case "status":
+            optionConditionValue.value = [
+                "hp", 
+                "mp", 
+                "str", 
+                "def", 
+                "int",
+                "spd", 
+                "spi",
+                "ap",
+                "lck",
+                "moveSpeed",
+                "sight"
+            ]
         break;
     }
 }
