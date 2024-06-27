@@ -24,12 +24,12 @@
                         <v-icon icon="mdi-trash-can" color="danger" @click.stop="setNodeToDelete(`Conversation event ${index + 1}`, index)"></v-icon>
                       </v-list-item> 
                   </template>
-                  <v-btn color="secondary" @click="prepareIndex">Add Scene</v-btn>
+                  <v-btn color="secondary" variant="outlined" @click="prepareIndex">Add Scene</v-btn>
                   
                   <v-list-item v-for="(content, subIndex) in item.scene" >
                     {{ `Event-${index + 1}-Scene-${subIndex + 1}` }}
                     <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="editScene(subIndex)"></v-icon> 
-                    <v-icon icon="mdi-trash-can" color="danger" @click="setNodeToDelete( `Event-${index + 1}-Scene-${subIndex + 1}`, index, subIndex)"></v-icon>
+                    <v-icon class="ml-2" icon="mdi-trash-can" color="danger" @click="setNodeToDelete( `Event-${index + 1}-Scene-${subIndex + 1}`, index, subIndex)"></v-icon>
                   </v-list-item>
                 </v-list-group>
             </v-list> 
