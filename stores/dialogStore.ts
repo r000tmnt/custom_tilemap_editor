@@ -19,6 +19,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const dialougeCreateDialog = ref<boolean>(false)
     // On and off switch for event dialogue edit
     const dialogueEditDialog = ref<boolean>(false)
+    // On and off switch for dialouge option list
+    const optionListDialog = ref<boolean>(false)
     // On and off switch for event dialogue option create
     const optionCreateDialog = ref<boolean>(false)
     // On and off switch for event dialogue option effect
@@ -88,6 +90,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'scene-dialogue-edit':
                 dialogueEditDialog.value = !dialogueEditDialog.value
             break;
+            case 'dialogue-option-list':
+                optionListDialog.value = !optionListDialog.value
+            break;
             case 'dialogue-option-create':
                 optionCreateDialog.value = !optionCreateDialog.value
             break;
@@ -152,6 +157,7 @@ export const useDialogStore = defineStore('dialog', () => {
         eventSceneEditDialog,
         bgAssetsGalleryDialog,
         dialougeCreateDialog,
+        optionListDialog,
         optionCreateDialog,
         dialogueEditDialog,
         optionEffectDialog,
