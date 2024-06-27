@@ -21,15 +21,15 @@
                   <template v-slot:activator="{ props }">
                       <v-list-item v-bind="props">
                         {{ `Conversation event ${index + 1}` }}
-                        <v-icon icon="mdi-trash-can" color="danger" @click="removeEvent(index)"></v-icon>
+                        <v-icon icon="mdi-trash-can" color="danger" @click.stop="setNodeToDelete(`Conversation event ${index + 1}`, index)"></v-icon>
                       </v-list-item> 
                   </template>
                   <v-btn color="secondary" @click="prepareIndex">Add Scene</v-btn>
                   
-                  <v-list-item v-for="(content, pointer) in item.scene" >
-                    {{ `Event-${index + 1}-Scene-${pointer + 1}` }}
-                    <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="editScene(pointer)"></v-icon> 
-                    <v-icon icon="mdi-trash-can" color="danger" @click="removeScene(index, pointer)"></v-icon>
+                  <v-list-item v-for="(content, subIndex) in item.scene" >
+                    {{ `Event-${index + 1}-Scene-${subIndex + 1}` }}
+                    <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="editScene(subIndex)"></v-icon> 
+                    <v-icon icon="mdi-trash-can" color="danger" @click="setNodeToDelete( `Event-${index + 1}-Scene-${subIndex + 1}`, index, subIndex)"></v-icon>
                   </v-list-item>
                 </v-list-group>
             </v-list> 
@@ -48,6 +48,9 @@
     <event-scene-edit v-if="eventSceneEditDialog" 
       :scene="sceneToEdit"
       @edit-scene="editConversationScene" />
+    <asset-delete-warning v-if="assetsDelete"
+      :name="nodeToDelete.name"
+      @delete-asset="proceedToDelete" />
 </template>
 
 <script setup lang="ts">
@@ -57,15 +60,20 @@ import type { levelEventModel, eventSceneModel, eventPositionModel } from '~/typ
 
 import eventSceneCreate from './event/eventSceneCreate.vue';
 import eventSceneEdit from './event/eventSceneEdit.vue';
+import assetDeleteWarning from './assetDeleteWarning.vue';
 
 const { levelData } = storeToRefs(useEditorStore())
-const { levelConversationEventEdit, eventSceneEditDialog, eventSceneCreateDialog } = storeToRefs(useDialogStore())
+const { levelConversationEventEdit, eventSceneEditDialog, eventSceneCreateDialog,assetsDelete } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
 
 // const newName = ref<string>(`${levelData.value.name}`)
 const formRef = ref()
-
+const nodeToDelete = ref({
+  name: "",
+  index: -1,
+  subIndex: -1
+})
 const sceneToEdit = ref<eventSceneModel>()
 const editIndex = ref<number>(-1)
 const latestIndex = ref<number>(-1)
@@ -103,14 +111,29 @@ const editScene = (index: number) => {
   toggleDialog("scene-edit")
 }
 
+const setNodeToDelete = (name: string, index: number, subIndex?: number) => {
+  nodeToDelete.value.name = name
+  nodeToDelete.value.index = index
+  if(subIndex) { nodeToDelete.value.subIndex = subIndex }
+  toggleDialog("assets-delete")
+}
+
+const proceedToDelete = () => {
+  if(nodeToDelete.value.name.includes("Scene")){
+    removeScene(nodeToDelete.value.index, nodeToDelete.value.subIndex)
+  }else{
+    removeEvent(nodeToDelete.value.index)
+  }
+}
+
 const removeEvent = (index: number) => {
   eventBeforeBattle.value.splice(index, 1)
   levelData.value.event.splice(index, 1)
 }
 
-const removeScene = (index: number, pointer: number) => {
-  eventBeforeBattle.value[index].scene.splice(pointer, 1)
-  levelData.value.event[index].scene.splice(pointer, 1)
+const removeScene = (index: number, subIndex: number) => {
+  eventBeforeBattle.value[index].scene.splice(subIndex, 1)
+  levelData.value.event[index].scene.splice(subIndex, 1)
 }
 
 const prepareIndex = () => {
