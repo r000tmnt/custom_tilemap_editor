@@ -91,6 +91,13 @@ export const useEditorStore = defineStore('editor', () => {
         "Language", 
     ])
 
+    const triggerType = ref<string[]>([
+        "stepOn",
+        "beside",
+        "defeat",
+        "once"
+    ])
+
     const editorTheme = ref<string>("dark")
 
     const configState = ref<boolean>(false)
@@ -452,6 +459,7 @@ export const useEditorStore = defineStore('editor', () => {
         configState,
         buildMessage,
         buildProgress,
+        triggerType,
         initEditor,
         storeSteps,
         previousStep,
