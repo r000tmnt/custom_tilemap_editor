@@ -98,6 +98,15 @@ export const useEditorStore = defineStore('editor', () => {
         "once"
     ])
 
+    const optionConditionType = ref<string[]>([
+        "none",
+        "item",
+        "status",
+        "enemy"
+    ])
+
+    const optionConditionValue = ref<string[]>([])
+
     const editorTheme = ref<string>("dark")
 
     const configState = ref<boolean>(false)
@@ -460,6 +469,8 @@ export const useEditorStore = defineStore('editor', () => {
         buildMessage,
         buildProgress,
         triggerType,
+        optionConditionType,
+        optionConditionValue,
         initEditor,
         storeSteps,
         previousStep,
