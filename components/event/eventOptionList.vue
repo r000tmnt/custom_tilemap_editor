@@ -10,24 +10,30 @@
         max-height="1000"
         :scrollable="true"
         title="Dialogue options"
-      ></v-card>
-      <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('dialogue-option-create')">
-            CREATE OPTION
-        </v-btn>
-      <v-list>
-        <v-list-item v-for="(option, index) in options"
-            :key="option.value"
-            @click.stop="editOption(option)">
-            {{ option.value }}
+      >
+        <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('dialogue-option-create')">
+              CREATE OPTION
+          </v-btn>
+        <v-list>
+          <v-list-item v-for="(option, index) in options"
+              :key="option.value"
+              @click.stop="editOption(option, index)">
+              {{ option.value }}
 
-            <v-icon icon="mdi-trash-can" color="danger" @click.stop="deleteOption(index)"></v-icon>
-        </v-list-item>
-      </v-list>
+              <v-icon icon="mdi-trash-can" color="danger" @click.stop="deleteOption(index)"></v-icon>
+          </v-list-item>
+        </v-list>
+
+        <v-card-actions>
+          <v-btn @click="toggleDialog('dialogue-option-list')">Cancel</v-btn>
+          <v-btn color="primary" @click="updateDialogueOptions">Confirm</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
 
-    <event-option-create />
+    <event-option-create @create-option="createOption" />
     <event-option-edit :option="optionToEdit"
-      @edit-option="" />
+      @edit-option="confirmOption" />
 </template>
 
 <script lang="ts" setup>
@@ -40,23 +46,13 @@ import eventOptionCreate from './eventOptionCreate.vue';
 import eventOptionEdit from './eventOptionEdit.vue';
 
 const props = defineProps({
-    // options: {
-    //     type: Array as PropType<dialogueOptionModel[]>,
-    //     default: [] as dialogueOptionModel[]
-    // }
-    // sceneIndex: {
-    //     type: Number,
-    //     default: 0
-    // },
-    // dialogueIndex: {
-    //     type: Number, 
-    //     default: 0
-    // },
     dialogue: {
         type: Object as PropType<eventDialogueModel>,
         default: {}
     }
 })
+
+const emit = defineEmits(["updateEventOptions"])
 
 // const { editEventIndex, tileInfo } = storeToRefs(useEditorStore())
 const { optionListDialog } = useDialogStore()
@@ -66,9 +62,12 @@ const options = ref<dialogueOptionModel[] | undefined>([])
 
 const optionToEdit = ref<dialogueOptionModel>()
 
-const editOption = (option: dialogueOptionModel) => {
+const editIndex = ref<number>(-1)
+
+const editOption = (option: dialogueOptionModel, index: number) => {
     console.log("option :>>>", option)
     optionToEdit.value = option
+    editIndex.value = index
     toggleDialog("dialouge-option-edit")
 }
 
@@ -76,11 +75,22 @@ const deleteOption = (index: number) => {
     options.value?.splice(index, 1)
 }
 
-onMounted(() => {
-    // if(tileInfo.value.events[editEventIndex.value].scene[props.sceneIndex].dialogue[props.dialogueIndex].option !== undefined){
-    //     options.value = tileInfo.value.events[editEventIndex.value].scene[props.sceneIndex].dialogue[props.dialogueIndex].option
-    // }
+const createOption = (v: dialogueOptionModel) => {
+  props.dialogue.option?.push(v)
+}
 
+const confirmOption = (v: dialogueOptionModel) => {
+  if(props.dialogue.option){
+    props.dialogue.option[editIndex.value] = v
+    toggleDialog("dialogue-event-list")
+  }
+}
+
+const updateDialogueOptions = () => {
+  emit("updateEventOptions", props.dialogue)
+}
+
+onMounted(() => {
     if(props.dialogue.option !== undefined){
         options.value = JSON.parse(JSON.stringify(props.dialogue.option))
     }
