@@ -57,6 +57,11 @@
                                     :key="index">
                                     {{ `${index + 1}. Dialogue: ${ item.dialogue.length?
                                         item.dialogue[0].content.length? item.dialogue[0].content : item.dialogue[0].option[0].content : ''}` }}
+
+                                        <v-icon class="ml-2" 
+                                            color="secondary" 
+                                            icon="mdi-note-edit-outline"
+                                            @click="editScene(index)"></v-icon>
                                 </v-list-item>    
                             </template>
 
@@ -96,6 +101,9 @@
     <event-scene-create v-if="eventSceneCreateDialog"
         :latest-index="latestIndex"
         :child-index="childIndex" />
+    <event-scene-edit :scene="sceneToEdit" />
+    <event-option-list 
+      @update-event-options="confirmOption"/>
 </template>
 
 <script setup lang="ts">
@@ -103,6 +111,9 @@ import { storeToRefs } from 'pinia'
 
 import eventItemList from './eventItemList.vue';
 import eventSceneCreate from './eventSceneCreate.vue';
+import eventSceneEdit from './eventSceneEdit.vue';
+import eventOptionList from './eventOptionList.vue';
+import type { eventDialogueModel } from '~/types/level';
 
 const { createEventDialog, eventSceneCreateDialog, eventItemDialog } = storeToRefs(useDialogStore())
 const { tileInfo, levelData, triggerType } = storeToRefs(useEditorStore())
@@ -118,6 +129,8 @@ const editContentType = ref()
 const selectedType = ref<string>("")
 const latestIndex = ref<number>(levelData.value.event.length - 1)
 const childIndex = ref<number>(-1)
+const sceneToEdit = ref()
+const editIndex = ref<number>(-1)
 
 const getEventIndex = () => {
     if(selectedType.value === "ITEM"){
@@ -157,6 +170,16 @@ const selectType = (type:string) => {
 const cancelEventCreate = () => {
     levelData.value.event.splice(levelData.value.event.length - 1, 1)
     toggleDialog("event-create")
+}
+
+const editScene = (index: number) => {
+    editIndex.value = index
+    sceneToEdit.value = editContentType.value[index]
+    toggleDialog("scene-edit")
+}
+
+const confirmOption = (v: eventDialogueModel) => {
+  //newScene.value.dialogue[editIndex.value] = v
 }
 
 // 新建關卡事件
