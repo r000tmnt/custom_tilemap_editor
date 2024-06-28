@@ -136,7 +136,14 @@ const editIndex = ref<number>(-1)
 
 const prepareNewOptions = () => {
   editIndex.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue.length
-  dialogueToEdit.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[editIndex.value]
+  dialogueToEdit.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[editIndex.value] = {
+    person: "",
+    style: "#ffffff",
+    size: "",
+    content: "",
+    audio: [],
+    option: []
+  }
   toggleDialog('dialogue-option-list')
 }
 

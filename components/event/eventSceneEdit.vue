@@ -65,7 +65,7 @@
                 <v-card-actions>
                     <v-btn @click="toggleDialog('scene-dialogue-create')">New dialogue</v-btn>
 
-                    <v-btn @click="toggleDialog('dialogue-option-create')">Create option</v-btn>
+                    <v-btn @click="prepareNewOptions">Create option</v-btn>
                 </v-card-actions>
 
                 <!-- Dialogue -->
@@ -139,6 +139,19 @@ const newScene = ref<eventSceneModel>(JSON.parse(JSON.stringify(props.scene)))
 
 const dialogueToEdit = ref<eventDialogueModel>()
 const editIndex = ref<number>(-1)
+
+const prepareNewOptions = () => {
+  editIndex.value = props.scene.dialogue.length
+  dialogueToEdit.value = props.scene.dialogue[editIndex.value] = {
+    person: "",
+    style: "#ffffff",
+    size: "",
+    content: "",
+    audio: [],
+    option: []
+  }
+  toggleDialog('dialogue-option-list')
+}
 
 const editDialogue = (index: number) => {
     editIndex.value = index
