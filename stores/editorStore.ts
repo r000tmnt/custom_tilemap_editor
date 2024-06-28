@@ -102,7 +102,9 @@ export const useEditorStore = defineStore('editor', () => {
         "none",
         "item",
         "status",
-        "enemy"
+        "enemy",
+        "player",
+        "option"
     ])
 
     const optionConditionValue = ref<string[]>([])
