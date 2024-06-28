@@ -12,8 +12,8 @@
         title="Dialogue options"
       >
         <v-btn prepend-icon="mdi-plus-box" color="primary" @click="toggleDialog('dialogue-option-create')">
-              CREATE OPTION
-          </v-btn>
+            CREATE OPTION
+        </v-btn>
         <v-list>
           <v-list-item v-for="(option, index) in options"
               :key="option.value"
@@ -68,7 +68,7 @@ const editOption = (option: dialogueOptionModel, index: number) => {
     console.log("option :>>>", option)
     optionToEdit.value = option
     editIndex.value = index
-    toggleDialog("dialouge-option-edit")
+    toggleDialog("dialogue-option-edit")
 }
 
 const deleteOption = (index: number) => {

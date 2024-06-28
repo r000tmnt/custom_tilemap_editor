@@ -98,7 +98,7 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'dialogue-option-create':
                 optionCreateDialog.value = !optionCreateDialog.value
             break;
-            case 'dialouge-option-edit':
+            case 'dialogue-option-edit':
                 optionEditDialog.value = !optionEditDialog.value
             break;
             case 'option-effect-create':
