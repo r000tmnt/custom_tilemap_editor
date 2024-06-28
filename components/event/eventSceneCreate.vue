@@ -65,7 +65,7 @@
                 <v-card-actions>
                     <v-btn @click="toggleDialog('scene-dialogue-create')">New dialogue</v-btn>
 
-                    <v-btn @click="toggleDialog('dialogue-option-create')">Create option</v-btn>
+                    <v-btn @click="prepareNewOptions">Create option</v-btn>
                 </v-card-actions>
 
                 <!-- Dialogue -->
@@ -96,8 +96,9 @@
     <event-dialogue-edit v-if="dialogueEditDialog" 
       :dialogue="dialogueToEdit" 
       @edit-dialogue="updateDialogue" />
-    <event-option-create v-if="optionCreateDialog" 
-        @create-option="confirmOption" />
+    <event-option-list v-if="optionListDialog"
+      :dialogue="dialogueToEdit"
+      @update-event-options="updateDialogue" />
 </template>
 
 <script setup lang="ts">
@@ -107,13 +108,13 @@ import type { eventSceneModel, dialogueOptionModel, eventDialogueModel } from '~
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
 import eventDialogueCreate from './eventDialogueCreate.vue';
-import eventOptionCreate from './eventOptionCreate.vue';
+import eventOptionList from './eventOptionList.vue';
 import eventDialogueEdit from './eventDialogueEdit.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
 const { audioAssets, levelData } = storeToRefs(useEditorStore())
-const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionCreateDialog } = storeToRefs(useDialogStore())
+const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionListDialog } = storeToRefs(useDialogStore())
 const { inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset, saveLevelData } = useEditorStore()
 
@@ -132,6 +133,12 @@ const formRef = ref()
 
 const dialogueToEdit = ref<eventDialogueModel>()
 const editIndex = ref<number>(-1)
+
+const prepareNewOptions = () => {
+  editIndex.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue.length
+  dialogueToEdit.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[editIndex.value]
+  toggleDialog('dialogue-option-list')
+}
 
 const editDialogue = (index: number) => {
     editIndex.value = index
@@ -155,16 +162,6 @@ const confirmDialogue = (v: eventDialogueModel) => {
   console.log("comfirmDialogue :>>>", v)
   levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue.push(v)
   console.log(levelData.value.event[props.latestIndex].scene[props.childIndex])
-}
-
-const confirmOption = (v: dialogueOptionModel) => {
-  levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue.push({
-    person: "",
-    style: "",
-    size: "",
-    content: "",
-    option: [ v ]
-  })
 }
 
 const updateDialogue = (v: eventDialogueModel) => {
