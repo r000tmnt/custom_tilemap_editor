@@ -23,6 +23,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const optionListDialog = ref<boolean>(false)
     // On and off switch for event dialogue option create
     const optionCreateDialog = ref<boolean>(false)
+    // On and off switch for event dialogue option edit
+    const optionEditDialog = ref<boolean>(false)
     // On and off switch for event dialogue option effect
     const optionEffectDialog = ref<boolean>(false)
     // On and off swith for editor context menu
@@ -96,6 +98,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'dialogue-option-create':
                 optionCreateDialog.value = !optionCreateDialog.value
             break;
+            case 'dialouge-option-edit':
+                optionEditDialog.value = !optionEditDialog.value
+            break;
             case 'option-effect-create':
                 optionEffectDialog.value = !optionEffectDialog.value
             break;
@@ -159,6 +164,7 @@ export const useDialogStore = defineStore('dialog', () => {
         dialougeCreateDialog,
         optionListDialog,
         optionCreateDialog,
+        optionEditDialog,
         dialogueEditDialog,
         optionEffectDialog,
         contextMenu,
