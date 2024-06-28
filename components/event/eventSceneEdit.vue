@@ -97,10 +97,9 @@
     <event-dialogue-edit v-if="dialogueEditDialog" 
       :dialogue="dialogueToEdit" 
       @edit-dialogue="updateDialogue" />
-    <event-option-create v-if="optionCreateDialog" 
-        @create-option="confirmOption" />
     <event-option-list v-if="optionListDialog"
-      :dialogue="dialogueToEdit" />
+      :dialogue="dialogueToEdit"
+      @update-event-options="confirmOption" />
 </template>
 
 <script setup lang="ts">
@@ -110,7 +109,6 @@ import type { eventSceneModel, dialogueOptionModel, eventDialogueModel } from '~
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
 import eventDialogueCreate from './eventDialogueCreate.vue';
-import eventOptionCreate from './eventOptionCreate.vue';
 import eventDialogueEdit from './eventDialogueEdit.vue';
 import eventOptionList from './eventOptionList.vue';
 
@@ -176,14 +174,8 @@ const updateDialogue = (v: eventDialogueModel) => {
     newScene.value.dialogue[editIndex.value] = v
 }
 
-const confirmOption = (v: dialogueOptionModel) => {
-  newScene.value.dialogue.push({
-    person: "",
-    style: "",
-    size: "",
-    content: "",
-    option: [ v ]
-  })
+const confirmOption = (v: eventDialogueModel) => {
+  newScene.value.dialogue[editIndex.value] = v
 }
 
 const editScene = () => {
