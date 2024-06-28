@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-      v-model="optionCreateDialog"
+      v-model="optionEditDialog"
       width="auto"
       persistent
     >
@@ -72,14 +72,14 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import type { PropType } from 'vue'
-import type { dialogueOptionModel, optionEffectModel, eventDialogueModel } from '~/types/level'
+import type { dialogueOptionModel, optionEffectModel } from '~/types/level'
 
 import eventOptionEffect from './eventOptionEffect.vue';
 
 const { optionConditionType, optionConditionValue } = storeToRefs(useEditorStore())
-const { optionCreateDialog } = storeToRefs(useDialogStore())
+const { optionEditDialog } = storeToRefs(useDialogStore())
 const { type } = storeToRefs(useItemStore())
 const { toggleDialog } = useDialogStore()
 const { inputRules } = useRuleStore()
@@ -88,11 +88,21 @@ const { getItemType } = useItemStore()
 const props = defineProps({
     option: {
         type: Object as PropType<dialogueOptionModel>,
-        default: {}
+        default: {
+            value: "",
+            style: "#ffffff",
+            size: "",
+            content: "",
+            condition: {
+                type: "",
+                value: ""
+            },
+            effect: []
+        }
     }
 })
 
-const emit = defineEmits(["createOption"])
+const emit = defineEmits(["editOption"])
 
 const formRef = ref()
 
@@ -129,11 +139,18 @@ const setConditionValueList = () => {
     }
 }
 
+watch(() => props.option, (newVal, oldVal) => {
+    console.log(newVal)
+    if(newVal){
+        newOption.value = JSON.parse(JSON.stringify(props.option))
+    }
+}, { deep: true })
+
 const createOption = () => {
     formRef.value?.validate().then((result: any) => {
         if(result.valid){
-            emit("createOption", newOption.value)
-            toggleDialog("dialogue-option-create")
+            emit("editOption", newOption.value)
+            toggleDialog("dialogue-option-edit")
         }
     })
 }
