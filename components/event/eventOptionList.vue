@@ -76,18 +76,18 @@ const deleteOption = (index: number) => {
 }
 
 const createOption = (v: dialogueOptionModel) => {
-  props.dialogue.option?.push(v)
+  options.value?.push(v)
 }
 
 const confirmOption = (v: dialogueOptionModel) => {
-  if(props.dialogue.option){
-    props.dialogue.option[editIndex.value] = v
-    toggleDialog("dialogue-event-list")
+  if(options.value){
+    options.value[editIndex.value] = v
   }
 }
 
 const updateDialogueOptions = () => {
-  emit("updateEventOptions", props.dialogue)
+  emit("updateEventOptions", options.value)
+  toggleDialog("dialogue-option-list")
 }
 
 onMounted(() => {
