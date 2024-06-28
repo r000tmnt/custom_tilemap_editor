@@ -128,6 +128,12 @@ const setConditionValueList = () => {
                 "sight"
             ]
         break;
+        case "player":
+        break;
+        case "enemy":
+        break;
+        case "option":
+        break;
     }
 }
 
