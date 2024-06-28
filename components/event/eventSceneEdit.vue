@@ -187,8 +187,8 @@ const updateDialogue = (v: eventDialogueModel) => {
     newScene.value.dialogue[editIndex.value] = v
 }
 
-const confirmOption = (v: eventDialogueModel) => {
-  newScene.value.dialogue[editIndex.value] = v
+const confirmOption = (v: dialogueOptionModel[]) => {
+  newScene.value.dialogue[editIndex.value].option = v
 }
 
 const editScene = () => {
