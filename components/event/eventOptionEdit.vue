@@ -58,7 +58,7 @@
             </v-row>
             <v-row>
                 <v-col class="d-flex justify-end">
-                    <v-btn color="grey" class=mr-2 @click="toggleDialog('dialogue-option-create')">CANCEL</v-btn>
+                    <v-btn color="grey" class=mr-2 @click="toggleDialog('dialogue-option-edit')">CANCEL</v-btn>
                     <v-btn color="primary" @click="createOption">CONFIRM</v-btn>
                 </v-col>
             </v-row>               
