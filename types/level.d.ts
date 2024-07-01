@@ -21,6 +21,8 @@ interface optionConditionModel {
     possess?: boolean
     greater?: boolean
     percentage?: number
+    down?: boolean // If player or enemy is on the field
+    required?: number // This option will appeared if xx option selected
 }
 
 interface dialogueOptionModel {
