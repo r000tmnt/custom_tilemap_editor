@@ -25,10 +25,7 @@
     "wall.png",
     "",
     "",
-    "item.png",
-    "/assets/images/env/item.png",
-    "/assets/images/env/item.png",
-    "/assets/images/env/item.png"
+    "item.png"
   ],
   "phase": ["conversation", "titleCard", "battle", "conversation", "end"],
   "event": [
@@ -69,14 +66,24 @@
                   "value": "tutorial_1.option_1.value",
                   "style": "",
                   "size": "",
-                  "content": "tutorial_1.option_1.content",
+                  "response": [{
+                    "person": "",
+                    "style": "#ffffff",
+                    "size": "",
+                    "content": "tutorial_1.option_1.content"
+                  }],
                   "effect": []
                 },
                 {
                   "value": "tutorial_1.option_2.value",
                   "style": "",
                   "size": "",
-                  "content": "tutorial_1.option_2.content",
+                  "response": [{
+                    "person": "",
+                    "style": "#ffffff",
+                    "size": "",
+                    "content": "tutorial_1.option_2.content"
+                  }],
                   "effect": [
                     { "target": "player_1", "attribute": "hp", "value": -1 }
                   ]
@@ -174,7 +181,12 @@
                   "value": "tutorial_1.option_3.value",
                   "style": "",
                   "size": "",
-                  "content": "tutorial_1.option_3.content",
+                  "response": [{
+                    "person": "",
+                    "style": "#ffffff",
+                    "size": "",
+                    "content": "tutorial_1.option_3.content"
+                  }],
                   "effect": [
                     {
                       "target": "player_1",
@@ -189,7 +201,12 @@
                   "value": "tutorial_1.option_4.value",
                   "style": "",
                   "size": "",
-                  "content": "tutorial_1.option_4.content",
+                  "response": [{
+                    "person": "",
+                    "style": "#ffffff",
+                    "size": "",
+                    "content": "tutorial_1.option_4.content"
+                  }],
                   "effect": [
                     { "target": "enemy_1", "attribute": "hp", "value": -1 }
                   ]
@@ -265,15 +282,14 @@
       "trigger": "auto"
     }
   ],
-  "enemy": [{ "name": "Zombie", "job": "mob_zombie_1", "startingPoint": { "x": 2, "y": 11 } }],
-  "player": [
+  "enemy": [
     {
-        "startingPoint": {
-            "x": 3,
-            "y": 11
-        }
+      "name": "Zombie",
+      "job": "mob_zombie_1",
+      "startingPoint": { "x": 2, "y": 11 }
     }
-],
+  ],
+  "player": [{ "startingPoint": { "x": 3, "y": 11 } }],
   "objective": {
     "victory": { "target": "enemy", "value": 0 },
     "fail": { "target": "player", "value": 0 },
