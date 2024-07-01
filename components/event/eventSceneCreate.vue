@@ -69,8 +69,8 @@
                 </v-card-actions>
 
                 <!-- Dialogue -->
-                <v-list v-for="(dialogue, index) in levelData.event[props.latestIndex].scene[props.childIndex].dialogue">
-                    {{ `${index + 1}. ${dialogue.content}` }}
+                <v-list v-for="(dialogue, index) in levelData.event[props.latestIndex].scene[props.childIndex].dialogue" :key="dialogue.content">
+                    {{ `${index + 1}. ${dialogue.option? dialogue.option.length? 'Display options...' : dialogue.content: dialogue.content }` }}
                     <v-icon class="ml-2" 
                         color="secondary" 
                         icon="mdi-note-edit-outline"

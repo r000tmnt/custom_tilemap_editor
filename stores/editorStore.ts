@@ -107,6 +107,17 @@ export const useEditorStore = defineStore('editor', () => {
         "option"
     ])
 
+    const characterList = ref([
+        "none",
+        "unknow"
+    ])
+    
+    const fontSizes = ref<string[]>([
+        "fontSize",
+        "fontSize_md",
+        "fontSize_sm"
+    ])
+
     const optionConditionValue = ref<string[]>([])
 
     const editorTheme = ref<string>("dark")
@@ -516,6 +527,8 @@ export const useEditorStore = defineStore('editor', () => {
         triggerType,
         optionConditionType,
         optionConditionValue,
+        characterList,
+        fontSizes,
         initEditor,
         storeSteps,
         previousStep,

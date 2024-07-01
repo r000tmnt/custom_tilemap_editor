@@ -29,7 +29,7 @@ interface dialogueOptionModel {
     value: string
     style: string
     size: string
-    content: string[]
+    response: eventDialogueModel[]
     condition: optionConditionModel
     effect: optionEffectModel[]
 }

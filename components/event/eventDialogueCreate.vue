@@ -73,21 +73,10 @@ import type { eventDialogueModel } from '~/types/level'
 
 const { dialougeCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-const { audioAssets } = storeToRefs(useEditorStore())
+const { audioAssets, characterList, fontSizes } = storeToRefs(useEditorStore())
 const { selectRules, inputRules } = useRuleStore()
 
 const emit = defineEmits(["createDialogue"])
-
-const characterList = ref([
-    "none",
-    "unknow"
-])
-
-const fontSizes = ref<string[]>([
-    "fontSize",
-    "fontSize_md",
-    "fontSize_sm"
-])
 
 const newDialogue = ref<eventDialogueModel>({
     person: "",

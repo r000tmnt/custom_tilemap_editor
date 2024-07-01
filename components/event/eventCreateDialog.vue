@@ -56,7 +56,7 @@
                                     v-for="(item, index) in editContentType"
                                     :key="index">
                                     {{ `${index + 1}. Dialogue: ${ item.dialogue.length?
-                                        item.dialogue[0].content.length? item.dialogue[0].content : item.dialogue[0].option[0].content : ''}` }}
+                                        item.dialogue[0].content.length? item.dialogue[0].content : item.dialogue[0].option[0].response[0].content : ''}` }}
 
                                         <v-icon class="ml-2" 
                                             color="secondary" 

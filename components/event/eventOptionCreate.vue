@@ -21,16 +21,50 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-col v-for="(msg, index) in newOption.content" :key="msg">
+                <v-col v-for="(msg, index) in newOption.response" :key="msg.content">
                     <!-- Content -->
-                    <v-textarea
-                        label="Option response"
-                        v-model="newOption.content[index]"
-                        :rules="inputRules"></v-textarea>    
+                    <v-row>
+                        <v-col>
+                            <!-- The person to show on the screen -->
+                            <v-select label="Person"
+                                v-model="msg.person"
+                                :items="characterList"></v-select>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <!-- font color -->
+                            <p>Font color</p>
+                            <v-color-picker v-model="msg.style"
+                                :rules="inputRules"
+                                hide-canvas></v-color-picker>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <!-- font size -->
+                            <v-select label="Font size"
+                                v-model="msg.size"
+                                :items="fontSizes"
+                                :rules="selectRules"></v-select>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <!-- content -->
+                            <v-textarea label="Content"
+                                v-model="msg.content"
+                                :rules="inputRules"></v-textarea>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-btn prepend-icon="mdi-plus-box" color="primary" @click="appendNewResponse">
+                                Create option response
+                            </v-btn>
+                        </v-col>
+                    </v-row>    
                 </v-col>
-                <v-btn prepend-icon="mdi-plus-box" color="primary" @click="() => { newOption.content.push('') }">
-                    Create option response
-                </v-btn>
             </v-row>
             <v-row>
                 <v-col>
@@ -89,10 +123,10 @@ import eventOptionEffect from './eventOptionEffect.vue';
 
 const { optionConditionType, optionConditionValue } = storeToRefs(useEditorStore())
 const { optionCreateDialog } = storeToRefs(useDialogStore())
+const { characterList, fontSizes } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
-const { inputRules } = useRuleStore()
+const { inputRules, selectRules } = useRuleStore()
 const { setConditionValueList } = useEditorStore()
-
 
 const emit = defineEmits(["createOption"])
 
@@ -102,7 +136,7 @@ const newOption = ref<dialogueOptionModel>({
     value: "",
     style: "#ffffff",
     size: "",
-    content: [],
+    response: [],
     condition: {
         type: "",
         value: ""
@@ -112,6 +146,15 @@ const newOption = ref<dialogueOptionModel>({
 
 const confirmEffect = (v: optionEffectModel) => {
     newOption.value.effect.push(v)
+}
+
+const appendNewResponse = () => {
+    newOption.value.response.push({
+        person: "",
+        style: "",
+        size: "",
+        content: ""
+    })
 }
 
 const createOption = () => {
