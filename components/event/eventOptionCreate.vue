@@ -21,16 +21,16 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-col>
+                <v-col v-for="(msg, index) in newOption.content" :key="msg">
                     <!-- Content -->
-                    <v-textarea v-for="(msg, index) in newOption.content"
+                    <v-textarea
                         label="Option response"
                         v-model="newOption.content[index]"
-                        :rules="inputRules"></v-textarea>
-                    <v-btn prepend-icon="mdi-plus-box" color="primary" @click="">
-                        Create option response
-                    </v-btn>    
+                        :rules="inputRules"></v-textarea>    
                 </v-col>
+                <v-btn prepend-icon="mdi-plus-box" color="primary" @click="() => { newOption.content.push('') }">
+                    Create option response
+                </v-btn>
             </v-row>
             <v-row>
                 <v-col>
