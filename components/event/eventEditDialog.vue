@@ -112,7 +112,7 @@ import eventSceneCreate from './eventSceneCreate.vue';
 import eventSceneEdit from './eventSceneEdit.vue';
 
 const { editEventDialog, eventItemDialog, eventSceneCreateDialog, eventSceneEditDialog } = storeToRefs(useDialogStore())
-const { tileInfo, levelData, editEventIndex, triggerType } = storeToRefs(useEditorStore())
+const { tileInfo, levelData, editEventIndex, triggerType, editSceneIndex } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
 
@@ -125,11 +125,10 @@ const editContentType = ref()
 const selectedType = ref<string>("")
 const sceneToEdit = ref()
 const eventIndex = ref<number>(tileInfo.value.indexes[editEventIndex.value])
-const editIndex = ref<number>(0)
 const childIndex = ref<number>(0)
 
 const editScene = (index: number) => {
-    editIndex.value = index
+    editSceneIndex.value = index
     sceneToEdit.value = editContentType.value[index]
     toggleDialog("scene-edit")
 }
@@ -170,17 +169,16 @@ const removeEventItem = (index: number) => {
     editContentType.value.splice(index, 1)
 }
 
-
 const editEvent = (v: any) => {
     console.log(v)
 
     if(selectedType.value === 'ITEM'){
-        tileInfo.value.events[editEventIndex.value].item[editIndex.value] = v
+        tileInfo.value.events[editEventIndex.value].item[editSceneIndex.value] = v
     }else{
-        tileInfo.value.events[editEventIndex.value].scene[editIndex.value] = v
+        tileInfo.value.events[editEventIndex.value].scene[editSceneIndex.value] = v
     }
 
-    editContentType.value[editIndex.value] = v
+    editContentType.value[editSceneIndex.value] = v
 }
 
 // const emit = defineEmits(["triggerReload"])
