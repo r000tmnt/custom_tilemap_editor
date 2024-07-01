@@ -47,7 +47,13 @@
                     <v-text-field v-if="newOption.condition.type === 'status'"
                         type="number"
                         placeholder="In percentage"
-                        v-model="newOption.condition.percentage"></v-text-field>    
+                        v-model="newOption.condition.percentage"></v-text-field>
+                    <v-checkbox v-if="newOption.condition.type === 'player' || newOption.condition.type === 'enemy'"
+                        lable="If the player or the enemy is on the field"
+                        v-model="newOption.condition.down"></v-checkbox>
+                    <v-checkbox v-if="newOption.condition.type === 'option'"
+                        label="If the option is selected"
+                        v-model="newOption.condition.required"></v-checkbox>    
                 </v-col>
             </v-row>
             <v-row>
@@ -73,16 +79,23 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue'
+import type { PropType } from 'vue'
 import type { dialogueOptionModel, optionEffectModel } from '~/types/level'
 
 import eventOptionEffect from './eventOptionEffect.vue';
 
-const { optionConditionType, optionConditionValue } = storeToRefs(useEditorStore())
+const { optionConditionType, optionConditionValue, levelData } = storeToRefs(useEditorStore())
 const { optionCreateDialog } = storeToRefs(useDialogStore())
-const { type } = storeToRefs(useItemStore())
 const { toggleDialog } = useDialogStore()
 const { inputRules } = useRuleStore()
-const { getItemType } = useItemStore()
+const { setConditionValueList } = useEditorStore()
+
+const props = defineProps({
+    options: {
+        type: Array as PropType<dialogueOptionModel[]>,
+        default: []
+    }
+})
 
 const emit = defineEmits(["createOption"])
 
@@ -97,44 +110,11 @@ const newOption = ref<dialogueOptionModel>({
         type: "",
         value: ""
     },
-    effect: []
+    effect: [],
 })
 
 const confirmEffect = (v: optionEffectModel) => {
     newOption.value.effect.push(v)
-}
-
-const setConditionValueList = () => {
-    console.log(newOption.value.condition.type)
-    switch(newOption.value.condition.type){
-        case "item":
-            getItemType().then(() => {
-                optionConditionValue.value = type.value.map(t => t.category)
-                newOption.value.condition.possess = false
-            })
-        break;
-        case "status":
-            optionConditionValue.value = [
-                "hp", 
-                "mp", 
-                "str", 
-                "def", 
-                "int",
-                "spd", 
-                "spi",
-                "ap",
-                "lck",
-                "moveSpeed",
-                "sight"
-            ]
-        break;
-        case "player":
-        break;
-        case "enemy":
-        break;
-        case "option":
-        break;
-    }
 }
 
 const createOption = () => {
