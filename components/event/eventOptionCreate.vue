@@ -25,7 +25,7 @@
                     <!-- Content -->
                     <v-textarea v-for="(msg, index) in newOption.content"
                         label="Option response"
-                        v-model="msg"
+                        v-model="newOption.content[index]"
                         :rules="inputRules"></v-textarea>
                     <v-btn prepend-icon="mdi-plus-box" color="primary" @click="">
                         Create option response
