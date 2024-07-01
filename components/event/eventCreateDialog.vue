@@ -116,7 +116,7 @@ import eventOptionList from './eventOptionList.vue';
 import type { eventDialogueModel } from '~/types/level';
 
 const { createEventDialog, eventSceneCreateDialog, eventItemDialog } = storeToRefs(useDialogStore())
-const { tileInfo, levelData, triggerType } = storeToRefs(useEditorStore())
+const { tileInfo, levelData, triggerType, editSceneIndex } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
 
@@ -130,7 +130,6 @@ const selectedType = ref<string>("")
 const latestIndex = ref<number>(levelData.value.event.length - 1)
 const childIndex = ref<number>(-1)
 const sceneToEdit = ref()
-const editIndex = ref<number>(-1)
 
 const getEventIndex = () => {
     if(selectedType.value === "ITEM"){
@@ -173,13 +172,13 @@ const cancelEventCreate = () => {
 }
 
 const editScene = (index: number) => {
-    editIndex.value = index
+    editSceneIndex.value = index
     sceneToEdit.value = editContentType.value[index]
     toggleDialog("scene-edit")
 }
 
 const confirmOption = (v: eventDialogueModel) => {
-  //newScene.value.dialogue[editIndex.value] = v
+  //newScene.value.dialogue[editSceneIndex.value] = v
 }
 
 // 新建關卡事件
