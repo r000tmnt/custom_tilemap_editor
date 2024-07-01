@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import type { levleDataModel, levelDataResponse, levelAssetModel, levelAssetResponseModel, tileInfoModel, levelEventModel, animationAssetModel, audioAssetModel } from '~/types/level'
 import type responseModel  from '~/types/serverResponse'
 import type { animationCreateModel, animationSort } from '~/types/animation'
-import $api from '~/composables/useCustomFetch'
+import $api from '~/composables/useCustomFetch' 
 
 export const useEditorStore = defineStore('editor', () => {
     // Default template for levelData
@@ -114,6 +114,10 @@ export const useEditorStore = defineStore('editor', () => {
     const configState = ref<boolean>(false)
 
     const editEventIndex = ref<number>(0)
+
+    const editSceneIndex = ref<number>(0)
+
+    const editDialogueIndex = ref<number>(0)
 
     const buildProgress = ref<number>(0)
 
@@ -366,6 +370,43 @@ export const useEditorStore = defineStore('editor', () => {
         }
     }
 
+    const setConditionValueList = (conditionType: string) => {
+        switch(conditionType){
+            case "item":
+                const itemStore = useItemStore()
+                itemStore.getItemType().then(() => {
+                    optionConditionValue.value = itemStore.type.map(t => t.category)
+                })
+            break;
+            case "status":
+                optionConditionValue.value = [
+                    "hp", 
+                    "mp", 
+                    "str", 
+                    "def", 
+                    "int",
+                    "spd", 
+                    "spi",
+                    "ap",
+                    "lck",
+                    "moveSpeed",
+                    "sight"
+                ]
+            break;
+            case "player":
+                optionConditionValue.value = levelData.value.player.map((p, index) => `Player ${index}`)
+            break;
+            case "enemy":
+                optionConditionValue.value = levelData.value.enemy.map((p, index) => `Enemy ${index}`)
+            break;
+            case "option":
+                if(Array.isArray(tileInfo.value.events[editEventIndex.value].scene[editSceneIndex.value].dialogue[editDialogueIndex.value].option))
+                    optionConditionValue.value.splice(0)
+                    tileInfo.value.events[editEventIndex.value].scene[editSceneIndex.value].dialogue[editDialogueIndex.value].option?.map((o, index) => optionConditionValue.value.push(`Option ${index}`))
+            break;
+        }
+    }
+
     /**
      * Save the latest changes of levelData
      */
@@ -462,6 +503,8 @@ export const useEditorStore = defineStore('editor', () => {
         selectedTile,
         tileInfo,
         editEventIndex,
+        editSceneIndex,
+        editDialogueIndex,
         audioAssets,
         animationAssets,
         layers,
@@ -487,6 +530,7 @@ export const useEditorStore = defineStore('editor', () => {
         getAnimationAssets,
         sortAnimationAssets,
         createNewAnimation,
+        setConditionValueList,
         buildProject
     }
 })
