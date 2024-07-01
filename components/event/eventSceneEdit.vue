@@ -114,7 +114,7 @@ import eventOptionList from './eventOptionList.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneEditDialog } = storeToRefs(useDialogStore())
-const { audioAssets, levelData, tileInfo } = storeToRefs(useEditorStore())
+const { audioAssets, levelData, tileInfo, editDialogueIndex } = storeToRefs(useEditorStore())
 const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionCreateDialog, optionListDialog } = storeToRefs(useDialogStore())
 const { selectRules, inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
@@ -138,11 +138,10 @@ const formRef = ref()
 const newScene = ref<eventSceneModel>(JSON.parse(JSON.stringify(props.scene)))
 
 const dialogueToEdit = ref<eventDialogueModel>()
-const editIndex = ref<number>(-1)
 
 const prepareNewOptions = () => {
-  editIndex.value = props.scene.dialogue.length
-  dialogueToEdit.value = props.scene.dialogue[editIndex.value] = {
+  editDialogueIndex.value = props.scene.dialogue.length
+  dialogueToEdit.value = props.scene.dialogue[editDialogueIndex.value] = {
     person: "",
     style: "#ffffff",
     size: "",
@@ -154,7 +153,7 @@ const prepareNewOptions = () => {
 }
 
 const editDialogue = (index: number) => {
-    editIndex.value = index
+    editDialogueIndex.value = index
     dialogueToEdit.value = newScene.value.dialogue[index]
     
     if(dialogueToEdit.value.option){
@@ -184,11 +183,11 @@ const confirmDialogue = (v: eventDialogueModel) => {
 
 const updateDialogue = (v: eventDialogueModel) => {
     console.log("updateDialogue :>>>", v)
-    newScene.value.dialogue[editIndex.value] = v
+    newScene.value.dialogue[editDialogueIndex.value] = v
 }
 
 const confirmOption = (v: dialogueOptionModel[]) => {
-  newScene.value.dialogue[editIndex.value].option = v
+  newScene.value.dialogue[editDialogueIndex.value].option = v
 }
 
 const editScene = () => {
