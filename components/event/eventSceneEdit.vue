@@ -70,11 +70,16 @@
 
                 <!-- Dialogue -->
                 <v-list v-for="(dialogue, index) in newScene.dialogue">
-                    {{ `${index + 1}. ${dialogue.option? dialogue.option[0].content : dialogue.content }` }}
+                    {{ `${index + 1}. ${dialogue.option?.length? dialogue.option[0].content[0] : dialogue.content }` }}
                     <v-icon class="ml-2" 
                         color="secondary" 
                         icon="mdi-note-edit-outline"
                         @click="editDialogue(index)"></v-icon>
+
+                    <v-icon icon="mdi-trash-can" 
+                      color="danger"
+                      class="ml-2" 
+                      @click.stop="deleteDialogue(index)"></v-icon>
                 </v-list>  
             </v-container>
         </v-form>
@@ -162,6 +167,11 @@ const editDialogue = (index: number) => {
     }else{
       toggleDialog("scene-dialogue-edit")
     }
+}
+
+const deleteDialogue = (index: number) => {
+  // editDialogueIndex.value = index
+  newScene.value.dialogue.splice(index, 1)
 }
 
 const updatePeopleInScene = (e: any) => {

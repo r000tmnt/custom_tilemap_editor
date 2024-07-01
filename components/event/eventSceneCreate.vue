@@ -75,6 +75,11 @@
                         color="secondary" 
                         icon="mdi-note-edit-outline"
                         @click="editDialogue(index)"></v-icon>
+
+                    <v-icon icon="mdi-trash-can" 
+                      color="danger"
+                      class="ml-2" 
+                      @click.stop="deleteDialogue(index)"></v-icon>
                 </v-list> 
             </v-container>
         </v-form>
@@ -150,6 +155,11 @@ const editDialogue = (index: number) => {
     editDialogueIndex.value = index
     dialogueToEdit.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[index]
     toggleDialog("scene-dialogue-edit")
+}
+
+const deleteDialogue = (index: number) => {
+  // editDialogueIndex.value = index
+  levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue.splice(index, 1)
 }
 
 const updatePeopleInScene = (e: any) => {
