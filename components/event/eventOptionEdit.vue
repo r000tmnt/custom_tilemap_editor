@@ -23,9 +23,13 @@
             <v-row>
                 <v-col>
                     <!-- Content -->
-                    <v-textarea label="Option response" 
-                        v-model="newOption.content"
+                    <v-textarea v-for="(msg, index) in newOption.content"
+                        label="Option response" 
+                        v-model="msg"
                         :rules="inputRules"></v-textarea>
+                    <v-btn prepend-icon="mdi-plus-box" color="primary" @click="">
+                    Create option response
+                    </v-btn>    
                 </v-col>
             </v-row>
             <v-row>
