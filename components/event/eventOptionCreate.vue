@@ -79,23 +79,16 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue'
-import type { PropType } from 'vue'
 import type { dialogueOptionModel, optionEffectModel } from '~/types/level'
 
 import eventOptionEffect from './eventOptionEffect.vue';
 
-const { optionConditionType, optionConditionValue, levelData } = storeToRefs(useEditorStore())
+const { optionConditionType, optionConditionValue } = storeToRefs(useEditorStore())
 const { optionCreateDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 const { inputRules } = useRuleStore()
 const { setConditionValueList } = useEditorStore()
 
-const props = defineProps({
-    options: {
-        type: Array as PropType<dialogueOptionModel[]>,
-        default: []
-    }
-})
 
 const emit = defineEmits(["createOption"])
 
