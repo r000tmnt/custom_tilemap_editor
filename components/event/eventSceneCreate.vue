@@ -113,7 +113,7 @@ import eventDialogueEdit from './eventDialogueEdit.vue';
 
 const { toggleDialog } = useDialogStore()
 const { eventSceneCreateDialog } = storeToRefs(useDialogStore())
-const { audioAssets, levelData } = storeToRefs(useEditorStore())
+const { audioAssets, levelData, editDialogueIndex } = storeToRefs(useEditorStore())
 const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionListDialog } = storeToRefs(useDialogStore())
 const { inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset, saveLevelData } = useEditorStore()
@@ -132,11 +132,10 @@ const props = defineProps({
 const formRef = ref()
 
 const dialogueToEdit = ref<eventDialogueModel>()
-const editIndex = ref<number>(-1)
 
 const prepareNewOptions = () => {
-  editIndex.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue.length
-  dialogueToEdit.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[editIndex.value] = {
+  editDialogueIndex.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue.length
+  dialogueToEdit.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[editDialogueIndex.value] = {
     person: "",
     style: "#ffffff",
     size: "",
@@ -148,7 +147,7 @@ const prepareNewOptions = () => {
 }
 
 const editDialogue = (index: number) => {
-    editIndex.value = index
+    editDialogueIndex.value = index
     dialogueToEdit.value = levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[index]
     toggleDialog("scene-dialogue-edit")
 }
@@ -173,7 +172,7 @@ const confirmDialogue = (v: eventDialogueModel) => {
 
 const updateDialogue = (v: eventDialogueModel) => {
     console.log("updateDialogue :>>>", v)
-    levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[editIndex.value] = v
+    levelData.value.event[props.latestIndex].scene[props.childIndex].dialogue[editDialogueIndex.value] = v
 }
 
 const createScene = () => {
