@@ -46,13 +46,6 @@
               "size": "fontSize_md",
               "content": "You heard a knocking sound from the distance not far way and see a moving shadow.\nWith cautious, you process the road ahead.",
               "audio": []
-            },
-            {
-              "person": "unknow",
-              "style": "#ffffff",
-              "size": "fontSize_md",
-              "content": "Thanks. I thought you'll run away and I'm going to stay like this forever.\nThe name is... by the way.",
-              "audio": []
             }
           ]
         }
@@ -85,12 +78,14 @@
                   "value": "test option",
                   "style": "#ffffff",
                   "size": "",
-                  "content": [{
-                    "person": "",
-                    "style": "",
-                    "size": "",
-                    "content": "not a real thing"
-                  }],
+                  "content": [
+                    {
+                      "person": "",
+                      "style": "",
+                      "size": "",
+                      "content": "not a real thing"
+                    }
+                  ],
                   "effect": []
                 }
               ]
@@ -154,12 +149,26 @@
                   "value": "Open the door",
                   "style": "#ffffff",
                   "size": "",
-                  "response": [{
-                    "person": "",
-                    "style": "#ffffff",
-                    "size": "",
-                    "content": "You see a man with a bow on his hand. He seems relief from the fact that he is free from the dusty room he's been stuck with."
-                  }],
+                  "response": [
+                    {
+                      "person": "none",
+                      "style": "#ffffff",
+                      "size": "fontSize_md",
+                      "content": "You see a man with a bow on his hand. He seems relief from the fact that he is free from the dusty room he's been stuck with."
+                    },
+                    {
+                      "person": "unknow",
+                      "style": "#FFFFFF",
+                      "size": "fontSize_md",
+                      "content": "Thanks. I thought you'll run away and I'm going to stay like this forever.\nThe name is... by the way."
+                    },
+                    {
+                      "person": "unknow",
+                      "style": "#FFFFFF",
+                      "size": "fontSize_md",
+                      "content": "Do you got more keys in your bag would you?\n{archer_name} saying it like it is urgent."
+                    }
+                  ],
                   "condition": {
                     "type": "item",
                     "value": "key",
@@ -171,12 +180,14 @@
                   "value": "Walk away quietly",
                   "style": "#ffffff",
                   "size": "",
-                  "response": [{
-                    "person": "",
-                    "style": "#ffffff",
-                    "size": "",
-                    "content": "Wait. Come back! You...\nYou don't seems to mind the fact that voice sound desperate and keep finding your way out."
-                  }],
+                  "response": [
+                    {
+                      "person": "",
+                      "style": "#ffffff",
+                      "size": "",
+                      "content": "Wait. Come back! You...\nYou don't seems to mind the fact that voice sound desperate and keep finding your way out."
+                    }
+                  ],
                   "condition": { "type": "", "value": "" },
                   "effect": []
                 }
