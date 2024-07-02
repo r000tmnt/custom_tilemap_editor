@@ -118,6 +118,12 @@ export const useEditorStore = defineStore('editor', () => {
         "fontSize_sm"
     ])
 
+    const optionEffectTarget = ref<string[]>([
+        "player",
+        "enemy",
+        // "event"
+    ])
+
     const optionConditionValue = ref<string[]>([])
 
     const editorTheme = ref<string>("dark")
@@ -527,6 +533,7 @@ export const useEditorStore = defineStore('editor', () => {
         triggerType,
         optionConditionType,
         optionConditionValue,
+        optionEffectTarget,
         characterList,
         fontSizes,
         initEditor,
