@@ -27,6 +27,8 @@ export const useDialogStore = defineStore('dialog', () => {
     const optionEditDialog = ref<boolean>(false)
     // On and off switch for event dialogue option effect
     const optionEffectDialog = ref<boolean>(false)
+    // On and off switch for event dialogue option response
+    const optionResponseDialog = ref<boolean>(false)
     // On and off swith for editor context menu
     const contextMenu = ref<boolean>(false)
     // On and off switch for editor enemy selector
@@ -104,6 +106,9 @@ export const useDialogStore = defineStore('dialog', () => {
             case 'option-effect-create':
                 optionEffectDialog.value = !optionEffectDialog.value
             break;
+            case 'option-response':
+                optionResponseDialog.value = !optionResponseDialog.value
+            break;
             case 'context-menu':
                 contextMenu.value = !contextMenu.value
             break;
@@ -165,6 +170,7 @@ export const useDialogStore = defineStore('dialog', () => {
         optionListDialog,
         optionCreateDialog,
         optionEditDialog,
+        optionResponseDialog,
         dialogueEditDialog,
         optionEffectDialog,
         contextMenu,
