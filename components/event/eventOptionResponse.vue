@@ -16,7 +16,7 @@
                 <v-col>
                     <!-- The person to show on the screen -->
                     <v-select label="Person"
-                        v-model="msg.person"
+                        v-model="msgToEdit.person"
                         :items="characterList"></v-select>
                 </v-col>
             </v-row>
@@ -24,7 +24,7 @@
                 <v-col>
                     <!-- font color -->
                     <p>Font color</p>
-                    <v-color-picker v-model="msg.style"
+                    <v-color-picker v-model="msgToEdit.style"
                         :rules="inputRules"
                         hide-canvas></v-color-picker>
                 </v-col>
@@ -33,7 +33,7 @@
                 <v-col>
                     <!-- font size -->
                     <v-select label="Font size"
-                        v-model="msg.size"
+                        v-model="msgToEdit.size"
                         :items="fontSizes"
                         :rules="selectRules"></v-select>
                 </v-col>
@@ -42,7 +42,7 @@
                 <v-col>
                     <!-- content -->
                     <v-textarea label="Content"
-                        v-model="msg.content"
+                        v-model="msgToEdit.content"
                         :rules="inputRules"></v-textarea>
                 </v-col>
             </v-row>            
@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import type { PropType } from 'vue';
 import { storeToRefs } from 'pinia';
 import type { eventDialogueModel } from '~/types/level';
@@ -82,10 +82,24 @@ const emit = defineEmits(["confirmResponse"])
 
 const myForm = ref<HTMLFormElement | null>(null)
 
+const msgToEdit = ref<eventDialogueModel>({
+            person: "",
+            style: "",
+            size: "",
+            content: ""
+        } )
+
+watch(() => props.msg, (newMsg, oldMsg) => {
+    if(newMsg){
+        msgToEdit.value = JSON.parse(JSON.stringify(props.msg))
+    }
+})
+
 const confirmResponse = () => {
-    myForm.value?.validate().tehn((result: any) => {
+    myForm.value?.validate().then((result: any) => {
         if(result.valid){
-            emit("confirmResponse", props.msg)
+            emit("confirmResponse", msgToEdit.value)
+            toggleDialog("option-response")
         }
     })
 }
