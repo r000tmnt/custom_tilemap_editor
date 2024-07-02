@@ -29,54 +29,11 @@
                     </v-col>
                 </v-row>
                 <v-list>
-                    <v-list-group 
-                        v-for="(msg, index) in newOption.response" 
+                    <v-list-item  v-for="(msg, index) in newOption.response" 
                         :key="msg.content"
-                        :value="`Response ${index + 1}. ${msg.content}`">
-                        <template v-slot:activator="{props}">
-                            <v-list-item
-                                v-bind="props"
-                                :title="`Response ${index + 1}. ${msg.content}`"></v-list-item>
-                        </template>
-
-                        <v-list-item>
-                            <!-- response -->
-                            <v-row>
-                                <v-col>
-                                    <!-- The person to show on the screen -->
-                                    <v-select label="Person"
-                                        v-model="msg.person"
-                                        :items="characterList"></v-select>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <!-- font color -->
-                                    <p>Font color</p>
-                                    <v-color-picker v-model="msg.style"
-                                        :rules="inputRules"
-                                        hide-canvas></v-color-picker>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <!-- font size -->
-                                    <v-select label="Font size"
-                                        v-model="msg.size"
-                                        :items="fontSizes"
-                                        :rules="selectRules"></v-select>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <!-- content -->
-                                    <v-textarea label="Content"
-                                        v-model="msg.content"
-                                        :rules="inputRules"></v-textarea>
-                                </v-col>
-                            </v-row>
-                        </v-list-item>
-                    </v-list-group>
+                        @click="editResponse(index)">
+                        {{ `Response ${index + 1}. ${msg.content}` }}
+                    </v-list-item>
                 </v-list>
             </v-row>
             <v-row>
@@ -119,22 +76,23 @@
     </v-dialog>
 
     <event-option-effect @create-option-effect="confirmEffect" />
+    <event-option-response :msg="msg" @confirm-response="createResponse" />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue'
 import type { PropType } from 'vue'
-import type { dialogueOptionModel, optionEffectModel } from '~/types/level'
+import type { dialogueOptionModel, optionEffectModel, eventDialogueModel } from '~/types/level'
 
 import eventOptionEffect from './eventOptionEffect.vue';
+import eventOptionResponse from './eventOptionResponse.vue';
 
 const { optionConditionType, optionConditionValue } = storeToRefs(useEditorStore())
 const { optionEditDialog } = storeToRefs(useDialogStore())
 const { type } = storeToRefs(useItemStore())
-const { characterList, fontSizes } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
-const { inputRules, selectRules } = useRuleStore()
+const { inputRules } = useRuleStore()
 const { getItemType } = useItemStore()
 
 const props = defineProps({
@@ -159,6 +117,10 @@ const emit = defineEmits(["editOption"])
 const formRef = ref()
 
 const newOption = ref<dialogueOptionModel>(props.option)
+
+const editIndex = ref<number>(0)
+
+const msg = ref<eventDialogueModel>()
 
 const confirmEffect = (v: optionEffectModel) => {
     newOption.value.effect.push(v)
@@ -205,6 +167,16 @@ const appendNewResponse = () => {
         size: "",
         content: ""
     })
+}
+
+const editResponse = (index: number) => {
+    editIndex.value = index
+    msg.value = newOption.value.response[index]
+    toggleDialog("option-response")
+}
+
+const createResponse = (v: eventDialogueModel) => {
+    newOption.value.response[editIndex.value] = v
 }
 
 const createOption = () => {
