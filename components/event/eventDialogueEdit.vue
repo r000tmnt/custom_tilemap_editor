@@ -73,7 +73,7 @@ import type { eventDialogueModel } from '~/types/level'
 
 const { dialogueEditDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-const { audioAssets } = storeToRefs(useEditorStore())
+const { audioAssets, characterList, fontSizes } = storeToRefs(useEditorStore())
 const { selectRules, inputRules } = useRuleStore()
 
 const props = defineProps({
@@ -90,17 +90,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["editDialogue"])
-
-const characterList = ref([
-    "none",
-    "unknow"
-])
-
-const fontSizes = ref<string[]>([
-    "fontSize",
-    "fontSize_md",
-    "fontSize_sm"
-])
 
 const newDialogue = ref<eventDialogueModel>(JSON.parse(JSON.stringify(props.dialogue)))
 
