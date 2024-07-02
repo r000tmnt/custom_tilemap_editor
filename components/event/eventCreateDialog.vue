@@ -82,6 +82,10 @@
                     </v-select>
                 </v-row>
 
+                <v-row v-if="levelData.event[latestIndex].trigger === 'option'">
+                    <!-- Decide which option is the key to trigger the event -->
+                </v-row>
+
                 <v-row>
                     <v-col cols="6">
                         <v-btn type="button" @click="cancelEventCreate" block>Cancel</v-btn>
@@ -108,12 +112,13 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { watch } from 'vue'
 
 import eventItemList from './eventItemList.vue';
 import eventSceneCreate from './eventSceneCreate.vue';
 import eventSceneEdit from './eventSceneEdit.vue';
 import eventOptionList from './eventOptionList.vue';
-import type { eventDialogueModel } from '~/types/level';
+import type { eventDialogueModel, dialogueOptionModel } from '~/types/level';
 
 const { createEventDialog, eventSceneCreateDialog, eventItemDialog } = storeToRefs(useDialogStore())
 const { tileInfo, levelData, triggerType, editSceneIndex } = storeToRefs(useEditorStore())
@@ -125,11 +130,29 @@ const eventType = ref<string[]>([
     "SCENE"
 ])
 
+const optionList = ref<dialogueOptionModel[]>([])
 const editContentType = ref()
 const selectedType = ref<string>("")
 const latestIndex = ref<number>(levelData.value.event.length - 1)
 const childIndex = ref<number>(-1)
 const sceneToEdit = ref()
+
+watch(() => levelData.value.event[latestIndex.value].trigger, (newType, oldType) => {
+    if(newType === 'option'){
+        // Gather option list
+        levelData.value.event.forEach(e => {
+            e.scene.forEach(s => {
+                s.dialogue.forEach(d => {
+                    if(d.option){
+                        d.option.forEach(o => {
+                            optionList.value.push(o)
+                        })
+                    }
+                })
+            })
+        })
+    }
+})
 
 const getEventIndex = () => {
     if(selectedType.value === "ITEM"){
