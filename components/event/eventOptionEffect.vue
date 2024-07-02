@@ -14,13 +14,21 @@
             <v-form ref="formRef">
                 <v-row>
                     <v-col>
-                        <!-- target -->
+                        <v-select :items="optionEffectTarget"
+                            v-model="effectTargetType"></v-select>
+                    </v-col>
+                </v-row>
+                <v-row v-if="effectTargetType === 'player'">
+                    <v-col>
                         <v-select :items="players" 
                             label="Target(player)"
                             v-model="newEffect.target"
                             :rules="selectRules">
-                        </v-select>
-
+                        </v-select>                        
+                    </v-col>
+                </v-row>
+                <v-row v-if="effectTargetType === 'enemy'">
+                    <v-col>
                         <v-select :items="enemies" 
                             label="Target(enemy)"
                             v-model="newEffect.target"
@@ -28,55 +36,65 @@
                         </v-select>
                     </v-col>
                 </v-row>
-                <v-row>
-                    <v-col>
-                        <!-- attribute -->
-                        <v-select label="Effected attribute" 
-                            :items="attribute"
-                            v-model="newEffect.attribute"
-                            :rules="selectRules"></v-select>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col>
-                        <!-- value -->
-                        <template v-if="newEffect.attribute === 'equip'">
-                            <v-select label="Effect value (equipment)"
-                                v-model="newEffect.value"
-                                :items="items"
-                                :rules="selectRules"
-                                @update:model-value="effectValueUpdate">
-                                <template v-slot:item="{props, item}">
-                                    <v-list-item v-bind="props">
-                                        {{ item.raw.id }}
-                                    </v-list-item>
-                                </template>
-                            </v-select>
-                        </template>
+                <template v-if="effectTargetType === 'player' || effectTargetType === 'enemy'">
+                    <v-row>
+                        <v-col>
+                            <!-- attribute -->
+                            <v-select label="Effected attribute" 
+                                :items="attribute"
+                                v-model="newEffect.attribute"
+                                :rules="selectRules"></v-select>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <!-- value -->
+                            <template v-if="newEffect.attribute === 'equip'">
+                                <v-select label="Effect value (equipment)"
+                                    v-model="newEffect.value"
+                                    :items="items"
+                                    :rules="selectRules"
+                                    @update:model-value="effectValueUpdate">
+                                    <template v-slot:item="{props, item}">
+                                        <v-list-item v-bind="props">
+                                            {{ item.raw.id }}
+                                        </v-list-item>
+                                    </template>
+                                </v-select>
+                            </template>
 
-                        <template v-else-if="newEffect.attribute === 'itme'">
-                            <v-select label="Effect value (item)"
-                                v-model="newEffect.value"
-                                :items="equipment"
-                                :rules="selectRules"
-                                @update:model-value="effectValueUpdate">
-                                <template v-slot:item="{props, item}">
-                                    <v-list-item v-bind="props">
-                                        {{ item.raw.id }}
-                                    </v-list-item>
-                                </template>
-                            </v-select>
-                        </template>
+                            <template v-else-if="newEffect.attribute === 'itme'">
+                                <v-select label="Effect value (item)"
+                                    v-model="newEffect.value"
+                                    :items="equipment"
+                                    :rules="selectRules"
+                                    @update:model-value="effectValueUpdate">
+                                    <template v-slot:item="{props, item}">
+                                        <v-list-item v-bind="props">
+                                            {{ item.raw.id }}
+                                        </v-list-item>
+                                    </template>
+                                </v-select>
+                            </template>
 
-                        <template v-else>
-                            <v-text-field type="number"
-                                label="Effect value (attribute)"
-                                v-model="newEffect.value"
-                                :rules="inputRules"
-                                :disabled="newEffect.attribute.length > 0 ? false : true"></v-text-field>
-                        </template>
-                    </v-col>
-                </v-row>
+                            <template v-else>
+                                <v-text-field type="number"
+                                    label="Effect value (attribute)"
+                                    v-model="newEffect.value"
+                                    :rules="inputRules"
+                                    :disabled="newEffect.attribute.length > 0 ? false : true"></v-text-field>
+                            </template>
+                        </v-col>
+                    </v-row>                    
+                </template>
+                <!-- <template v-if="effectTargetType === 'event'">
+                    <span>Select a position on the map</span>
+                    <v-row v-for="i in levelData.map.length">
+                        <v-col v-for="j in levelData.map[i-1].length">
+                            <div style="width: 32px; height: 32px;"></div>
+                        </v-col>
+                    </v-row>
+                </template> -->
                 <v-row>
                     <v-col class="d-flex justify-end">
                         <v-btn color="grey" class="mr-2" @click="toggleDialog('option-effect-create')">CANCEL</v-btn>
@@ -96,7 +114,7 @@ import type { optionEffectModel, effectItemReferenceModel } from '~/types/level'
 
 const { optionEffectDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
-const { levelData } = storeToRefs(useEditorStore())
+const { levelData, optionEffectTarget } = storeToRefs(useEditorStore())
 const { item } = storeToRefs(useItemStore())
 const { selectRules, inputRules } = useRuleStore()
 
@@ -104,6 +122,7 @@ const emit = defineEmits(["createOptionEffect"])
 
 const formRef = ref()
 
+const effectTargetType = ref<string>("")
 const players = computed(() => levelData.value.player.map((p,index) => `player_${index + 1}`))
 const enemies = computed(() => levelData.value.enemy.map((e,index) => `enemy_${index + 1}`))
 const attribute = ref<string[]>([
