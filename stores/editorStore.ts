@@ -95,7 +95,8 @@ export const useEditorStore = defineStore('editor', () => {
         "stepOn",
         "beside",
         "defeat",
-        "once"
+        "once",
+        "option"
     ])
 
     const optionConditionType = ref<string[]>([
