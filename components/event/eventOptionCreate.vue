@@ -21,50 +21,25 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-col v-for="(msg, index) in newOption.response" :key="msg.content">
-                    <!-- Content -->
-                    <v-row>
-                        <v-col>
-                            <!-- The person to show on the screen -->
-                            <v-select label="Person"
-                                v-model="msg.person"
-                                :items="characterList"></v-select>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <!-- font color -->
-                            <p>Font color</p>
-                            <v-color-picker v-model="msg.style"
-                                :rules="inputRules"
-                                hide-canvas></v-color-picker>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <!-- font size -->
-                            <v-select label="Font size"
-                                v-model="msg.size"
-                                :items="fontSizes"
-                                :rules="selectRules"></v-select>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <!-- content -->
-                            <v-textarea label="Content"
-                                v-model="msg.content"
-                                :rules="inputRules"></v-textarea>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-btn prepend-icon="mdi-plus-box" color="primary" @click="appendNewResponse">
-                                Create option response
-                            </v-btn>
-                        </v-col>
-                    </v-row>    
+                <v-col>
+                    <v-btn prepend-icon="mdi-plus-box" color="primary" @click="appendNewResponse">
+                        Create option response
+                    </v-btn>
                 </v-col>
+            </v-row>
+            <v-row>
+                <v-list>
+                    <v-list-item  v-for="(msg, index) in newOption.response" 
+                        :key="msg.content"
+                        @click="editResponse(index)">
+                        {{ `Response ${index + 1}. ${msg.content.length? msg.content.substring(0, 4) +'...' : 'blank'}` }}
+
+                        <v-icon icon="mdi-trash-can" 
+                        color="danger"
+                        class="ml-2" 
+                        @click.stop="deleteResponse(index)"></v-icon>
+                    </v-list-item>
+                </v-list>
             </v-row>
             <v-row>
                 <v-col>
@@ -112,25 +87,30 @@
     </v-dialog>
 
     <event-option-effect @create-option-effect="confirmEffect" />
+    <event-option-response :msg="msg" @confirm-response="createResponse" />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue'
-import type { dialogueOptionModel, optionEffectModel } from '~/types/level'
+import type { dialogueOptionModel, optionEffectModel, eventDialogueModel } from '~/types/level'
 
 import eventOptionEffect from './eventOptionEffect.vue';
+import eventOptionResponse from './eventOptionResponse.vue';
 
 const { optionConditionType, optionConditionValue } = storeToRefs(useEditorStore())
 const { optionCreateDialog } = storeToRefs(useDialogStore())
-const { characterList, fontSizes } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
-const { inputRules, selectRules } = useRuleStore()
+const { inputRules } = useRuleStore()
 const { setConditionValueList } = useEditorStore()
 
 const emit = defineEmits(["createOption"])
 
 const formRef = ref()
+
+const editIndex = ref<number>(0)
+
+const msg = ref<eventDialogueModel>()
 
 const newOption = ref<dialogueOptionModel>({
     value: "",
@@ -155,6 +135,20 @@ const appendNewResponse = () => {
         size: "",
         content: ""
     })
+}
+
+const editResponse = (index: number) => {
+    editIndex.value = index
+    msg.value = newOption.value.response[index]
+    toggleDialog("option-response")
+}
+
+const createResponse = (v: eventDialogueModel) => {
+    newOption.value.response[editIndex.value] = v
+}
+
+const deleteResponse = (index: number) => {
+    newOption.value.response.splice(index, 1)
 }
 
 const createOption = () => {
