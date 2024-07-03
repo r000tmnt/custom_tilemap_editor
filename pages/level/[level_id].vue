@@ -139,6 +139,13 @@ const canvasEvent = (e: any) => {
 
     const mouseButton = e.button
 
+    // Change tile info desc
+    tileInfo.value.x = col
+    tileInfo.value.y = row
+    const { events, indexes } = getEventsonTile(col, row)
+    tileInfo.value.events = events
+    tileInfo.value.indexes = indexes
+
     switch(mouseButton){
         case 0:
             // Left button
@@ -147,14 +154,9 @@ const canvasEvent = (e: any) => {
             }
 
             switch(mode.value){
-                case "nav":
-                    // Change tile info desc
-                    tileInfo.value.x = col
-                    tileInfo.value.y = row
-                    const { events, indexes } = getEventsonTile(col, row)
-                    tileInfo.value.events = events
-                    tileInfo.value.indexes = indexes
-                break;
+                // case "nav":
+
+                // break;
                 case "draw":
                     // Draw a tile on the canvas if selected
                     if(selectedTile.value !== null){
