@@ -84,8 +84,8 @@ const myForm = ref<HTMLFormElement | null>(null)
 
 const msgToEdit = ref<eventDialogueModel>({
             person: "",
-            style: "",
-            size: "",
+            style: "#ffffff",
+            size: "fontSize_md",
             content: ""
         } )
 
