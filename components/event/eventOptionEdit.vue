@@ -106,7 +106,7 @@ const props = defineProps({
         default: {
             value: "",
             style: "#ffffff",
-            size: "",
+            size: "fontSize_md",
             condition: {
                 type: "",
                 value: ""
@@ -121,17 +121,7 @@ const emit = defineEmits(["editOption"])
 
 const formRef = ref()
 
-const newOption = ref<dialogueOptionModel>({
-            value: "",
-            style: "#ffffff",
-            size: "",
-            condition: {
-                type: "",
-                value: ""
-            },
-            response: [],
-            effect: []
-        })
+const newOption = ref<dialogueOptionModel>(JSON.parse(JSON.stringify(props.option)))
 
 const editIndex = ref<number>(0)
 
@@ -169,9 +159,9 @@ const setConditionValueList = () => {
 }
 
 watch(() => props.option, (newVal, oldVal) => {
-    console.log(newVal)
+    console.log("newVal :>>>",newVal)
     if(newVal){
-        newOption.value = JSON.parse(JSON.stringify(props.option))
+        newOption.value = JSON.parse(JSON.stringify(newVal))
     }
 }, { deep: true })
 
