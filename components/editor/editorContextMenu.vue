@@ -19,9 +19,11 @@
             :class="{'disabled': pointType < 2}"
             @click="removeStartingPoint">Remove starting point</v-list-item>
         <v-list-item
-            :class="{'disabled': ifEventExist}">Copy event</v-list-item>
+            :class="{'disabled': ifEventExist}"
+            @click="copyEvent">Copy event</v-list-item>
         <v-list-item
-            :class="{'disabled': eventClipBoard === null}">Paste event</v-list-item>
+            :class="{'disabled': eventClipBoard === null}"
+            @click="pasteEvent">Paste event</v-list-item>
         <v-list-item @click="clearMap">Clear tiles on the map</v-list-item>
         <v-list-item @click="toggleDialog('map-expander')">Expand map</v-list-item>
     </v-list>
@@ -34,27 +36,28 @@
 import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia';
 import type { mobDataModel } from '~/types/character';
-import type { levelEventModel } from '~/types/level';
+import type { levelEventModel, tileInfoModel } from '~/types/level';
 // Components
 import eventEnemySelector from './editorEnemySelector.vue'
 import editorMapExpander from './editorMapExpander.vue'
 
 
 const { contextMenu, mapExpander, enemySelector } = storeToRefs(useDialogStore())
-const { levelData } = storeToRefs(useEditorStore())
+const { levelData, tileInfo } = storeToRefs(useEditorStore())
 const { saveLevelData, storeSteps, getEventsonTile } = useEditorStore()
 const { getMobData } = useCharacterStore()
 const { toggleDialog } = useDialogStore()
 
+const tile = ref()
 const pointType = ref<number>(-1)
 const pointer = ref<number>(-1)
 const eventClipBoard = ref<levelEventModel | null>(null)
 
 // Check if the tile is binded with event
 const ifEventExist = computed(() => {
-    const tile = getEventsonTile(props.col, props.row)
-    console.log(tile)
-    return tile.events.length === 0
+    tile.value = getEventsonTile(props.col, props.row)
+    console.log(tile.value)
+    return tile.value?.events.length === 0
 })
 
 const props = defineProps({
@@ -155,6 +158,14 @@ const clearMap = () => {
             }
         }
     }
+}
+
+const copyEvent = () => {
+    eventClipBoard.value = tile.value.events
+}
+
+const pasteEvent = () => {
+    tileInfo.value.events.push({ ...tile.value, position: { x: tileInfo.value.x } })
 }
 
 </script>
