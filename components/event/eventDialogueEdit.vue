@@ -82,7 +82,7 @@ const props = defineProps({
         default: {
             person: "",
             style: "#ffffff",
-            size: "",
+            size: "fontSize_md",
             content: "",
             audio: []
         }
