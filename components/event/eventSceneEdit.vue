@@ -109,7 +109,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref, onBeforeMount, computed, onMounted} from 'vue'
+import { ref, onBeforeMount, watch, onMounted} from 'vue'
 import type { eventSceneModel, dialogueOptionModel, eventDialogueModel } from '~/types/level'
 
 import eventSceneBgGallery from './eventSceneBgGallery.vue';
@@ -121,7 +121,7 @@ const { toggleDialog } = useDialogStore()
 const { eventSceneEditDialog } = storeToRefs(useDialogStore())
 const { audioAssets, levelData, tileInfo, editDialogueIndex } = storeToRefs(useEditorStore())
 const { dialougeCreateDialog, dialogueEditDialog, bgAssetsGalleryDialog, optionCreateDialog, optionListDialog } = storeToRefs(useDialogStore())
-const { selectRules, inputRules } = useRuleStore()
+const { inputRules } = useRuleStore()
 const { getAudioAssets, getBattleAudioAsset } = useEditorStore()
 
 const props = defineProps({
@@ -208,6 +208,12 @@ const editScene = () => {
     }
   })
 }
+
+watch(() => props.scene, (newVal, oldVal) => {
+  if(newVal){
+    newScene.value =JSON.parse(JSON.stringify(props.scene))
+  }
+}, { deep: true })
 
 onMounted(() => {
     console.log(props.scene)
