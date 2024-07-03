@@ -31,13 +31,13 @@
       </v-card>
     </v-dialog>
 
-    <event-option-create @create-option="createOption" />
-    <event-option-edit :option="optionToEdit"
+    <event-option-create v-if="optionCreateDialog" @create-option="createOption" />
+    <event-option-edit v-if="optionEditDialog" :option="optionToEdit"
       @edit-option="confirmOption" />
 </template>
 
 <script lang="ts" setup>
-// import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { ref, onMounted } from 'vue'
 import type { PropType } from 'vue'
 import type { dialogueOptionModel, eventDialogueModel } from '~/types/level'
@@ -55,7 +55,7 @@ const props = defineProps({
 const emit = defineEmits(["updateEventOptions"])
 
 // const { editEventIndex, tileInfo } = storeToRefs(useEditorStore())
-const { optionListDialog } = useDialogStore()
+const { optionListDialog, optionCreateDialog, optionEditDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 
 const options = ref<dialogueOptionModel[] | undefined>([])
