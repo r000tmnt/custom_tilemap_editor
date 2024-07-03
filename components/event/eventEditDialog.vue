@@ -82,6 +82,22 @@
                     </v-select>
                 </v-row>
 
+                <v-row v-if="tileInfo.events[editEventIndex].trigger === 'defeat'">
+                    <!-- Decide which enemy is the key to trigger the event -->
+                    <v-select 
+                        label="Enemy to defeat"
+                        :items="optionConditionValue"
+                        v-model="tileInfo.events[editEventIndex].requireOption"></v-select>
+                </v-row>
+
+                <v-row v-if="tileInfo.events[editEventIndex].trigger === 'option'">
+                    <!-- Decide which option is the key to trigger the event -->
+                    <v-select
+                        label="Require option" 
+                        :items="optionList.map(o => o.value)"
+                        v-model="tileInfo.events[editEventIndex].requireOption"></v-select>
+                </v-row>
+
                 <v-row>
                     <v-col cols="6">
                         <v-btn type="button" @click="resetFormState" block>Cancel</v-btn>
@@ -105,14 +121,16 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import type { dialogueOptionModel } from '~/types/level';
 
 import eventItemList from './eventItemList.vue';
 import eventSceneCreate from './eventSceneCreate.vue';
 import eventSceneEdit from './eventSceneEdit.vue';
 
 const { editEventDialog, eventItemDialog, eventSceneCreateDialog, eventSceneEditDialog } = storeToRefs(useDialogStore())
-const { tileInfo, levelData, editEventIndex, triggerType, editSceneIndex } = storeToRefs(useEditorStore())
+const { tileInfo, levelData, editEventIndex, triggerType, editSceneIndex, optionConditionValue } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
 
@@ -121,11 +139,37 @@ const eventType = ref<string[]>([
     "SCENE"
 ])
 
+const optionList = ref<dialogueOptionModel[]>([])
 const editContentType = ref()
 const selectedType = ref<string>("")
 const sceneToEdit = ref()
 const eventIndex = ref<number>(tileInfo.value.indexes[editEventIndex.value])
 const childIndex = ref<number>(0)
+
+watch(() => tileInfo.value.events[editEventIndex.value].trigger, (newType, oldType) => {
+    if(newType === 'defeat'){
+        // Gather enemyList
+        optionConditionValue.value = levelData.value.enemy.map((e, index) => `Enemy ${index+1}`)
+
+        // If the enemy is a player character
+        optionConditionValue.value.push("class")
+    }
+
+    if(newType === 'option'){
+        // Gather option list
+        levelData.value.event.forEach(e => {
+            e.scene.forEach(s => {
+                s.dialogue.forEach(d => {
+                    if(d.option){
+                        d.option.forEach(o => {
+                            optionList.value.push(o)
+                        })
+                    }
+                })
+            })
+        })
+    }
+})
 
 const editScene = (index: number) => {
     editSceneIndex.value = index
