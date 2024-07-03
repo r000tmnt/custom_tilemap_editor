@@ -84,6 +84,10 @@
 
                 <v-row v-if="levelData.event[latestIndex].trigger === 'option'">
                     <!-- Decide which option is the key to trigger the event -->
+                    <v-select
+                        label="Require option" 
+                        :items="optionList.map(o => o.value)"
+                        v-model="levelData.event[latestIndex].requireOption"></v-select>
                 </v-row>
 
                 <v-row>
@@ -105,7 +109,8 @@
     <event-scene-create v-if="eventSceneCreateDialog"
         :latest-index="latestIndex"
         :child-index="childIndex" />
-    <event-scene-edit :scene="sceneToEdit" />
+    <event-scene-edit v-if="eventSceneEditDialog"
+        :scene="sceneToEdit" />
     <event-option-list 
       @update-event-options="confirmOption"/>
 </template>
@@ -120,7 +125,7 @@ import eventSceneEdit from './eventSceneEdit.vue';
 import eventOptionList from './eventOptionList.vue';
 import type { eventDialogueModel, dialogueOptionModel } from '~/types/level';
 
-const { createEventDialog, eventSceneCreateDialog, eventItemDialog } = storeToRefs(useDialogStore())
+const { createEventDialog, eventSceneCreateDialog, eventSceneEditDialog, eventItemDialog } = storeToRefs(useDialogStore())
 const { tileInfo, levelData, triggerType, editSceneIndex } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
