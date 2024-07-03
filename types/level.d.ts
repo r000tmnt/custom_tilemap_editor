@@ -66,6 +66,7 @@ interface levelEventModel {
     item: eventItemModel[]
     scene: eventSceneModel[]
     trigger: string
+    requireOption?: string
 }
 
 interface tileInfoModel extends eventPositionModel {
