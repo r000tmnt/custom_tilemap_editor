@@ -21,18 +21,23 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-row>
-                    <v-col>
-                        <v-btn prepend-icon="mdi-plus-box" color="primary" @click="appendNewResponse">
-                            Create option response
-                        </v-btn>
-                    </v-col>
-                </v-row>
+                <v-col>
+                    <v-btn prepend-icon="mdi-plus-box" color="primary" @click="appendNewResponse">
+                        Create option response
+                    </v-btn>
+                </v-col>
+            </v-row>
+            <v-row>
                 <v-list>
                     <v-list-item  v-for="(msg, index) in newOption.response" 
                         :key="msg.content"
                         @click="editResponse(index)">
-                        {{ `Response ${index + 1}. ${msg.content}` }}
+                        {{ `Response ${index + 1}. ${msg.content.length? msg.content.substring(0, 4) +'...' : 'blank'}` }}
+
+                        <v-icon icon="mdi-trash-can" 
+                        color="danger"
+                        class="ml-2" 
+                        @click.stop="deleteResponse(index)"></v-icon>
                     </v-list-item>
                 </v-list>
             </v-row>
@@ -102,11 +107,11 @@ const props = defineProps({
             value: "",
             style: "#ffffff",
             size: "",
-            content: "",
             condition: {
                 type: "",
                 value: ""
             },
+            response: [],
             effect: []
         }
     }
@@ -116,7 +121,17 @@ const emit = defineEmits(["editOption"])
 
 const formRef = ref()
 
-const newOption = ref<dialogueOptionModel>(props.option)
+const newOption = ref<dialogueOptionModel>({
+            value: "",
+            style: "#ffffff",
+            size: "",
+            condition: {
+                type: "",
+                value: ""
+            },
+            response: [],
+            effect: []
+        })
 
 const editIndex = ref<number>(0)
 
@@ -173,6 +188,10 @@ const editResponse = (index: number) => {
     editIndex.value = index
     msg.value = newOption.value.response[index]
     toggleDialog("option-response")
+}
+
+const deleteResponse = (index: number) => {
+    newOption.value.response.splice(index, 1)
 }
 
 const createResponse = (v: eventDialogueModel) => {
