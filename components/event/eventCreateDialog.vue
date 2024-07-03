@@ -82,6 +82,14 @@
                     </v-select>
                 </v-row>
 
+                <v-row v-if="levelData.event[latestIndex].trigger === 'defeat'">
+                    <!-- Decide which enemy is the key to trigger the event -->
+                    <v-select 
+                        label="Enemy to defeat"
+                        :items="optionConditionValue"
+                        v-model="levelData.event[latestIndex].requireOption"></v-select>
+                </v-row>
+
                 <v-row v-if="levelData.event[latestIndex].trigger === 'option'">
                     <!-- Decide which option is the key to trigger the event -->
                     <v-select
@@ -126,7 +134,7 @@ import eventOptionList from './eventOptionList.vue';
 import type { eventDialogueModel, dialogueOptionModel } from '~/types/level';
 
 const { createEventDialog, eventSceneCreateDialog, eventSceneEditDialog, eventItemDialog } = storeToRefs(useDialogStore())
-const { tileInfo, levelData, triggerType, editSceneIndex } = storeToRefs(useEditorStore())
+const { tileInfo, levelData, triggerType, editSceneIndex, optionConditionValue } = storeToRefs(useEditorStore())
 const { toggleDialog } = useDialogStore()
 const { saveLevelData } = useEditorStore()
 
@@ -143,6 +151,14 @@ const childIndex = ref<number>(-1)
 const sceneToEdit = ref()
 
 watch(() => levelData.value.event[latestIndex.value].trigger, (newType, oldType) => {
+    if(newType === 'defeat'){
+        // Gather enemyList
+        optionConditionValue.value = levelData.value.enemy.map((e, index) => `Enemy ${index+1}`)
+
+        // If the enemy is a player character
+        optionConditionValue.value.push("class")
+    }
+
     if(newType === 'option'){
         // Gather option list
         levelData.value.event.forEach(e => {
