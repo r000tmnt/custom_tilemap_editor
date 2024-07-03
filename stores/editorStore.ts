@@ -109,7 +109,6 @@ export const useEditorStore = defineStore('editor', () => {
     ])
 
     const characterList = ref([
-        "none",
         "unknow"
     ])
     
