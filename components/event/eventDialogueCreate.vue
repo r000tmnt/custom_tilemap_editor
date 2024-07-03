@@ -81,7 +81,7 @@ const emit = defineEmits(["createDialogue"])
 const newDialogue = ref<eventDialogueModel>({
     person: "",
     style: "#ffffff",
-    size: "",
+    size: "fontSize_md",
     content: "",
     audio: []
 })
