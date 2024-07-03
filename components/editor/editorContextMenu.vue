@@ -51,7 +51,7 @@ const { toggleDialog } = useDialogStore()
 const tile = ref()
 const pointType = ref<number>(-1)
 const pointer = ref<number>(-1)
-const eventClipBoard = ref<levelEventModel | null>(null)
+const eventClipBoard = ref<levelEventModel[] | null>(null)
 
 // Check if the tile is binded with event
 const ifEventExist = computed(() => {
@@ -165,7 +165,10 @@ const copyEvent = () => {
 }
 
 const pasteEvent = () => {
-    tileInfo.value.events.push({ ...tile.value, position: { x: tileInfo.value.x } })
+    eventClipBoard.value?.forEach(e => {
+        levelData.value.event.push({ ...e, position: { x: tileInfo.value.x, y: tileInfo.value.y } }) 
+    });
+    console.log(levelData.value)
 }
 
 </script>
