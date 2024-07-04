@@ -36,8 +36,7 @@
             <!-- tile info -->
             <editor-tile-info 
                 :width="canvasRef?.width" 
-                :height="canvasRef?.height"
-                @event-delete="removeEventOnTile" />
+                :height="canvasRef?.height" />
         </div>  
     </section>         
 
@@ -53,6 +52,8 @@
         @clear-all="clearMap"
         @expand-map="drawCanvas"/>
     <event-delete-warning v-if="eventDeleteDialog" @event-delete-all="removeEventOnTile" />
+    <event-list v-if="eventListDialog"
+        @event-delete="removeEventOnTile" />
 </template>
 
 <script setup lang="ts">
@@ -69,12 +70,13 @@ import editorContextMenu from '~/components/editor/editorContextMenu.vue';
 import eventCreateDialog from '~/components/event/eventCreateDialog.vue';
 import eventEditDialog from '~/components/event/eventEditDialog.vue';
 import eventDeleteWarning from '~/components/event/eventDeleteWarning.vue';
+import eventList from '~/components/event/eventList.vue';
 
 const route = useRoute()
 const { levelData, steps, tiles, selectedTile, mode, tileInfo, layers } = storeToRefs(useEditorStore())
 const { initEditor, storeSteps, saveLevelData, getEventsonTile } = useEditorStore()
 const { tileSize } = storeToRefs(useMainStore())
-const { contextMenu, createEventDialog, editEventDialog, eventDeleteDialog } = storeToRefs(useDialogStore())
+const { contextMenu, createEventDialog, editEventDialog, eventDeleteDialog, eventListDialog } = storeToRefs(useDialogStore())
 const { toggleDialog } = useDialogStore()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
