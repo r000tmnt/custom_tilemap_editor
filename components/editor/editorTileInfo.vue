@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
+import type { PropType } from 'vue';
 
 const props = defineProps(
     {
@@ -31,6 +32,10 @@ const props = defineProps(
             type: Number,
             default: 0
         },
+        multiSelectTiles: {
+            type: Array as PropType<number[][]>,
+            default: []
+        }
     }
 )
 
@@ -46,16 +51,27 @@ const tileDetail = ref({
 const checkWalkableValue = (v: boolean | null) => {
     const { x, y } = tileInfo.value
     console.log(Number(v))
-    levelData.value.depth[y][x][0] = Number(v)
+
+    if(props.multiSelectTiles.length){
+        props.multiSelectTiles.forEach(tile => {
+            levelData.value.depth[tile[0]][tile[1]][0] = Number(v)
+        })
+    }else{
+        levelData.value.depth[y][x][0] = Number(v)
+    }
+    
     saveLevelData()
 }
 
 const checkDepthValue = (v: string) => {
     const { x, y } = tileInfo.value
-    if(Number(v) < 0){
-        levelData.value.depth[y][x][1] = 0
+
+    if(props.multiSelectTiles.length){
+        props.multiSelectTiles.forEach(tile => {
+            levelData.value.depth[tile[0]][tile[1]][1] = (Number(v) < 0)? 0 : Number(v)
+        })
     }else{
-        levelData.value.depth[y][x][1] = Number(v)
+        levelData.value.depth[y][x][1] = (Number(v) < 0)? 0 : Number(v)
     }
 
     saveLevelData()
