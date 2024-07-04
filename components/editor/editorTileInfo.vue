@@ -1,23 +1,17 @@
 <template>
-    <v-card class="info ml-auto mr-2 pa-2" 
+    <v-card class="info ml-auto mr-2 pa-2"
+        style="width: 15vw" 
         subtitle="Tile info" 
         :text="`Width:${props.width}\nHeight:${props.height}\nX:${tileInfo.x}\nY:${tileInfo.y}\nEvents:${tileInfo.events.length}`">
-        <v-card-actions>
-            <v-btn color="primary" 
-                @click="createEvent(tileInfo.x, tileInfo.y)">Add event</v-btn>
-            <v-btn :color="(tileInfo.events.length)? 'secondary' : 'grey'" 
-                :disabled="tileInfo.events.length === 0"
-                @click="toggleDialog('event-delete')">Remove events</v-btn>
-        </v-card-actions>
-
         <v-list>
-            <v-list-item v-for="(event, index) in tileInfo.events" :key="index">
-                <v-card hover>
-                    {{ `Item: ${event.item.length} Scene: ${event.scene.length} Trigger: ${event.trigger}` }}
-                    <br/>
-                    <v-btn size="x-small" variant="outlined" color="secondary" class="ml-auto" @click="editEvent(index)">EDIT</v-btn>
-                    <v-btn size="x-small" variant="outlined" color="warning" class="ml-2" @click="deleteEvent(index)">DELETE</v-btn>
-                </v-card>
+            <v-list-item>
+                <v-checkbox label="Walkable"
+                    v-model="tileDetail.walkable"
+                    @update:model-value="checkWalkableValue"></v-checkbox>
+                <v-text-field label="Depth" 
+                    type="number"
+                    v-model="levelData.depth[tileInfo.y][tileInfo.x][1]"
+                    @update:model-value="checkDepthValue" ></v-text-field>
             </v-list-item>
         </v-list>
     </v-card>
@@ -25,6 +19,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
+import { ref, watch } from 'vue';
 
 const props = defineProps(
     {
@@ -39,46 +34,38 @@ const props = defineProps(
     }
 )
 
-const emit = defineEmits(["event-delete"])
-
-const { tileInfo, levelData, editEventIndex } = storeToRefs(useEditorStore())
+const { tileInfo, levelData } = storeToRefs(useEditorStore())
 const { saveLevelData } = useEditorStore()
-const { toggleDialog } = useDialogStore()
+// const { toggleDialog } = useDialogStore()
 
-const createEvent = (x: number, y: number) => {
-    const newEvent = {
-        position: { x, y },
-        item: [],
-        scene: [],
-        trigger: 'auto'
+const tileDetail = ref({
+    walkable: Boolean(levelData.value.depth[tileInfo.value.y][tileInfo.value.x][0]),
+    depth: levelData.value.depth[tileInfo.value.y][tileInfo.value.x][1]
+})
+
+const checkWalkableValue = (v: boolean | null) => {
+    const { x, y } = tileInfo.value
+    console.log(Number(v))
+    levelData.value.depth[y][x][0] = Number(v)
+    saveLevelData()
+}
+
+const checkDepthValue = (v: string) => {
+    const { x, y } = tileInfo.value
+    if(Number(v) < 0){
+        levelData.value.depth[y][x][1] = 0
+    }else{
+        levelData.value.depth[y][x][1] = Number(v)
     }
-    levelData.value.event.push(newEvent)
-    tileInfo.value.events.push(newEvent)
-
-    toggleDialog("event-create")
-}
-
-const editEvent = (index: number) => {
-    editEventIndex.value = index
-    toggleDialog("event-edit")
-}
-
-const deleteEvent = (index: number) => {
-    // Get each index of the event on the same position
-    const pointer: number[] = []
-    levelData.value.event.forEach((e, index) => {
-        if(e.position.x === tileInfo.value.events[0].position.x && e.position.y === tileInfo.value.events[0].position.y){
-            pointer.push(index)
-        }
-    })
-
-    // Delete the event in levelData
-    levelData.value.event.splice(pointer[index], 1)
-
-    // Delete the event in tileInfo
-    tileInfo.value.events.splice(index, 1)
 
     saveLevelData()
-    emit("event-delete")
 }
+
+watch(() => tileInfo.value, (newVal) => {
+    if(newVal){
+        const { x, y } = newVal
+        tileDetail.value.walkable = Boolean(levelData.value.depth[y][x][0])
+        tileDetail.value.depth = levelData.value.depth[y][x][1]
+    }
+}, { deep: true })
 </script>
