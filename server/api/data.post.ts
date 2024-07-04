@@ -11,14 +11,22 @@ export default defineEventHandler( async(event) => {
     // const { id, name, width, height } = event.context.formidable.fields
     const { id, name, width, height } = body
 
-    const newMap = []
+    // The multi-dimentional array to define which asset to draw
+    // [ [asset number] ]
+    const newMap: number[][] = []
+    // The multi-dimentional array to define the depth of each tile
+    // [ [walkable, depth] ]
+    const depth: number[][] = []
 
     for(let i=0; i < Number(height); i++){
         const row : number[] = []
         newMap.push(row)
+        depth.push(row)
 
         for(let j=0; j < Number(width); j++){
             newMap[i].push(0)
+            depth[i].push(0) // Default to be walkable
+            depth[i].push(0) // Default to be ground level
         }
     }
 
