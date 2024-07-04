@@ -11,6 +11,7 @@ export const useEditorStore = defineStore('editor', () => {
         id: "",
         name: "",
         map: [],
+        depth: [],
         event: [],
         phase: [],
         enemy: [],
