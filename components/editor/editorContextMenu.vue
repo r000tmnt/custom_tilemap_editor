@@ -18,12 +18,13 @@
         <v-list-item 
             :class="{'disabled': pointType < 2}"
             @click="removeStartingPoint">Remove starting point</v-list-item>
+        <v-list-item @click="toggleDialog('event-list')">Manage events</v-list-item>
         <v-list-item
             :class="{'disabled': ifEventExist}"
-            @click="copyEvent">Copy event</v-list-item>
+            @click="copyEvent">Copy events</v-list-item>
         <v-list-item
             :class="{'disabled': eventClipBoard === null}"
-            @click="pasteEvent">Paste event</v-list-item>
+            @click="pasteEvent">Paste events</v-list-item>
         <v-list-item @click="clearMap">Clear tiles on the map</v-list-item>
         <v-list-item @click="toggleDialog('map-expander')">Expand map</v-list-item>
     </v-list>
