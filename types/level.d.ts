@@ -105,7 +105,7 @@ interface levleDataModel {
     id: string
     name: string
     map: number[][]
-    depth: number[][]
+    depth: number[][][]
     event: levelEventModel[]
     phase: string[]
     enemy: characterReferenceModel[]
