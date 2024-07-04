@@ -36,7 +36,8 @@
             <!-- tile info -->
             <editor-tile-info 
                 :width="canvasRef?.width" 
-                :height="canvasRef?.height" />
+                :height="canvasRef?.height"
+                :multi-select-tiles="multiSelectTiles" />
         </div>  
     </section>         
 
@@ -57,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, watch, ref, onBeforeUnmount } from 'vue';
+import { onBeforeMount, onMounted, watch, ref, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
 import type { eventPositionModel } from '~/types/level'
@@ -84,6 +85,8 @@ const context = ref()
 const canvasPosition = ref()
 const pointedSpot = ref({ x: 0, y: 0, row: 0, col: 0 })
 const mouseTraker = ref<eventPositionModel[]>([])
+const holdShift = ref<boolean>(false)
+const multiSelectTiles = ref<number[][]>([])
 
 const redrawContentOnTile = (originalX: number, originalY: number, x: number, y: number) => {
     const index = levelData.value.map[y][x]
@@ -155,10 +158,17 @@ const canvasEvent = (e: any) => {
                 toggleDialog("context-menu")
             }
 
-            switch(mode.value){
-                // case "nav":
+            if(!holdShift.value){
+                multiSelectTiles.value.splice(0)
+            }
 
-                // break;
+            switch(mode.value){
+                case "nav":
+                    if(holdShift.value){
+                        // [ y, x ]
+                        multiSelectTiles.value.push([row, col])
+                    }
+                break;
                 case "draw":
                     // Draw a tile on the canvas if selected
                     if(selectedTile.value !== null){
@@ -230,20 +240,30 @@ const canvasEvent = (e: any) => {
     if(layers.value[1].active){
         // Draw border on pointed tile
         // Redraw border on the tile clicked before
-        if(mouseTraker.value.length){
-            const oldRow = Math.floor(mouseTraker.value[0].y / tileSize.value)
-            const oldCol = Math.floor(mouseTraker.value[0].x / tileSize.value)
-            redrawContentOnTile(mouseTraker.value[0].x, mouseTraker.value[0].y, oldCol, oldRow)
-            mouseTraker.value.splice(0)
+        if(!holdShift.value){
+            if(mouseTraker.value.length){
+                const oldRow = Math.floor(mouseTraker.value[0].y / tileSize.value)
+                const oldCol = Math.floor(mouseTraker.value[0].x / tileSize.value)
+                redrawContentOnTile(mouseTraker.value[0].x, mouseTraker.value[0].y, oldCol, oldRow)
+                mouseTraker.value.splice(0)
+            }
+
+            mouseTraker.value.push({ x: col * tileSize.value, y: row * tileSize.value })
+            context.value.strokeStyle = "yellow"
+            context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)            
+        }else{
+            context.value.strokeStyle = "yellow"
+            context.value.strokeRect(col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)    
         }
 
-        mouseTraker.value.push({ x: col * tileSize.value, y: row * tileSize.value })
-        context.value.strokeStyle = "yellow"
-        context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)
     }
 }
 
 const canvasKeyPressEvent = (e: any) => {
+    if(e.shiftKey){
+        holdShift.value = true
+    }
+
     // If there are steps for back tracking
     if(steps.value.length){
         // If the combination is ctrl + z
@@ -252,7 +272,7 @@ const canvasKeyPressEvent = (e: any) => {
             levelData.value.map = steps.value[steps.value.length - 1]
             // Remove the step
             steps.value.splice(steps.value.length - 1, 1)
-        }        
+        }   
     }
 }
 
@@ -560,6 +580,14 @@ onBeforeMount(() => {
     if(route?.params?.level_id){
         initEditor(String(route.params.level_id))
     }
+})
+
+onMounted(() => {
+    document.addEventListener("keyup", (e: KeyboardEvent) => {
+        if(e.shiftKey){
+            holdShift.value = false
+        }
+    })
 })
 
 // Reset canvas when leaving the page
