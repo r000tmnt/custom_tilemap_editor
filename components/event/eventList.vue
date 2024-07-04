@@ -29,6 +29,10 @@
                 </v-card>
             </v-list-item>
         </v-list>
+
+        <v-card-actions>
+            <v-btn class="ml-auto" color="primary" @click="toggleDialog('event-list')">Close</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
 </template>
