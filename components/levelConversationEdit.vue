@@ -28,7 +28,7 @@
                   
                   <v-list-item v-for="(content, subIndex) in item.scene" >
                     {{ `Event-${index + 1}-Scene-${subIndex + 1}` }}
-                    <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="editScene(subIndex)"></v-icon> 
+                    <v-icon class="ml-2" color="secondary" icon="mdi-note-edit-outline" @click="editScene(index, subIndex)"></v-icon> 
                     <v-icon class="ml-2" icon="mdi-trash-can" color="danger" @click="setNodeToDelete( `Event-${index + 1}-Scene-${subIndex + 1}`, index, subIndex)"></v-icon>
                   </v-list-item>
                 </v-list-group>
@@ -91,7 +91,11 @@ const createConversation = () => {
         trigger: "auto"
     }
     // Insert the event before battlephase
-    levelData.value.event.splice(battlePhaseIndex, 0, newEvent) 
+    if(battlePhaseIndex >= 0){
+      levelData.value.event.splice(battlePhaseIndex, 0, newEvent) 
+    }else{
+      levelData.value.event.push(newEvent)
+    }
 
     // Update array
     eventBeforeBattle.value.push(newEvent)
@@ -99,15 +103,14 @@ const createConversation = () => {
 
 const editConversationScene = (v: any) => {
     console.log(v)
-    const battlePhaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
     // Insert the event before battlephase
-    levelData.value.event[battlePhaseIndex - 1].scene[editIndex.value] = v
+    levelData.value.event[latestIndex.value].scene[editIndex.value] = v
 }
 
-const editScene = (index: number) => {
-  const battlephaseIndex = levelData.value.event.findIndex((e: levelEventModel) => Object.entries(e.position).length)
-  editIndex.value = index
-  sceneToEdit.value = levelData.value.event[battlephaseIndex - 1].scene[index]
+const editScene = (index: number, subIndex: number) => {
+  latestIndex.value = index
+  editIndex.value = subIndex
+  sceneToEdit.value = levelData.value.event[index].scene[subIndex]
   toggleDialog("scene-edit")
 }
 
