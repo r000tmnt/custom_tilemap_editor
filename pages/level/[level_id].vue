@@ -189,7 +189,7 @@ const canvasEvent = (e: any) => {
                             const latest = multiSelectTiles.value.length - 1
                             // If the destination is at the upper row 
                             if(row < multiSelectTiles.value[latest][0]){
-
+                                console.log("The destination is at the upper row")
                                 // Select tiles
                                 // first
                                 for(let i=multiSelectTiles.value[latest][1]; i >= 0; i--){
@@ -214,6 +214,7 @@ const canvasEvent = (e: any) => {
 
                             // If the destination is at the deeper row
                             if(row > multiSelectTiles.value[latest][0]){
+                                console.log("The destination is at the deeper row")
                                 // Select tiles
                                 // first
                                 for(let i=multiSelectTiles.value[latest][1]; i <= (levelData.value.map[0].length - 1); i++){
@@ -236,12 +237,16 @@ const canvasEvent = (e: any) => {
                                 }
                             }else{
                                 // If the destination is on the same x axis
+                                console.log("The destination is on the same x axis")
                                 if(col < multiSelectTiles.value[latest][1]){
-                                    for(let i=multiSelectTiles.value[latest][1]-1; i <= col; i--){
+                                    console.log("To left")
+                                    for(let i=multiSelectTiles.value[latest][1]-1; i >= col; i--){
+                                        console.log(i)
                                         multiSelectTiles.value.push([row, i])
                                         drawBorderOnTile(i, row)
                                     }
                                 }else{
+                                    console.log("To right")
                                     for(let i=col; i <= multiSelectTiles.value[latest][1]; i++){
                                         multiSelectTiles.value.push([row, i])
                                         drawBorderOnTile(i, row)
