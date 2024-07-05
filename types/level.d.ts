@@ -150,6 +150,15 @@ interface translationDataModel {
     skill: string[]
 }
 
+interface translationDetailModel {
+    en: any
+    zh: any
+}
+
+interface translationResponse extends responseModel{
+    data: translationDetailModel
+}
+
 export { 
     levelList,
     levelDataResponse, 
@@ -169,5 +178,6 @@ export {
     eventPositionModel,
     objectiveDataModel,
     objectiveOptionalModel,
-    translationDataModel
+    translationDataModel,
+    translationResponse
 }
