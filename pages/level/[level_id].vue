@@ -25,7 +25,8 @@
 
             <!-- tilemap editor -->
             <main id="right"
-                class="pa-2 w-auto mx-auto overflow-x-auto overflow-y-auto">
+                class="pa-2 w-auto mx-auto overflow-x-auto overflow-y-auto"
+                @scroll="updateCanvasPosition">
                 <!-- map layer -->
                 <canvas class="mx-auto"
                     ref="canvasRef"
@@ -159,6 +160,11 @@ const canvasEvent = (e: any) => {
             }
 
             if(!holdShift.value){
+                // Remove border
+                multiSelectTiles.value.forEach(tile => {
+                    redrawContentOnTile(tile[1] * tileSize.value, tile[0] * tileSize.value, tile[1], tile[0])
+                })
+                // Clear the array
                 multiSelectTiles.value.splice(0)
             }
 
@@ -252,7 +258,7 @@ const canvasEvent = (e: any) => {
             context.value.strokeStyle = "yellow"
             context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)            
         }else{
-            context.value.strokeStyle = "yellow"
+            context.value.strokeStyle = "green"
             context.value.strokeRect(col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)    
         }
 
@@ -561,6 +567,22 @@ const drawCanvas = () => {
     }
 }
 
+const openContextMenu = () => { 
+    if(contextMenu.value)  toggleDialog("context-menu")
+ }
+
+ const releaseShiftKey = (e: KeyboardEvent) => {
+    console.log('keyup event')
+    console.log(e)
+    if(e.key === "Shift"){
+        holdShift.value = false
+    }
+}
+
+const updateCanvasPosition = () => {
+    canvasPosition.value = canvasRef.value?.getBoundingClientRect()
+}
+
 watch(() => canvasRef.value, (newVal) => {
     console.log("newVal :>>>", newVal)
     if(newVal !== null){
@@ -570,8 +592,7 @@ watch(() => canvasRef.value, (newVal) => {
 
     // Hide the default browser context menu when right click on the canvas
     canvasRef.value?.addEventListener("contextmenu", (e: any) => { e.preventDefault() })
-    document.getElementById("right")?.addEventListener("scroll", () => canvasPosition.value = canvasRef.value?.getBoundingClientRect())
-    document.addEventListener("click", () => { if(contextMenu.value)  toggleDialog("context-menu") })
+    document.addEventListener("click", openContextMenu)
     document.addEventListener("keydown", canvasKeyPressEvent)
 })
 
@@ -583,17 +604,16 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    document.addEventListener("keyup", (e: KeyboardEvent) => {
-        if(e.shiftKey){
-            holdShift.value = false
-        }
-    })
+    document.addEventListener("keyup", releaseShiftKey)
 })
 
 // Reset canvas when leaving the page
 onBeforeUnmount(() => {
     canvasRef.value = null
     levelData.value.map.splice(0)
+    document.removeEventListener("click", openContextMenu)
+    document.removeEventListener("keydown", canvasKeyPressEvent)
+    document.removeEventListener("keyup", releaseShiftKey)
 })
 </script>
 
