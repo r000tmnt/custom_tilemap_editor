@@ -62,7 +62,6 @@
 import { onBeforeMount, onMounted, watch, ref, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
-import type { eventPositionModel } from '~/types/level'
 
 // Components
 import editorToolBar from '~/components/editor/editorToolBar.vue'
@@ -85,9 +84,14 @@ const canvasRef = ref<HTMLCanvasElement | null>(null)
 const context = ref()
 const canvasPosition = ref()
 const pointedSpot = ref({ x: 0, y: 0, row: 0, col: 0 })
-const mouseTraker = ref<eventPositionModel[]>([])
 const holdShift = ref<boolean>(false)
+const holdCtrl = ref<boolean>(false)
 const multiSelectTiles = ref<number[][]>([])
+
+const drawBorderOnTile = (col: number, row: number) => {
+    context.value.strokeStyle = "yellow"
+    context.value.strokeRect(col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value) 
+}
 
 const redrawContentOnTile = (originalX: number, originalY: number, x: number, y: number) => {
     const index = levelData.value.map[y][x]
@@ -159,7 +163,7 @@ const canvasEvent = (e: any) => {
                 toggleDialog("context-menu")
             }
 
-            if(!holdShift.value){
+            if(!holdShift.value && !holdCtrl.value){
                 // Remove border
                 multiSelectTiles.value.forEach(tile => {
                     redrawContentOnTile(tile[1] * tileSize.value, tile[0] * tileSize.value, tile[1], tile[0])
@@ -170,9 +174,86 @@ const canvasEvent = (e: any) => {
 
             switch(mode.value){
                 case "nav":
-                    if(holdShift.value){
+                    if(holdCtrl.value){
                         // [ y, x ]
                         multiSelectTiles.value.push([row, col])
+                    }
+
+                    if(holdShift.value){
+                        console.log("Holding shift")
+                        console.log(multiSelectTiles.value)
+                        if(multiSelectTiles.value.length){
+                            console.log("end :>>>", `${row}, ${col}`)
+                            // Get end position
+                            // Fill the rest
+                            const latest = multiSelectTiles.value.length - 1
+                            // If the destination is at the upper row 
+                            if(row < multiSelectTiles.value[latest][0]){
+
+                                // Select tiles
+                                // first
+                                for(let i=multiSelectTiles.value[latest][1]; i >= 0; i--){
+                                    multiSelectTiles.value.push([multiSelectTiles.value[latest][0], i])
+                                    drawBorderOnTile(i, multiSelectTiles.value[latest][0])
+                                }
+
+                                // middle
+                                for(let i=multiSelectTiles.value[latest][0] - 1; i > row; i--){
+                                    for(let j=(levelData.value.map[0].length - 1); j >=0; j--){
+                                        multiSelectTiles.value.push([i, j])
+                                        drawBorderOnTile(j, i)
+                                    }
+                                }
+
+                                // last
+                                for(let i=col; i < (levelData.value.map[0].length - 1); i--){
+                                    multiSelectTiles.value.push([row, i])
+                                    drawBorderOnTile(i, row)
+                                }
+                            }
+
+                            // If the destination is at the deeper row
+                            if(row > multiSelectTiles.value[latest][0]){
+                                // Select tiles
+                                // first
+                                for(let i=multiSelectTiles.value[latest][1]; i <= (levelData.value.map[0].length - 1); i++){
+                                    multiSelectTiles.value.push([multiSelectTiles.value[latest][0], i])
+                                    drawBorderOnTile(i, multiSelectTiles.value[latest][0])
+                                }
+
+                                // middle
+                                for(let i=multiSelectTiles.value[latest][0] + 1; i < row; i++){
+                                    for(let j=0; j < levelData.value.map[0].length; j++){
+                                        multiSelectTiles.value.push([i, j])
+                                        drawBorderOnTile(j, i)
+                                    }
+                                }
+
+                                // last
+                                for(let i=0; i <= col; i++){
+                                    multiSelectTiles.value.push([row, i])
+                                    drawBorderOnTile(i, row)
+                                }
+                            }else{
+                                // If the destination is on the same x axis
+                                if(col < multiSelectTiles.value[latest][1]){
+                                    for(let i=multiSelectTiles.value[latest][1]-1; i <= col; i--){
+                                        multiSelectTiles.value.push([row, i])
+                                        drawBorderOnTile(i, row)
+                                    }
+                                }else{
+                                    for(let i=col; i <= multiSelectTiles.value[latest][1]; i++){
+                                        multiSelectTiles.value.push([row, i])
+                                        drawBorderOnTile(i, row)
+                                    }
+                                }
+                            }
+                        }else{
+                            // Get starting position
+                            console.log("start :>>>", `${row}, ${col}`)
+                            multiSelectTiles.value.push([row, col])
+                            console.log(multiSelectTiles.value)
+                        }
                     }
                 break;
                 case "draw":
@@ -246,20 +327,16 @@ const canvasEvent = (e: any) => {
     if(layers.value[1].active){
         // Draw border on pointed tile
         // Redraw border on the tile clicked before
-        if(!holdShift.value){
-            if(mouseTraker.value.length){
-                const oldRow = Math.floor(mouseTraker.value[0].y / tileSize.value)
-                const oldCol = Math.floor(mouseTraker.value[0].x / tileSize.value)
-                redrawContentOnTile(mouseTraker.value[0].x, mouseTraker.value[0].y, oldCol, oldRow)
-                mouseTraker.value.splice(0)
+        if(!holdShift.value && !holdCtrl.value){
+            if(multiSelectTiles.value.length){
+                redrawContentOnTile(multiSelectTiles.value[0][1] * tileSize.value, multiSelectTiles.value[0][0] * tileSize.value, multiSelectTiles.value[0][1], multiSelectTiles.value[0][0])
+                multiSelectTiles.value.splice(0)
             }
 
-            mouseTraker.value.push({ x: col * tileSize.value, y: row * tileSize.value })
-            context.value.strokeStyle = "yellow"
-            context.value.strokeRect(mouseTraker.value[0].x, mouseTraker.value[0].y, tileSize.value, tileSize.value)            
+            multiSelectTiles.value.push([row, col])
+            drawBorderOnTile(multiSelectTiles.value[0][1], multiSelectTiles.value[0][0])            
         }else{
-            context.value.strokeStyle = "green"
-            context.value.strokeRect(col * tileSize.value, row * tileSize.value, tileSize.value, tileSize.value)    
+            drawBorderOnTile(col, row)
         }
 
     }
@@ -270,16 +347,20 @@ const canvasKeyPressEvent = (e: any) => {
         holdShift.value = true
     }
 
-    // If there are steps for back tracking
-    if(steps.value.length){
-        // If the combination is ctrl + z
-        if(e.keyCode === 90 && e.ctrlKey){
+    if(e.ctrlKey){
+        holdCtrl.value = true
+    }
+
+    // If the combination is ctrl + z
+    if(e.keyCode === 90 && e.ctrlKey){
+        // If there are steps for back tracking
+        if(steps.value.length){
             // Take one step back
             levelData.value.map = steps.value[steps.value.length - 1]
             // Remove the step
-            steps.value.splice(steps.value.length - 1, 1)
-        }   
-    }
+            steps.value.splice(steps.value.length - 1, 1)        
+        }
+    } 
 }
 
 // Check the other layers
@@ -593,7 +674,6 @@ watch(() => canvasRef.value, (newVal) => {
     // Hide the default browser context menu when right click on the canvas
     canvasRef.value?.addEventListener("contextmenu", (e: any) => { e.preventDefault() })
     document.addEventListener("click", openContextMenu)
-    document.addEventListener("keydown", canvasKeyPressEvent)
 })
 
 onBeforeMount(() => {
@@ -604,6 +684,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
+    document.addEventListener("keydown", canvasKeyPressEvent)
     document.addEventListener("keyup", releaseShiftKey)
 })
 
@@ -692,4 +773,4 @@ canvas{
     font-weight: 700;
     line-height: 30px;
 }
-</style>..../../components/editor/editorTileInfo.vue../../components/editor/editorToolBar.vue/../components/editor/editorAssets.vue
+</style>
