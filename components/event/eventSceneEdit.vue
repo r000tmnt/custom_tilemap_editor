@@ -70,7 +70,7 @@
 
                 <!-- Dialogue -->
                 <v-list v-for="(dialogue, index) in newScene.dialogue" :key="dialogue.content">
-                    {{ `${index + 1}. ${dialogue.option? dialogue.option.length? 'Display options...' : dialogue.content: dialogue.content }` }}
+                    {{ `${index + 1}. ${dialogue.option? dialogue.option.length? 'Display options...' : dialogue.content.includes(levelData.id)? $t(dialogue.content) : dialogue.content : dialogue.content.includes(levelData.id)? $t(dialogue.content) : dialogue.content  }` }}
                     <v-icon class="ml-2" 
                         color="secondary" 
                         icon="mdi-note-edit-outline"
