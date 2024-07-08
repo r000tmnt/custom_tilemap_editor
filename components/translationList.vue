@@ -10,7 +10,7 @@
     :title="`${props.type} translation`"
   >
     <template v-slot:text>
-      <template v-if="Object.entries(translationDetail).length">
+      <template v-if="translationDetail.en.title.length">
         <v-form class="d-flex">
             <!-- en message & zh message  -->
             <div class="w-50">
@@ -22,7 +22,10 @@
                     <template v-if="targetToEdit.lang === 'EN' && targetToEdit.index === index">
                       <div v-if="String(key).includes('option')">
                         <v-text-field :label="String(key)" v-model="value.value"></v-text-field>  
-                        <v-text-field label="response" v-model="value.content"></v-text-field>  
+                        <v-text-field v-for="(content, count) in value.response"
+                          :key="content" 
+                          label="response" 
+                          v-model="value.response[count].content"></v-text-field>   
                       </div>
 
                       <v-text-field v-else :label="String(key)" v-model="translationDetail.en[String(key)]"></v-text-field>
@@ -34,7 +37,20 @@
                     </template>
                   
                     <template v-else>
-                      <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>   
+                      <div v-if="String(key).includes('option')"
+                        class="dialogue">
+                        {{ `${key}: ${value.value}\n` }}
+
+                        <template v-for="(content, count) in value.response"
+                          :key="content">
+                          {{ `response_${count}: ${value.response[count].content}\n` }}
+                        </template>
+                      </div>
+
+                      <div v-else class="dialogue">
+                        {{ `${key}: ${value}` }}
+                      </div>
+
                       <v-btn 
                         variant="outlined" 
                         color="secondary" 
@@ -76,7 +92,10 @@
                     <template v-if="targetToEdit.lang === 'ZH' && targetToEdit.index === index">
                       <div v-if="String(key).includes('option')">
                         <v-text-field :label="String(key)" v-model="value.value"></v-text-field>  
-                        <v-text-field label="response" v-model="value.content"></v-text-field>  
+                        <v-text-field v-for="(content, count) in value.response"
+                          :key="content" 
+                          label="response" 
+                          v-model="value.response[count].content"></v-text-field>  
                       </div>
 
                       <v-text-field v-else :label="String(key)" v-model="translationDetail.zh[String(key)]"></v-text-field>
@@ -88,7 +107,20 @@
                     </template>
                   
                     <template v-else>
-                      <div class="px-2" style="white-space: pre-line;">{{ String(key).includes("option")? `${key}: ${value.value}\nrespond: ${value.content}` : `${key}: ${value}` }}</div>        
+                      <div v-if="String(key).includes('option')"
+                        class="dialogue">
+                        {{ `${key}: ${value.value}\n` }}
+
+                        <template v-for="(content, count) in value.response"
+                          :key="content">
+                          {{ `response_${count}: ${value.response[count].content}\n` }}
+                        </template>
+                      </div>
+
+                      <div v-else class="dialogue">
+                        {{ `${key}: ${value}` }}
+                      </div>
+
                       <v-btn 
                         variant="outlined" 
                         color="secondary" 
@@ -183,9 +215,12 @@ const getTranslation = (item: string) => {
 }
 
 const closeTranslationList = () => {
-  if(Object.entries(translationDetail.value).length){
+  if(translationDetail.value.en.title.length){
     // Back to the list
-    translationDetail.value = {}
+    translationDetail.value = {
+      en: { title: "" },
+      zh: { title: "" },
+    }
   }else{
     // Close dialog
     toggleDialog('translation-viewer')
@@ -200,6 +235,15 @@ const saveChanges = () => {
 
 // Reset translation detail
 onBeforeUnmount(() => {
-  translationDetail.value = {}
+  translationDetail.value = {
+      en: { title: "" },
+      zh: { title: "" },
+    }
 })
 </script>
+
+<style scoped>
+.dialogue{
+  white-space: break-spaces;
+}
+</style>
