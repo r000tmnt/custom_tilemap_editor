@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { levelList, translationDataModel, translationResponse, levelDataResponse, levelEventModel } from '~/types/level';
+import type { levelList, translationDataModel, translationResponse, levelEventModel, translationDetailModel } from '~/types/level';
 import type responseModel from '~/types/serverResponse'
 import type { skillResponseModel } from "~/types/skill";
 
@@ -23,7 +23,17 @@ export const useLangStore = defineStore('lang', () => {
         skill: [""]
     })
 
-    const translationDetail = ref<any>({})
+    const translationDetail = ref<translationDetailModel>({
+        en: {
+            title: ""
+        },
+        zh: {
+            title: ""
+        }
+    })
+
+    console.log(translationData.value)
+    console.log(translationDetail.value)
 
     const getTranslationList = async(type: string) => {
         const translationRequest : levelList = await $fetch(`${mainStore.base_url}api/lang/${type}`)
@@ -36,10 +46,6 @@ export const useLangStore = defineStore('lang', () => {
     }
 
     const getTranslationData = async(target: string, type: string) => {
-        translationDetail.value = {
-            en: {},
-            zh: {}
-        }
 
         if(type === "level"){
             // Need to read the raw data first
@@ -47,7 +53,9 @@ export const useLangStore = defineStore('lang', () => {
 
             const translationRequest : translationResponse = await $fetch(`${mainStore.base_url}api/lang/data?type=${type}&name=${target}`)
 
+            console.log(rawDataRequest)
             console.log(translationRequest)
+            console.log(translationDetail.value)
 
             if(!Array.isArray(rawDataRequest.data)){
                 if(translationRequest.data.en.title && translationRequest.data.zh.title){
@@ -73,11 +81,15 @@ export const useLangStore = defineStore('lang', () => {
                                             
                                             translationDetail.value.zh[`option_${optionCount}`] = translationRequest.data.zh[`option_${optionCount}`]
                                         }else{
-                                            translationDetail.value.en[`option_${optionCount}`].value = option[l].value
-                                            translationDetail.value.en[`option_${optionCount}`].content = option[l].contnet
+                                            translationDetail.value.en[`option_${optionCount}`] = { 
+                                                value: option[l].value,
+                                                response: option[l].response
+                                             }
                                             
-                                            translationDetail.value.zh[`option_${optionCount}`].value = ""
-                                            translationDetail.value.zh[`option_${optionCount}`].content = ""
+                                            translationDetail.value.zh[`option_${optionCount}`] = {
+                                                value: "",
+                                                response: []
+                                            }
                                         }
 
                                         optionCount += 1
@@ -104,7 +116,7 @@ export const useLangStore = defineStore('lang', () => {
                 translationDetail.value.zh = { ...translationDetail.value.zh, ...translationRequest.data.zh }
             }
         }else{
-            const translationRequest : levelDataResponse = await $fetch(`${mainStore.base_url}api/lang/data?type=${type}&name=${target}`)
+            const translationRequest : translationResponse = await $fetch(`${mainStore.base_url}api/lang/data?type=${type}&name=${target}`)
 
             console.log(translationRequest)
     
