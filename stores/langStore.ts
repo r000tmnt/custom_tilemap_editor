@@ -83,13 +83,16 @@ export const useLangStore = defineStore('lang', () => {
                                         }else{
                                             translationDetail.value.en[`option_${optionCount}`] = { 
                                                 value: option[l].value,
-                                                response: option[l].response
+                                                response: option[l].response.map((o: any) => o.content)
                                              }
                                             
                                             translationDetail.value.zh[`option_${optionCount}`] = {
                                                 value: "",
                                                 response: option[l].response.map((o: any) => "")
                                             }
+
+                                            console.log(translationDetail.value.en[`option_${optionCount}`])
+                                            console.log(translationDetail.value.zh[`option_${optionCount}`])
                                         }
 
                                         optionCount += 1
