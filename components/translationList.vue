@@ -20,7 +20,7 @@
                   :key="key">
                   <template v-if="type === 'level' || type === 'class'">
                     <template v-if="targetToEdit.lang === 'EN' && targetToEdit.index === index">
-                      <div v-if="String(key).includes('option')">
+                      <div class="w-100" v-if="String(key).includes('option')">
                         <v-text-field :label="String(key)" v-model="value.value"></v-text-field>  
                         <v-text-field v-for="(content, count) in value.response"
                           :key="content" 
@@ -90,8 +90,8 @@
                   :key="key">
                   <template v-if="type === 'level' || type === 'class'">
                     <template v-if="targetToEdit.lang === 'ZH' && targetToEdit.index === index">
-                      <div v-if="String(key).includes('option')">
-                        <v-text-field :label="String(key)" v-model="value.value"></v-text-field>  
+                      <div class="w-100" v-if="String(key).includes('option')">
+                        <v-text-field :label="String(key)" v-model="value.value"></v-text-field>
                         <v-text-field v-for="(content, count) in value.response"
                           :key="content" 
                           label="response" 
