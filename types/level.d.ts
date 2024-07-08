@@ -150,9 +150,14 @@ interface translationDataModel {
     skill: string[]
 }
 
+interface translationLocaleModel {
+    title: string,
+    [key: string]: any
+}
+
 interface translationDetailModel {
-    en: any
-    zh: any
+    en: translationLocaleModel
+    zh: translationLocaleModel
 }
 
 interface translationResponse extends responseModel{
@@ -179,5 +184,6 @@ export {
     objectiveDataModel,
     objectiveOptionalModel,
     translationDataModel,
-    translationResponse
+    translationResponse,
+    translationDetailModel
 }
