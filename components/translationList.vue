@@ -25,7 +25,7 @@
                         <v-textarea v-for="(content, count) in value.response"
                           :key="content" 
                           label="response" 
-                          v-model="value.response[count].content"></v-textarea>   
+                          v-model="value.response[count]"></v-textarea>   
                       </div>
 
                       <v-textarea v-else :label="String(key)" v-model="translationDetail.en[String(key)]"></v-textarea>
@@ -43,7 +43,7 @@
 
                         <template v-for="(content, count) in value.response"
                           :key="content">
-                          {{ `response_${count}: ${value.response[count].content}\n` }}
+                          {{ `response_${count}: ${value.response[count]}\n` }}
                         </template>
                       </div>
 
@@ -95,7 +95,7 @@
                         <v-textarea v-for="(content, count) in value.response"
                           :key="content" 
                           label="response" 
-                          v-model="value.response[count].content"></v-textarea>  
+                          v-model="value.response[count]"></v-textarea>  
                       </div>
 
                       <v-textarea v-else :label="String(key)" v-model="translationDetail.zh[String(key)]"></v-textarea>
@@ -113,7 +113,7 @@
 
                         <template v-for="(content, count) in value.response"
                           :key="content">
-                          {{ `response_${count}: ${value.response[count].content}\n` }}
+                          {{ `response_${count}: ${value.response[count]}\n` }}
                         </template>
                       </div>
 
