@@ -21,14 +21,14 @@
                   <template v-if="type === 'level' || type === 'class'">
                     <template v-if="targetToEdit.lang === 'EN' && targetToEdit.index === index">
                       <div class="w-100" v-if="String(key).includes('option')">
-                        <v-text-field :label="String(key)" v-model="value.value"></v-text-field>  
-                        <v-text-field v-for="(content, count) in value.response"
+                        <v-textarea :label="String(key)" v-model="value.value"></v-textarea>  
+                        <v-textarea v-for="(content, count) in value.response"
                           :key="content" 
                           label="response" 
-                          v-model="value.response[count].content"></v-text-field>   
+                          v-model="value.response[count].content"></v-textarea>   
                       </div>
 
-                      <v-text-field v-else :label="String(key)" v-model="translationDetail.en[String(key)]"></v-text-field>
+                      <v-textarea v-else :label="String(key)" v-model="translationDetail.en[String(key)]"></v-textarea>
                       <v-btn 
                         variant="outlined" 
                         color="grey" 
@@ -61,8 +61,8 @@
 
                   <template v-if="type === 'skill' || type === 'item'">
                     <template v-if="targetToEdit.lang === 'EN' && targetToEdit.index === index">
-                      <v-text-field label="name" v-model="value.name"></v-text-field>  
-                      <v-text-field label="desc" v-model="value.desc"></v-text-field>  
+                      <v-textarea label="name" v-model="value.name"></v-textarea>  
+                      <v-textarea label="desc" v-model="value.desc"></v-textarea>  
 
                       <v-btn 
                         variant="outlined" 
@@ -91,14 +91,14 @@
                   <template v-if="type === 'level' || type === 'class'">
                     <template v-if="targetToEdit.lang === 'ZH' && targetToEdit.index === index">
                       <div class="w-100" v-if="String(key).includes('option')">
-                        <v-text-field :label="String(key)" v-model="value.value"></v-text-field>
-                        <v-text-field v-for="(content, count) in value.response"
+                        <v-textarea :label="String(key)" v-model="value.value"></v-textarea>
+                        <v-textarea v-for="(content, count) in value.response"
                           :key="content" 
                           label="response" 
-                          v-model="value.response[count].content"></v-text-field>  
+                          v-model="value.response[count].content"></v-textarea>  
                       </div>
 
-                      <v-text-field v-else :label="String(key)" v-model="translationDetail.zh[String(key)]"></v-text-field>
+                      <v-textarea v-else :label="String(key)" v-model="translationDetail.zh[String(key)]"></v-textarea>
                       <v-btn 
                         variant="outlined" 
                         color="grey" 
@@ -131,8 +131,8 @@
 
                   <template v-if="type === 'skill' || type === 'item'">
                     <template v-if="targetToEdit.lang === 'ZH' && targetToEdit.index === index">
-                      <v-text-field label="name" v-model="value.name"></v-text-field>  
-                      <v-text-field label="desc" v-model="value.desc"></v-text-field>  
+                      <v-textarea label="name" v-model="value.name"></v-textarea>  
+                      <v-textarea label="desc" v-model="value.desc"></v-textarea>  
 
                       <v-btn 
                         variant="outlined" 
