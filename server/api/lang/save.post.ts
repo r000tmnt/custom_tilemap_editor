@@ -49,7 +49,7 @@ export default defineEventHandler( async(event) => {
                         }
                     }else{
                         // Check if the original value exist
-                        if(dialogue[k].content.length)
+                        if(dialogue[k].content.length && dialogue[k].content !== "demo")
                             dialogue[k].content = `${name}.dialogue_${dialogueCount}`
                             dialogueCount += 1
                     }

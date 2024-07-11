@@ -98,15 +98,17 @@ export const useLangStore = defineStore('lang', () => {
                                         optionCount += 1
                                     }
                                 }else{
-                                    if(translationRequest.data.en[`dialogue_${dialogueCount}`] !== undefined && translationRequest.data.zh[`dialogue_${dialogueCount}`] !== undefined){
-                                        translationDetail.value.en[`dialogue_${dialogueCount}`] = translationRequest.data.en[`dialogue_${dialogueCount}`]
-                                        translationDetail.value.zh[`dialogue_${dialogueCount}`] = translationRequest.data.zh[`dialogue_${dialogueCount}`]
-                                    }else{
-                                        translationDetail.value.en[`dialogue_${dialogueCount}`] = dialogue[k].content
-                                        translationDetail.value.zh[`dialogue_${dialogueCount}`] = ""
-                                    }
+                                    if(dialogue[k].content !== "demo"){
+                                        if(translationRequest.data.en[`dialogue_${dialogueCount}`] !== undefined && translationRequest.data.zh[`dialogue_${dialogueCount}`] !== undefined){
+                                            translationDetail.value.en[`dialogue_${dialogueCount}`] = translationRequest.data.en[`dialogue_${dialogueCount}`]
+                                            translationDetail.value.zh[`dialogue_${dialogueCount}`] = translationRequest.data.zh[`dialogue_${dialogueCount}`]
+                                        }else{
+                                            translationDetail.value.en[`dialogue_${dialogueCount}`] = dialogue[k].content
+                                            translationDetail.value.zh[`dialogue_${dialogueCount}`] = ""
+                                        }
 
-                                    dialogueCount += 1
+                                        dialogueCount += 1                                        
+                                    }
                                 }
                             }
                         }
