@@ -23,8 +23,8 @@
                       <div class="w-100" v-if="String(key).includes('option')">
                         <v-textarea :label="String(key)" v-model="value.value"></v-textarea>  
                         <v-textarea v-for="(content, count) in value.response"
-                          :key="content" 
-                          label="response" 
+                          :key="count" 
+                          :label="`response ${count}`" 
                           v-model="value.response[count]"></v-textarea>   
                       </div>
 
@@ -93,8 +93,8 @@
                       <div class="w-100" v-if="String(key).includes('option')">
                         <v-textarea :label="String(key)" v-model="value.value"></v-textarea>
                         <v-textarea v-for="(content, count) in value.response"
-                          :key="content" 
-                          label="response" 
+                          :key="count" 
+                          :label="`response ${count}`" 
                           v-model="value.response[count]"></v-textarea>  
                       </div>
 
