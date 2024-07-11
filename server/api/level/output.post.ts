@@ -20,10 +20,48 @@ export default defineEventHandler( async(event) => {
 
     try{
         for(let i=0; i < levels.length; i++){
+            const levelName = levels[i].split(".")[0]
             if(!levels[i].includes("test")){
-                levelList += `"${levels[i].split(".")[0]}",\n`
+                levelList += `"${levelName}",\n`
             } 
-            const content = fs.readFileSync(`${pathPrefix}${levels[i]}`, { encoding: "utf-8" })
+            let content = fs.readFileSync(`${pathPrefix}${levels[i]}`, { encoding: "utf-8" })
+            
+            const data = JSON.parse(content)
+
+            // Add translate function
+            for(let i=0; i < data.event.length; i++){
+                for(let j=0, scene = data.event[i].scene; j < scene.length; j++){
+                    for(let k=0, dialogue = scene[j].dialogue; k < dialogue.length; k++){
+                        const option = dialogue[k].option
+        
+                        if(option !== undefined){
+                            for(let l=0; l < option.length; l++){
+                                // Check if the original value exist
+                                if(option[l].value.includes(levelName)){
+                                    console.log("search value :>>>", option[l].value)
+                                    content = content.replace(`"${option[l].value}"`, `t("${option[l].value}")`)
+                                }
+        
+                                for(let m=0, response = option[l].response; m < response.length; m++){
+                                    // Check if the original value exist
+                                    if(response[m].content.includes(levelName)){
+                                        console.log("search value :>>>", response[m].content)
+                                        content = content.replace(`"${response[m].content}"`, `t("${response[m].content}")`)
+                                    }
+                                }
+                            }
+                        }else{
+                            // Check if the original value exist
+                            if(dialogue[k].content.includes(levelName))
+                                console.log("search value :>>>", dialogue[k].content)
+                                content = content.replace(`"${dialogue[k].content}"`, `t("${dialogue[k].content}")`)
+                        }
+                    }
+                }
+            }
+
+            console.log("content altered :>>>", content)
+
             const newLevel = `import { t } from '../../utils/i18n'
 
             export default ${content}`     
