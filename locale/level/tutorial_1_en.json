@@ -5,11 +5,11 @@
     "dialogue_3": "As you gradually regain your conscious.\nYou first...",
     "option_1": {
         "value": "Take a look around",
-        "content": "Although there's not much light in here, you've notice that you're in a cave."
+        "response": ["Although there's not much light in here, you've notice that you're in a cave."]
     },
     "option_2": {
         "value": "Lay down on the ground",
-        "content": "You slowly bend down your body against the ground.\nThen you realize that your cloth is in a poor condition,\nnot enough to protect you from the low temperature in here."
+        "response": ["You slowly bend down your body against the ground.\nThen you realize that your cloth is in a poor condition,\nnot enough to protect you from the low temperature in here."]
     },
     "dialogue_4": "You heard a voice whispering beyond the entrence.\nIt is not clear enough for anyone to understand. But it gives you a direction to follow.",
     "dialogue_5": "As you walk your way out of the cave. You start to get used to the lack of brightness of your surrounding.",
@@ -24,11 +24,11 @@
     "dialogue_14": "The mysterious person throws a knife on the ground near where you are standing.\nWould you...",
     "option_3":{
         "value": "Take the knife",
-        "content": "Soon as you pick up the knife on the ground.\nYou heard another voice, and a rotten smell came after."
+        "response": ["Soon as you pick up the knife on the ground.\nYou heard another voice, and a rotten smell came after."]
     },
     "option_4":{
         "value": "I trust in my own fist",
-        "content": "You kicked the knife out of your reach.\nYet it stops in the middle like it hit something solid, and it is not the sound of the ground or stone either."
+        "response": ["You kicked the knife out of your reach.\nYet it stops in the middle like it hit something solid, and it is not the sound of the ground or stone either."]
     },
     "dialogue_15": "A sound of deadman approch towoards you.",
     "dialogue_16": "Suit yourself, I'm out of here",

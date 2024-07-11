@@ -1,1 +1,678 @@
-{"id":"tutorial_2","name":"The corridor","map":[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,3,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,1,1,1,1,1,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"depth":[[[0,0],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]],[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]],[[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1]],[[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1]],[[0,0],[0,0],[0,0],[0,1],[0,1],[0,1],[0,1],[0,1],[0,0],[0,0],[0,1],[0,1],[0,1],[0,1],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1]],[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1]],[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]]],"audio":"","assets":["","wall.png","item.png","door_close.png"],"phase":["conversation","titleCard","battle","conversation","end"],"event":[{"position":{},"item":[],"scene":[{"background":"","people":1,"audio":"","dialogue":[{"person":"","style":"#ffffff","size":"fontSize_md","content":"A corridor.\nIt seems so out of place from where you've been moments ago.","audio":[]},{"person":"","style":"#ffffff","size":"fontSize_md","content":"The key shatter to dust once you across the door.\nThankfully, there are torches hanging on the wall for you to see.","audio":[]},{"person":"","style":"#ffffff","size":"fontSize_md","content":"You heard a knocking sound from the distance not far way and see a moving shadow.\nWith cautious, you process the road ahead.","audio":[]}]}],"trigger":"auto"},{"position":{"x":18,"y":2},"item":[{"amount":10,"id":"currency_1","type":1}],"scene":[{"background":"","audio":"","people":1,"dialogue":[{"person":"","style":"#ffffff","size":"fontSize_md","content":"test","audio":[]},{"person":"","style":"","size":"","content":"","option":[{"value":"test option","style":"#ffffff","size":"","content":[{"person":"","style":"","size":"","content":"not a real thing"}],"effect":[]}]},{"person":"unknow","style":"#ffffff","size":"fontSize_md","content":"Still testing","audio":[]}]}],"trigger":"auto"},{"position":{"x":14,"y":2},"item":[],"scene":[{"background":"","audio":"","people":1,"dialogue":[{"person":"unknow","style":"#ffffff","size":"fontSize_md","content":"hello there","audio":[]}]}],"trigger":"auto"},{"position":{"x":2,"y":5},"item":[],"scene":[{"background":"","audio":"","people":1,"dialogue":[{"person":"unknow","style":"#ffffff","size":"fontSize_md","content":"Hey you! You're not the monster right?\nHave you find a small key? Mine got stolen by those creatures.\nThe voice came from the door near where you standing.","audio":[]},{"person":"","style":"","size":"","content":"","option":[{"value":"Open the door","style":"#ffffff","size":"","response":[{"person":"","style":"#ffffff","size":"fontSize_md","content":"You see a man with a bow on his hand. He seems relief from the fact that he is free from the dusty room he's been stuck with."},{"person":"unknow","style":"#FFFFFF","size":"fontSize_md","content":"Thanks. I thought you'll run away and I'm going to stay like this forever.\nThe name is... by the way."},{"person":"unknow","style":"#FFFFFF","size":"fontSize_md","content":"Do you got more keys in your bag would you?\n{archer_name} saying it like it is urgent."},{"person":"unknow","style":"#FFFFFF","size":"fontSize_md","content":"You explain to him what happened in the cave and you stumble your way here."}],"condition":{"type":"item","value":"key","possess":true},"effect":[]},{"value":"Walk away quietly","style":"#ffffff","size":"","response":[{"person":"","style":"#ffffff","size":"","content":"Wait. Come back! You...\nYou don't seems to mind the fact that voice sound desperate and keep finding your way out."}],"condition":{"type":"","value":""},"effect":[]}]}]}],"trigger":"once"},{"position":{"x":2,"y":7},"item":[],"scene":[{"background":"","audio":"","people":1,"dialogue":[{"person":"","style":"#ffffff","size":"fontSize_md","content":"Something is broken. A man bust out the door you passed by not long ago. It is clear that his angry at you.","audio":[]},{"person":"","style":"#ffffff","size":"fontSize_md","content":"You see a man holding a bow and he is ready to fire an arrow.","audio":[]},{"person":"","style":"#ffffff","size":"","content":"","audio":[],"option":[{"value":"Oh Fuc...!","style":"#ffffff","size":"","response":[{"person":"","style":"#FFFFFF","size":"fontSize_md","content":"You pull out the knife just in time to block the arrow.\nStill, the sharp surface scratched your skin."}],"condition":{"type":"","value":""},"effect":[]},{"value":"Keep running","style":"#ffffff","size":"","response":[{"person":"","style":"#FFFFFF","size":"fontSize_md","content":"You pick up the pace. Running like your life depends on it."},{"person":"unknow","style":"#FFFFFF","size":"fontSize_md","content":"You bastard. You left me to die!\nThe man yelling at you. No matter what you said to explain the situation. It seems a fight is inevitable."}],"condition":{"type":"","value":""},"effect":[]}]}]}],"trigger":"option","requireOption":"Walk away quietly"},{"position":{"x":23,"y":9},"item":[],"scene":[{"background":"","audio":"","people":1,"dialogue":[{"person":"","style":"#ffffff","size":"fontSize_md","content":"Alright alright. You win, just take the money.","audio":[]},{"person":"","style":"#FFFFFFD0","size":"fontSize_md","content":"The man sitting on ground. Waiting for you to take the prize.","audio":[]},{"person":"","style":"#ffffff","size":"fontSize_md","content":"What are you looking at? Didn't you lock me in the room so you can force me to handle the money?","audio":[]}]}],"trigger":"defeat","requireOption":"class"},{"position":{"x":23,"y":9},"item":[],"scene":[{"background":"","audio":"","people":1,"dialogue":[{"person":"","style":"#ffffff","size":"fontSize_md","content":"That sounds rough. I thought you were try to kill me. Sorry about that.","audio":[]}]}],"trigger":"option","requireOption":"Walk away quietly"},{"position":{"x":23,"y":9},"item":[],"scene":[{"background":"","audio":"","people":1,"dialogue":[{"person":"","style":"#ffffff","size":"fontSize_md","content":"The village is not far from here. I can take you there if you want.","audio":[]},{"person":"","style":"#ffffff","size":"fontSize_md","content":"The man offering you a guide. From the situation you have, it seems to be reasonable choice to take the offer.","audio":[]},{"person":"","style":"#ffffff","size":"fontSize_md","content":"Let's go get ourselves a key and leave.","audio":[]}]}],"trigger":"auto"}],"enemy":[{"startingPoint":{"x":13,"y":1}},{"job":"mob_zombie_1","name":"Zombie","startingPoint":{"x":4,"y":2}},{"job":"mob_zombie_1","name":"Zombie","startingPoint":{"x":3,"y":1}},{"job":"mob_zombie_1","name":"Zombie","startingPoint":{"x":7,"y":7}},{"job":"mob_zombie_1","name":"Zombie","startingPoint":{"x":19,"y":6}},{"job":"mob_zombie_1","name":"Zombie","startingPoint":{"x":19,"y":7}}],"player":[{"startingPoint":{"x":12,"y":1}}],"objective":{"victory":{"target":"enemy","value":0},"fail":{"target":"player","value":0},"optional":[{"target":"turn","value":6,"prize":[{"id":"currency_1","type":1,"amount":100}]}]},"difficulty":1}
+{
+  "id": "tutorial_2",
+  "name": "The corridor",
+  "map": [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 3, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ],
+  "depth": [
+    [
+      [0, 0],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1]
+    ],
+    [
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0]
+    ],
+    [
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0]
+    ],
+    [
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1]
+    ],
+    [
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1]
+    ],
+    [
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1]
+    ],
+    [
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1]
+    ],
+    [
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1]
+    ],
+    [
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 1],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0],
+      [0, 0]
+    ],
+    [
+      [0, 0],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1],
+      [0, 1]
+    ]
+  ],
+  "audio": "",
+  "assets": ["", "wall.png", "item.png", "door_close.png"],
+  "phase": ["conversation", "titleCard", "battle", "conversation", "end"],
+  "event": [
+    {
+      "position": {},
+      "item": [],
+      "scene": [
+        {
+          "background": "",
+          "people": 1,
+          "audio": "",
+          "dialogue": [
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_1",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_2",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_3",
+              "audio": []
+            }
+          ]
+        }
+      ],
+      "trigger": "auto"
+    },
+    {
+      "position": { "x": 18, "y": 2 },
+      "item": [{ "amount": 10, "id": "currency_1", "type": 1 }],
+      "scene": [
+        {
+          "background": "",
+          "audio": "",
+          "people": 1,
+          "dialogue": [
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_4",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "",
+              "size": "",
+              "content": "",
+              "option": [
+                {
+                  "value": "tutorial_2.option_1.value",
+                  "style": "#ffffff",
+                  "size": "",
+                  "response": [
+                    {
+                      "person": "",
+                      "style": "",
+                      "size": "",
+                      "content": "tutorial_2.option_1.response.0"
+                    }
+                  ],
+                  "effect": []
+                }
+              ]
+            },
+            {
+              "person": "unknow",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_5",
+              "audio": []
+            }
+          ]
+        }
+      ],
+      "trigger": "auto"
+    },
+    {
+      "position": { "x": 14, "y": 2 },
+      "item": [],
+      "scene": [
+        {
+          "background": "",
+          "audio": "",
+          "people": 1,
+          "dialogue": [
+            {
+              "person": "unknow",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_6",
+              "audio": []
+            }
+          ]
+        }
+      ],
+      "trigger": "auto"
+    },
+    {
+      "position": { "x": 2, "y": 5 },
+      "item": [],
+      "scene": [
+        {
+          "background": "",
+          "audio": "",
+          "people": 1,
+          "dialogue": [
+            {
+              "person": "unknow",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_7",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "",
+              "size": "",
+              "content": "",
+              "option": [
+                {
+                  "value": "tutorial_2.option_2.value",
+                  "style": "#ffffff",
+                  "size": "",
+                  "response": [
+                    {
+                      "person": "",
+                      "style": "#ffffff",
+                      "size": "fontSize_md",
+                      "content": "tutorial_2.option_2.response.0"
+                    },
+                    {
+                      "person": "unknow",
+                      "style": "#FFFFFF",
+                      "size": "fontSize_md",
+                      "content": "tutorial_2.option_2.response.1"
+                    },
+                    {
+                      "person": "unknow",
+                      "style": "#FFFFFF",
+                      "size": "fontSize_md",
+                      "content": "tutorial_2.option_2.response.2"
+                    },
+                    {
+                      "person": "unknow",
+                      "style": "#FFFFFF",
+                      "size": "fontSize_md",
+                      "content": "tutorial_2.option_2.response.3"
+                    }
+                  ],
+                  "condition": {
+                    "type": "item",
+                    "value": "key",
+                    "possess": true
+                  },
+                  "effect": []
+                },
+                {
+                  "value": "tutorial_2.option_3.value",
+                  "style": "#ffffff",
+                  "size": "",
+                  "response": [
+                    {
+                      "person": "",
+                      "style": "#ffffff",
+                      "size": "",
+                      "content": "tutorial_2.option_3.response.0"
+                    }
+                  ],
+                  "condition": { "type": "", "value": "" },
+                  "effect": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "trigger": "once"
+    },
+    {
+      "position": { "x": 2, "y": 7 },
+      "item": [],
+      "scene": [
+        {
+          "background": "",
+          "audio": "",
+          "people": 1,
+          "dialogue": [
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_8",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_9",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "",
+              "content": "",
+              "audio": [],
+              "option": [
+                {
+                  "value": "tutorial_2.option_4.value",
+                  "style": "#ffffff",
+                  "size": "",
+                  "response": [
+                    {
+                      "person": "",
+                      "style": "#FFFFFF",
+                      "size": "fontSize_md",
+                      "content": "tutorial_2.option_4.response.0"
+                    }
+                  ],
+                  "condition": { "type": "", "value": "" },
+                  "effect": []
+                },
+                {
+                  "value": "tutorial_2.option_5.value",
+                  "style": "#ffffff",
+                  "size": "",
+                  "response": [
+                    {
+                      "person": "",
+                      "style": "#FFFFFF",
+                      "size": "fontSize_md",
+                      "content": "tutorial_2.option_5.response.0"
+                    },
+                    {
+                      "person": "unknow",
+                      "style": "#FFFFFF",
+                      "size": "fontSize_md",
+                      "content": "tutorial_2.option_5.response.1"
+                    }
+                  ],
+                  "condition": { "type": "", "value": "" },
+                  "effect": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "trigger": "option",
+      "requireOption": "Walk away quietly"
+    },
+    {
+      "position": { "x": 23, "y": 9 },
+      "item": [],
+      "scene": [
+        {
+          "background": "",
+          "audio": "",
+          "people": 1,
+          "dialogue": [
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_10",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "#FFFFFFD0",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_11",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_12",
+              "audio": []
+            }
+          ]
+        }
+      ],
+      "trigger": "defeat",
+      "requireOption": "class"
+    },
+    {
+      "position": { "x": 23, "y": 9 },
+      "item": [],
+      "scene": [
+        {
+          "background": "",
+          "audio": "",
+          "people": 1,
+          "dialogue": [
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_13",
+              "audio": []
+            }
+          ]
+        }
+      ],
+      "trigger": "option",
+      "requireOption": "Walk away quietly"
+    },
+    {
+      "position": { "x": 23, "y": 9 },
+      "item": [],
+      "scene": [
+        {
+          "background": "",
+          "audio": "",
+          "people": 1,
+          "dialogue": [
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_14",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_15",
+              "audio": []
+            },
+            {
+              "person": "",
+              "style": "#ffffff",
+              "size": "fontSize_md",
+              "content": "tutorial_2.dialogue_16",
+              "audio": []
+            }
+          ]
+        }
+      ],
+      "trigger": "auto"
+    }
+  ],
+  "enemy": [
+    { "startingPoint": { "x": 13, "y": 1 } },
+    {
+      "job": "mob_zombie_1",
+      "name": "Zombie",
+      "startingPoint": { "x": 4, "y": 2 }
+    },
+    {
+      "job": "mob_zombie_1",
+      "name": "Zombie",
+      "startingPoint": { "x": 3, "y": 1 }
+    },
+    {
+      "job": "mob_zombie_1",
+      "name": "Zombie",
+      "startingPoint": { "x": 7, "y": 7 }
+    },
+    {
+      "job": "mob_zombie_1",
+      "name": "Zombie",
+      "startingPoint": { "x": 19, "y": 6 }
+    },
+    {
+      "job": "mob_zombie_1",
+      "name": "Zombie",
+      "startingPoint": { "x": 19, "y": 7 }
+    }
+  ],
+  "player": [{ "startingPoint": { "x": 12, "y": 1 } }],
+  "objective": {
+    "victory": { "target": "enemy", "value": 0 },
+    "fail": { "target": "player", "value": 0 },
+    "optional": [
+      {
+        "target": "turn",
+        "value": 6,
+        "prize": [{ "id": "currency_1", "type": 1, "amount": 100 }]
+      }
+    ]
+  },
+  "difficulty": 1
+}
