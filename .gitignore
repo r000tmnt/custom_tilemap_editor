@@ -13,6 +13,9 @@ node_modules
 logs
 *.log
 
+# custom outputs
+outPut
+
 # Misc
 .DS_Store
 .fleet
