@@ -25,7 +25,7 @@ export default defineEventHandler( async(event) => {
 
         for(let j=0; j < Number(width); j++){
             newMap[i].push(0)
-            depth[i].push(0) // Default to be walkable
+            depth[i].push(1) // Default to be walkable
             depth[i].push(0) // Default to be ground level
         }
     }
