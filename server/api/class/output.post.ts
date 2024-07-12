@@ -58,7 +58,7 @@ export default defineEventHandler( async(event) => {
             `
 
             const filePath = path.join(process.cwd(), `${process.env.OUTPUT_PATH}/dataBase/`,`class.js`)
-            fs.appendFileSync(filePath, classCollector)
+            fs.writeFileSync(filePath, classCollector)
 
             return { status: 200 }
         }catch(error){
