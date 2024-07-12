@@ -247,7 +247,7 @@ const canvasEvent = (e: any) => {
                                     }
                                 }else{
                                     console.log("To right")
-                                    for(let i=col; i <= multiSelectTiles.value[latest][1]; i++){
+                                    for(let i=multiSelectTiles.value[latest][1]; i <= col; i++){
                                         multiSelectTiles.value.push([row, i])
                                         drawBorderOnTile(i, row)
                                     }
