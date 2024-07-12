@@ -657,11 +657,15 @@ const openContextMenu = () => {
     if(contextMenu.value)  toggleDialog("context-menu")
  }
 
- const releaseShiftKey = (e: KeyboardEvent) => {
+ const releaseKey = (e: KeyboardEvent) => {
     console.log('keyup event')
     console.log(e)
     if(e.key === "Shift"){
         holdShift.value = false
+    }
+
+    if(e.key === "Control"){
+        holdCtrl.value = false
     }
 }
 
@@ -690,7 +694,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
     document.addEventListener("keydown", canvasKeyPressEvent)
-    document.addEventListener("keyup", releaseShiftKey)
+    document.addEventListener("keyup", releaseKey)
 })
 
 // Reset canvas when leaving the page
@@ -699,7 +703,7 @@ onBeforeUnmount(() => {
     levelData.value.map.splice(0)
     document.removeEventListener("click", openContextMenu)
     document.removeEventListener("keydown", canvasKeyPressEvent)
-    document.removeEventListener("keyup", releaseShiftKey)
+    document.removeEventListener("keyup", releaseKey)
 })
 </script>
 
