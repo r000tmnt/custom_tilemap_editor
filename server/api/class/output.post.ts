@@ -34,7 +34,7 @@ export default defineEventHandler( async(event) => {
             for(let i=0; i < classes.length; i++){
                 const className = classes[i].split(".")[0]
                 classlist += `import ${className} from "./class/${className}"\n`
-                classExpand += `...${className},\n`
+                classExpand += `${className},\n`
             }
 
             const classCollector = `${classlist}

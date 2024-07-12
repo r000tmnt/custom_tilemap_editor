@@ -34,7 +34,7 @@ export default defineEventHandler( async(event) => {
             for(let i=0; i < mobs.length; i++){
                 const mobName = mobs[i].split(".")[0]
                 moblist += `import ${mobName} from "./mob/${mobName}"\n`
-                mobExpand += `...${mobName},\n`
+                mobExpand += `${mobName},\n`
             }
 
             const classCollector = `${moblist}
